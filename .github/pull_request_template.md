@@ -12,4 +12,4 @@
 ## How Has This Been Tested?
 <!-- Describe the tests that you ran to verify your changes. -->
 - [ ] Unit tests added/updated
-- [ ] Manual testing completed
+- [ ] Manual testing complete
