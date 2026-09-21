@@ -1,0 +1,14 @@
+{
+  "features": {
+    "ghcr.io/devcontainers-extra/features/nestjs-cli:2": {
+      "version": "2.0.16",
+      "resolved": "ghcr.io/devcontainers-extra/features/nestjs-cli@sha256:ab4c5c5064288e2d1d51081e3429fabb3394fdfc575305c768328d5ab167f8b6",
+      "integrity": "sha256:ab4c5c5064288e2d1d51081e3429fabb3394fdfc575305c768328d5ab167f8b6"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "1.1.2",
+      "resolved": "ghcr.io/devcontainers/features/github-cli@sha256:7c409bf6316ffd85f04fd92fba85a744282639e603417dd4796409866bdb6805",
+      "integrity": "sha256:7c409bf6316ffd85f04fd92fba85a744282639e603417dd4796409866bdb6805"
+    }
+  }
+}
