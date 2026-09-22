@@ -5,7 +5,10 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "lint": "turbo run lint",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "test:fe": "npm run test --workspace=web",
+    "test:be": "npm run test --workspace=api",
+    "test:all": "npm run test --workspaces --if-present"
   },   
   "workspaces": [
     "services/*",

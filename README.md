@@ -18,6 +18,7 @@ This keeps the frontend, backend, and shared packages aligned in one monorepo bu
 ### Frontend
 - Next.js
 - React
+- Redux
 - TypeScript
 - Tailwind CSS
 - Shared component library in `packages/components`
@@ -32,10 +33,7 @@ This keeps the frontend, backend, and shared packages aligned in one monorepo bu
 - npm workspaces
 - Turbo repo
 - TypeScript project references / shared config
-
-### Planned additions
-- Redux for frontend state management
-- Jest testing for both frontend and backend packages
+- Jest Testing for both FE/BE packages
 
 ## Development Workflow
 
