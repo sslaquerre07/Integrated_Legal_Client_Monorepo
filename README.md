@@ -69,26 +69,31 @@ This repository includes a configured dev container at `.devcontainer/devcontain
 1. Open the repository in VS Code.
 2. Use the command palette and select:
    - "Dev Containers: Reopen in Container"
-3. VS Code will build the container using the configured TypeScript Node image.
+3. VS Code starts the services defined in `.devcontainer/docker-compose.yml`.
 
 ### Included container setup
-The dev container is configured with:
-- Node.js + TypeScript image (`mcr.microsoft.com/devcontainers/typescript-node:5-24-trixie`)
-- GitHub CLI feature
-- NestJS CLI feature
-- VS Code extensions for ESLint, Prettier, and Jest runner
+The dev container starts three services:
+- `web` and `api` — the application development containers
+- `db` — PostgreSQL 16, with a persistent `pgdata` volume
+
+The database is created as `dev_db` with the local development user `user` and password `password`. These are development-only credentials; do not use them for production or sensitive data. The app containers connect to PostgreSQL over the Compose network. Port `5432` is also published on localhost for database tools on your machine.
+
+The PostgreSQL schema is defined in `.devcontainer/init-scripts/init.sql`. PostgreSQL runs scripts in that directory when it initializes a new, empty data volume. The sample rows are in `.devcontainer/init-scripts/seed.sql`; the Dev Container runs the seed command after `npm install` each time it is created. The seed is safe to rerun.
+
+The setup also includes the GitHub CLI and NestJS CLI features, plus VS Code extensions for ESLint, Prettier, Jest, and database access.
 
 ### Automatic install step
-After the container is created, the project runs:
+After the container is created, the project installs dependencies and seeds the database:
 
 ```bash
-npm install
+npm install && npm --workspace services/api run db:seed
 ```
 
 ### Forwarded ports
 The dev container forwards:
 - `3000` for the web app
 - `3001` for the API
+- `5432` for the DB
 
 ### Useful commands inside the container
 
@@ -97,7 +102,11 @@ npm install
 npm run dev
 npm run build
 npm run lint
+# Rerun the sample-data seed at any time
+npm --workspace services/api run db:seed
 ```
+
+The database volume persists across container rebuilds. To rerun sample data manually, use the seed command above; rebuilding the container alone does not rerun PostgreSQL's first-time initialization scripts.
 
 ## Notes
 
