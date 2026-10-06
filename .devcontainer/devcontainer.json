@@ -1,32 +1,34 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
-	"name": "Node.js & TypeScript",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/typescript-node:5-24-trixie",
-	"features": {
-		"ghcr.io/devcontainers/features/github-cli:1": {},
-		"ghcr.io/devcontainers-extra/features/nestjs-cli:2": {}
-	},
+  "name": "Node.js & TypeScript Monorepo",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "web",
+  "runServices": ["db", "api", "web"],
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "shutdownAction": "stopCompose",
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [3000, 3001],
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers-extra/features/nestjs-cli:2": {}
+  },
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "npm install",
+  "forwardPorts": [3000, 3001, 5432],
 
-	"remoteEnv": {
-		"TURBO_CACHE_DIR": "${containerWorkspaceFolder}/.turbo/cache"
-	},
+  "postCreateCommand": "npm install && npm --workspace services/api run db:seed",
 
-	// Configure tool-specific properties.
-	"customizations": {
-		"vscode": {
-			"extensions": [
-			"dbaeumer.vscode-eslint",      // Linter for TS/JS
-			"esbenp.prettier-vscode",      // Code formatter
-			"firsttris.vscode-jest-runner" // If you use Jest for NestJS/React testing
-			]
-		}
-	}
+  "remoteUser": "root",
+
+  "remoteEnv": {
+    "TURBO_CACHE_DIR": "/workspaces/${localWorkspaceFolderBasename}/.turbo/cache"
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "firsttris.vscode-jest-runner",
+        "cweijan.vscode-database-client2"
+      ]
+    }
+  }
 }

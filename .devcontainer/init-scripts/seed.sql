@@ -1,0 +1,9 @@
+INSERT INTO nodes (id, name, is_folder, parent_id)
+VALUES
+    ('00000000-0000-4000-8000-000000000001', 'Sample Folder', TRUE, NULL),
+    ('00000000-0000-4000-8000-000000000002', 'Sample Document 1', FALSE, '00000000-0000-4000-8000-000000000001'),
+    ('00000000-0000-4000-8000-000000000003', 'Sample Document 2', FALSE, '00000000-0000-4000-8000-000000000001')
+ON CONFLICT (id) DO UPDATE
+SET name = EXCLUDED.name,
+    is_folder = EXCLUDED.is_folder,
+    parent_id = EXCLUDED.parent_id;
