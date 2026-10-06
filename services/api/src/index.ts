@@ -1,16 +1,13 @@
-import express from 'express';
-import cors from 'cors';
-import type { User } from '@repo/types';
-import nodesRouter from './nodes/routes';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
 
-const app = express();
-const PORT = process.env.PORT || 3001;
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.enableCors();
 
-app.use(cors());
-app.use(express.json());
+  const port = process.env.PORT ?? 3001;
+  await app.listen(port);
+  console.log(`API server running on http://localhost:${port}`);
+}
 
-app.use('/nodes', nodesRouter);
-
-app.listen(PORT, () => {
-  console.log(`🚀 API server running on http://localhost:${PORT}`);
-});
+void bootstrap();

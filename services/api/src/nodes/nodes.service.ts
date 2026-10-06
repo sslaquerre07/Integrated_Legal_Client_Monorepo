@@ -1,12 +1,10 @@
 // app/api/nodes/nodes.service.ts
+import { Inject, Injectable } from '@nestjs/common';
 import { NodesRepository } from './nodes.repository';
 
+@Injectable()
 export class NodesService {
-  private repository: NodesRepository;
-
-  constructor() {
-    this.repository = new NodesRepository();
-  }
+  constructor(@Inject(NodesRepository) private readonly repository: NodesRepository) {}
 
   async getAllNodes() {
     // You can process or format your business data here if needed
