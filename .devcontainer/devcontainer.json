@@ -27,7 +27,8 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "firsttris.vscode-jest-runner",
-        "cweijan.vscode-database-client2"
+        "cweijan.vscode-database-client2",
+        "bradlc.vscode-tailwindcss" // Tailwind Autocomplete
       ]
     }
   }
