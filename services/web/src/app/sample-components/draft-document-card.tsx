@@ -1,15 +1,17 @@
 export default function DraftDocumentCard({
-  text,
+  name,
   type,
+  date_uploaded,
 }: {
-  text: string;
+  name: string;
   type: string;
+  date_uploaded: string;
 }) {
   return (
     <div className="flex flex-1 items-center justify-between rounded-lg bg-white/5 px-3 py-2">
       <div className="flex flex-col items-left gap-1">
         <span className="whitespace-nowrap font-roboto-mono font-semibold text-white text-xl ">
-          {text}
+          {name}
         </span>
         <div>
           {type === "approved" ? (
@@ -23,7 +25,7 @@ export default function DraftDocumentCard({
           )}
         </div>
         <span className="whitespace-nowrap font-roboto-mono  font-semibold text-white">
-          12/07/2026
+          {date_uploaded}
         </span>
       </div>
     </div>
