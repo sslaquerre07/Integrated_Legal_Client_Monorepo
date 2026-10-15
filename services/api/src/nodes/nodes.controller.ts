@@ -29,26 +29,24 @@ export class NodesController {
     if (depth < 1) {
       throw new BadRequestException('depth must be a positive integer');
     }
-
-    const structure = await this.nodesService.getFolderStructure(depth, rootId);
-    return { success: true, data: structure };
+    return await this.nodesService.getFolderStructure(depth, rootId);
   }
 
   @Post()
-  async createNode(@Body() nodeDto: CreateNodeDto) {
+  async createNode(@Body() nodeDto: CreateNodeDto): Promise<ResponseNodeDto> {
     const node = await this.nodesService.createNode(nodeDto);
-    return { success: true, data: ResponseNodeDto.fromEntity(node) };
+    return ResponseNodeDto.fromEntity(node);
   }
 
   @Patch('/:id')
-  async updateNode(@Param('id', new ParseUUIDPipe()) id: string, @Body() nodeDto: Partial<CreateNodeDto>) {
+  async updateNode(@Param('id', new ParseUUIDPipe()) id: string, @Body() nodeDto: Partial<CreateNodeDto>): Promise<ResponseNodeDto> {
     const updatedNode = await this.nodesService.updateNode(id, nodeDto);
-    return { success: true, data: ResponseNodeDto.fromEntity(updatedNode) };
+    return ResponseNodeDto.fromEntity(updatedNode);
   }
 
   @Delete('/:id')
   async deleteNode(@Param('id', new ParseUUIDPipe()) id: string) {
     await this.nodesService.deleteNode(id);
-    return { success: true, message: 'Node deleted successfully' };
+    return { message: 'Node deleted successfully' };
   }
 }
