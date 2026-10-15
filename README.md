@@ -6,7 +6,7 @@ This repository is a TypeScript monorepo for the integrated legal client platfor
 
 The root-level build command uses Turbo to run the workspace build tasks. At the moment, the build pipeline includes four build targets:
 
-1. `services/api` — TypeScript API build (`tsc`)
+1. `services/api` — TypeScript API type check (`tsc`) and SWC compilation
 2. `services/web` — Next.js production build (`next build`)
 3. `packages/components` — shared React component package type check (`tsc --noEmit`)
 4. `packages/types` — shared type package type check (`tsc --noEmit`)
@@ -79,6 +79,8 @@ The dev container starts three services:
 The database is created as `dev_db` with the local development user `user` and password `password`. These are development-only credentials; do not use them for production or sensitive data. The app containers connect to PostgreSQL over the Compose network. Port `5432` is also published on localhost for database tools on your machine.
 
 The PostgreSQL schema is defined in `.devcontainer/init-scripts/init.sql`. PostgreSQL runs scripts in that directory when it initializes a new, empty data volume. The sample rows are in `.devcontainer/init-scripts/seed.sql`; the Dev Container runs the seed command after `npm install` each time it is created. The seed is safe to rerun.
+
+The API connects using `DATABASE_URL`. Its development and start commands load `services/api/.env` when present; environment variables already provided by the Dev Container take precedence. When running the API on the host, use `localhost` in the URL and ensure its credentials and database name match your local PostgreSQL setup. Inside the Compose network, use the database service hostname `db` and the database credentials configured in `docker-compose.yml`.
 
 The setup also includes the GitHub CLI and NestJS CLI features, plus VS Code extensions for ESLint, Prettier, Jest, and database access.
 
