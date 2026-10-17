@@ -6,6 +6,9 @@ import Button from "../sample-components/button";
 import DraftDocumentCard from "../sample-components/draft-document-card";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { Dialog } from "@repo/ui/components/ui/dialog";
+import { Card } from "@repo/ui/components/ui/card";
+import Link from "next/link";
 
 export default function FileUploadPage() {
   const lawyerFile = useSelector((state: RootState) => state.lawyerFile);
@@ -17,6 +20,7 @@ export default function FileUploadPage() {
   //   let type2 = "pending";
   return (
     <main className="bg-company min-h-screen text-white p-8">
+      <Link href="/">Go back</Link>
       <div className="flex flex-col gap-7">
         <div className="flex flex-row items-center justify-between">
           <span className="whitespace-nowrap text-2xl font-semibold text-white">

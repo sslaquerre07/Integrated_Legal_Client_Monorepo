@@ -106,6 +106,8 @@ npm run build
 npm run lint
 # Rerun the sample-data seed at any time
 npm --workspace services/api run db:seed
+# Add shadcn components (frontend)
+npm run ui add <component-name>
 ```
 
 The database volume persists across container rebuilds. To rerun sample data manually, use the seed command above; rebuilding the container alone does not rerun PostgreSQL's first-time initialization scripts.
