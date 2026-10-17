@@ -19,6 +19,11 @@ export class FilesService implements OnModuleInit {
         this.bucket = this.storage.bucket(bucketName);
     }
 
+    retrieveFileStream(nodeId: string) {
+        const blob = this.bucket.file(nodeId);
+        return blob.createReadStream();
+    }
+
     uploadFile(file: Express.Multer.File, nodeId: string): Promise<string> {
         const blob = this.bucket.file(nodeId);
         const blobStream = blob.createWriteStream({

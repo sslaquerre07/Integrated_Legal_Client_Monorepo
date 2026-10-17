@@ -43,6 +43,10 @@ export class NodesService {
     return { tree, entities };
   }
 
+  async getNodeById(id: string) {
+    return await this.findNodeOrThrow(id);
+  }
+
   async getFolderStructure(depth: number = 3, rootId?: string) {
     const query = `
       WITH RECURSIVE node_tree AS (

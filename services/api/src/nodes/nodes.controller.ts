@@ -14,6 +14,8 @@ import {
   Query,
   UseInterceptors,
   UploadedFiles,
+  Res,
+  StreamableFile,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { NodesService } from './nodes.service';
@@ -21,6 +23,7 @@ import { CreateNodeDto, ResponseNodeDto } from '../dtos/nodes.dto';
 import { FilesService } from './files.service';
 import { ItemNode } from '../entities/node.entity';
 import { BatchActionItemResult, BatchActionResult } from './types';
+import { type Response } from 'express';
 
 @Controller('nodes')
 export class NodesController {
@@ -44,7 +47,12 @@ export class NodesController {
     return batchResult;
   }
 
-  @Get()
+  /**
+   * Retrieves the folder structure up to the requested depth.
+   * @param depth Maximum number of tree levels to return, starting at the root.
+   * @param rootId Optional node ID to use as the root of the returned structure.
+   */
+  @Get("/structure")
   async getFolderStructure(
     @Query('depth', new DefaultValuePipe(1), ParseIntPipe) depth: number,
     @Query('rootId', new ParseUUIDPipe({ optional: true })) rootId?: string,
@@ -55,6 +63,30 @@ export class NodesController {
     return await this.nodesService.getFolderStructure(depth, rootId);
   }
 
+  /**
+   * Retrieves a file's contents for inline display.
+   * @param id UUID of the file node to retrieve.
+   */
+  @Get('/file/:id')
+  async getFileContent(@Param('id', new ParseUUIDPipe()) id: string, @Res({ passthrough: true }) res: Response) {
+    const node = await this.nodesService.getNodeById(id);
+    if (node.isFolder) {
+      throw new BadRequestException('The specified node is a folder, not a file.');
+    }
+    
+    const fileStream = this.filesService.retrieveFileStream(id);
+    res.setHeader('Content-Disposition', "inline");
+    res.setHeader('Content-Type', 'application/octet-stream');
+
+    return new StreamableFile(fileStream);
+  }
+
+  /**
+   * Uploads multiple files and creates a node for each file.
+   * The result reports successful uploads and any database or storage failures.
+   * @param files Files to upload.
+   * @param parentId Optional UUID of the folder that will contain the uploaded files.
+   */
   @Post('/files')
   @UseInterceptors(FilesInterceptor('files'))
   async createNode(
@@ -89,6 +121,11 @@ export class NodesController {
     return this.collectBatchResults(results);
   }
 
+  /**
+   * Creates a folder node.
+   * @param name Name of the new folder.
+   * @param parentId Optional UUID of the parent folder.
+   */
   @Post('/folders')
   async createFolder(@Body('name') name: string, @Body('parentId') parentId?: string): Promise<ResponseNodeDto> {
     const nodeDto: CreateNodeDto = {
@@ -100,12 +137,22 @@ export class NodesController {
     return ResponseNodeDto.fromEntity(node);
   }
 
+  /**
+   * Updates a node's name.
+   * @param id UUID of the node to update.
+   * @param nodeDto Node fields to update.
+   */
   @Patch('/:id')
   async updateNode(@Param('id', new ParseUUIDPipe()) id: string, @Body() nodeDto: Partial<CreateNodeDto>): Promise<ResponseNodeDto> {
     const updatedNode = await this.nodesService.updateNode(id, nodeDto);
     return ResponseNodeDto.fromEntity(updatedNode);
   }
 
+  /**
+   * Deletes files and their associated node records.
+   * The result reports successful deletions and any storage or database failures.
+   * @param ids UUIDs of the file nodes to delete.
+   */
   @Delete('/files')
   async deleteNodes(@Body('ids') ids: string[]): Promise<BatchActionResult<{ id: string }>> {
     const results: BatchActionItemResult<{ id: string }>[] = await Promise.all(ids.map(async (id) => {
