@@ -1,5 +1,5 @@
 // app/api/nodes/nodes.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateNodeDto, ResponseNodeDto } from '../dtos/nodes.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -90,6 +90,14 @@ export class NodesService {
 
   async deleteNode(id: string) {
     const node = await this.findNodeOrThrow(id, 'Node not found');
+    // Note: For now, we are only allowing the deletion of empty folders
+    if (node.isFolder) {
+      const child = await this.repository.findOneBy({ parent: { id } });
+      if (child) {
+        throw new ConflictException('Cannot delete a folder that contains nodes');
+      }
+    }
+
     await this.repository.remove(node);
   }
 }

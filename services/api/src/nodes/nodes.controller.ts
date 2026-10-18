@@ -16,13 +16,15 @@ import {
   UploadedFiles,
   Res,
   StreamableFile,
+  MaxFileSizeValidator,
+  ParseFilePipe,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { NodesService } from './nodes.service';
 import { CreateNodeDto, ResponseNodeDto } from '../dtos/nodes.dto';
 import { FilesService } from './files.service';
 import { ItemNode } from '../entities/node.entity';
-import { BatchActionItemResult, BatchActionResult } from './types';
+import { BatchActionItemResult, BatchActionResult } from './nodes.types';
 import { type Response } from 'express';
 
 @Controller('nodes')
@@ -89,8 +91,13 @@ export class NodesController {
    */
   @Post('/files')
   @UseInterceptors(FilesInterceptor('files'))
-  async createNode(
-    @UploadedFiles() files: Express.Multer.File[],
+  async createFile(
+    @UploadedFiles(new ParseFilePipe({
+      validators: [
+        // 10 MB Max Size
+        new MaxFileSizeValidator({ maxSize: 10*1048576 }),
+      ],
+    })) files: Express.Multer.File[],
     @Body('parentId') parentId?: string,
   ): Promise<BatchActionResult<ResponseNodeDto>> {
     const results: BatchActionItemResult<ResponseNodeDto>[] = await Promise.all(files.map(async (file, index) => {
@@ -149,15 +156,16 @@ export class NodesController {
   }
 
   /**
-   * Deletes files and their associated node records.
+   * Deletes files and empty folders with their associated node records.
    * The result reports successful deletions and any storage or database failures.
-   * @param ids UUIDs of the file nodes to delete.
+   * @param ids UUIDs of the file or folder nodes to delete.
    */
-  @Delete('/files')
+  @Delete()
   async deleteNodes(@Body('ids') ids: string[]): Promise<BatchActionResult<{ id: string }>> {
     const results: BatchActionItemResult<{ id: string }>[] = await Promise.all(ids.map(async (id) => {
       try {
-        await this.filesService.deleteFile(id);
+        const node = await this.nodesService.getNodeById(id);
+        if (!node.isFolder) await this.filesService.deleteFile(id);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         return { success: false as const, stage: 'storage', message };
@@ -174,9 +182,4 @@ export class NodesController {
 
     return this.collectBatchResults(results);
   }
-
-  // TODO: Need to consider if there's anything within these folders
-  // @Delete('/folders')
-  // async deleteFolders(@Body('ids') ids: string[]): Promise<BatchActionResult<{ id: string }>> {
-  // }
 }
