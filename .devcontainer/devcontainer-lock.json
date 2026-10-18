@@ -9,6 +9,11 @@
       "version": "1.1.3",
       "resolved": "ghcr.io/devcontainers/features/github-cli@sha256:bd7ab48a832228f633239277552c30b353867fef2e5b037e064b4e64f0b843f2",
       "integrity": "sha256:bd7ab48a832228f633239277552c30b353867fef2e5b037e064b4e64f0b843f2"
+    },
+    "ghcr.io/jajera/features/gcloud-cli:1": {
+      "version": "1.0.1",
+      "resolved": "ghcr.io/jajera/features/gcloud-cli@sha256:bdafd7578bc7b32851b443f8ffe350d20fae0d299a08cc803519e0526014d76b",
+      "integrity": "sha256:bdafd7578bc7b32851b443f8ffe350d20fae0d299a08cc803519e0526014d76b"
     }
   }
 }

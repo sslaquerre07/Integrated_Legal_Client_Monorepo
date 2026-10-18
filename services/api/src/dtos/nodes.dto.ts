@@ -42,4 +42,3 @@ export class ResponseNodeDto {
         return new ResponseNodeDto(entity.id, entity.name, entity.isFolder, entity.updatedAt, entity.parent?.id);
     }
 }
-
