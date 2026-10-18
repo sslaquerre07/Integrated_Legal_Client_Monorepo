@@ -1,0 +1,84 @@
+"use client";
+
+import {
+  EllipsisVertical,
+  Folder,
+  FolderOpen,
+  Pencil,
+  Trash2,
+} from "lucide-react";
+
+import { Button } from "@repo/ui/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@repo/ui/components/ui/dropdown-menu";
+import { cn } from "@repo/ui/lib/utils";
+
+interface FolderCardProps {
+  name: string;
+  onOpen?: () => void;
+  onRename?: () => void;
+  onDelete?: () => void;
+  className?: string;
+}
+
+export function FolderCard({
+  name,
+  onOpen,
+  onRename,
+  onDelete,
+  className,
+}: FolderCardProps) {
+  return (
+    <div
+      className={cn(
+        "group relative flex h-12 items-center gap-3 rounded-xl bg-muted/50 pl-4 pr-1 transition-colors hover:bg-muted",
+        className,
+      )}
+    >
+      {/* Whole-card click target. It sits under the menu button, so the
+          menu never accidentally opens the folder (no stopPropagation needed). */}
+      <button
+        type="button"
+        onClick={onOpen}
+        title={name}
+        aria-label={`Open folder ${name}`}
+        className="absolute inset-0 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      />
+
+      {/* fill-current turns lucide's outline folder into a solid one, like Drive */}
+      <Folder className="size-5 shrink-0 fill-current text-muted-foreground" />
+
+      <span className="flex-1 truncate text-sm font-medium">{name}</span>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={`More actions for ${name}`}
+            className="relative z-10 size-8 rounded-full text-muted-foreground"
+          >
+            <EllipsisVertical />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-44">
+          <DropdownMenuItem onSelect={onOpen}>
+            <FolderOpen /> Open
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={onRename}>
+            <Pencil /> Rename
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem variant="destructive" onSelect={onDelete}>
+            <Trash2 /> Move to trash
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+}

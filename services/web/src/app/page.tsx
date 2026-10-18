@@ -19,6 +19,14 @@ export default function Home() {
           <Link href="/file-upload">Go to File Upload Page</Link>
         </CardFooter>
       </Card>
+            <Card size="sm" className="mx-auto w-full max-w-xs">
+        <CardHeader>
+          <CardTitle>Alternative File Upload</CardTitle>
+        </CardHeader>
+        <CardFooter>
+          <Link href="/file-upload-shad">Go to Shad File Upload Page</Link>
+        </CardFooter>
+      </Card>
       <Card size="sm" className="mx-auto w-full max-w-xs">
         <CardHeader>
           <CardTitle>Sandbox</CardTitle>

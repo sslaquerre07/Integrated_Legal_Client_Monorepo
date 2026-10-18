@@ -9,7 +9,9 @@
     "test:fe": "npm run test --workspace=web",
     "test:be": "npm run test --workspace=api",
     "test:all": "npm run test --workspaces --if-present",
-    "ui": "npm exec -w packages/components -- shadcn"
+    "ui": "npm exec -w packages/components -- shadcn",
+    "frontend": "npm exec -w services/web -- npm run dev"
+
   },
   "workspaces": [
     "services/*",
