@@ -28,6 +28,7 @@ import {
   DeleteNodesResultDto,
   FolderStructureDto,
   ResponseNodeDto,
+  UpdateNodeDto,
   UploadFilesDto,
   UploadFilesResultDto,
 } from "../dtos/nodes.dto";
@@ -193,9 +194,9 @@ export class NodesController {
   @Patch("/:id")
   async updateNode(
     @Param("id", new ParseUUIDPipe()) id: string,
-    @Body() nodeDto: Partial<CreateNodeDto>,
+    @Body() { name }: UpdateNodeDto,
   ): Promise<ResponseNodeDto> {
-    const updatedNode = await this.nodesService.updateNode(id, nodeDto);
+    const updatedNode = await this.nodesService.updateNode(id, { name });
     return ResponseNodeDto.fromEntity(updatedNode);
   }
 

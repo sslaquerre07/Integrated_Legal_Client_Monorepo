@@ -142,3 +142,9 @@ export class CreateFolderDto {
   /** UUID of the parent folder. Leave out to create the folder at the top level. */
   parentId?: string;
 }
+
+/** Body of PATCH /nodes/:id. Only renaming is supported. */
+export class UpdateNodeDto {
+  /** New name for the file or folder. */
+  name!: string;
+}

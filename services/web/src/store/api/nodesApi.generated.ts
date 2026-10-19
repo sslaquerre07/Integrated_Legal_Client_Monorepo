@@ -55,6 +55,7 @@ const injectedRtkApi = api
         query: (queryArg) => ({
           url: `/nodes/${queryArg.id}`,
           method: "PATCH",
+          body: queryArg.updateNodeDto,
         }),
         invalidatesTags: ["Nodes"],
       }),
@@ -101,6 +102,7 @@ export type NodesControllerUpdateNodeApiResponse =
 export type NodesControllerUpdateNodeApiArg = {
   /** UUID of the node to update. */
   id: string;
+  updateNodeDto: UpdateNodeDto;
 };
 export type NodesControllerDeleteNodesApiResponse =
   /** status 200  */ DeleteNodesResultDto;
@@ -146,10 +148,14 @@ export type UploadFilesDto = {
   parentId?: string;
 };
 export type CreateFolderDto = {
-  /** stuff */
+  /** Name of the new folder. */
   name: string;
-  /** stuff */
+  /** UUID of the parent folder. Leave out to create the folder at the top level. */
   parentId?: string;
+};
+export type UpdateNodeDto = {
+  /** New name for the file or folder. */
+  name: string;
 };
 export type DeletedNodeDto = {
   /** UUID of the deleted node. */
