@@ -1,6 +1,6 @@
 "use client";
 
-import { use, type ReactNode } from "react";
+import { use, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Eye, FolderPlus, SearchIcon, Upload } from "lucide-react";
 
@@ -42,6 +42,7 @@ import {
   UploadDropzone,
 } from "@repo/ui/components/upload-dropzone";
 import {
+  useNodesControllerCreateFolderMutation,
   useNodesControllerGetFolderStructureQuery,
   type FolderStructureDto,
   type ResponseNodeDto,
@@ -68,7 +69,7 @@ type PageActions = {
   deleteFolder: (folder: ResponseNodeDto) => void;
   deleteFile: (file: ResponseNodeDto) => void;
   uploadFiles: (files: File[]) => void;
-  createFolder: (name: string) => void;
+  createFolder: (name: string) => Promise<void>;
   uploadRequested: (request: DocRequest, file: File) => void;
   viewRequested: (request: DocRequest) => void;
   removeRequested: (request: DocRequest) => void;
@@ -87,7 +88,7 @@ const NOOP_ACTIONS: PageActions = {
   deleteFolder: noop,
   deleteFile: noop,
   uploadFiles: noop,
-  createFolder: noop,
+  createFolder: async () => {},
   uploadRequested: noop,
   viewRequested: noop,
   removeRequested: noop,
@@ -121,6 +122,18 @@ export default function FileUploadShadPage({
 }) {
   const { folder: folderId } = use(searchParams); // undefined at the top level
 
+  const [createFolder] = useNodesControllerCreateFolderMutation();
+
+  const actions: PageActions = {
+    ...NOOP_ACTIONS,
+    openFolder: (folder) => router.push(`?folder=${folder.id}`),
+    createFolder: async (name) => {
+      await createFolder({
+        createFolderDto: { name, parentId: folderId },
+      }).unwrap();
+    },
+  };
+
   const { currentData, isFetching, isError } =
     useNodesControllerGetFolderStructureQuery({
       depth: 2,
@@ -137,11 +150,6 @@ export default function FileUploadShadPage({
   const lawyerFiles: ResponseNodeDto[] = [];
 
   const router = useRouter();
-
-  const actions: PageActions = {
-    ...NOOP_ACTIONS,
-    openFolder: (folder) => router.push(`?folder=${folder.id}`),
-  };
 
   return (
     <div className="min-h-svh bg-background">
@@ -433,25 +441,47 @@ function UploadButton({ onFiles }: { onFiles: (files: File[]) => void }) {
  * Create doesn't close it yet. When you wire Redux, either pass `open` / `onOpenChange`
  * from your store, or wrap the Create button in <DialogClose asChild>.
  */
-function NewFolderDialog({ onCreate }: { onCreate: (name: string) => void }) {
+function NewFolderDialog({
+  onCreate,
+}: {
+  onCreate: (name: string) => Promise<void>;
+}) {
+  const [open, setOpen] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const name = String(new FormData(e.currentTarget).get("name") ?? "").trim();
+    if (!name) return;
+
+    setPending(true);
+    setError(null);
+    try {
+      await onCreate(name);
+      setOpen(false); // only close once the server says it worked
+    } catch {
+      setError("Couldn't create the folder. Please try again.");
+    } finally {
+      setPending(false);
+    }
+  }
+
   return (
-    <Dialog>
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        setOpen(next);
+        if (!next) setError(null);
+      }}
+    >
       <DialogTrigger
         className={buttonVariants({ variant: "outline", size: "sm" })}
       >
         <FolderPlus /> New folder
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
-        <form
-          className="grid gap-4"
-          onSubmit={(e) => {
-            e.preventDefault();
-            const name = String(
-              new FormData(e.currentTarget).get("name") ?? "",
-            ).trim();
-            if (name) onCreate(name);
-          }}
-        >
+        <form className="grid gap-4" onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>New folder</DialogTitle>
             <DialogDescription>
@@ -465,11 +495,14 @@ function NewFolderDialog({ onCreate }: { onCreate: (name: string) => void }) {
             placeholder="Untitled folder"
             aria-label="Folder name"
           />
+          {error && <p className="text-sm text-destructive">{error}</p>}
           <DialogFooter>
             <DialogClose className={buttonVariants({ variant: "outline" })}>
               Cancel
             </DialogClose>
-            <Button type="submit">Create</Button>
+            <Button type="submit" disabled={pending}>
+              {pending ? "Creating…" : "Create"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
