@@ -20,7 +20,7 @@
   "devDependencies": {
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.16.18",
-    "turbo": "2.11.4",
+    "turbo": "2.11.8",
     "typescript": "^6.0.3"
   },
   "packageManager": "npm@10.9.2"
