@@ -76,6 +76,12 @@ GCP_PROJECT_ID="our-project-id"
 STORAGE_BUCKET_NAME="our-storage-bucket-name"
 ```
 
+### .env.local Setup
+You will also need to setup a `.env.local` file in the `service/web` folder with the following format:
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
 ### Open the project in the container
 1. Open the repository in VS Code.
 2. Use the command palette and select:
