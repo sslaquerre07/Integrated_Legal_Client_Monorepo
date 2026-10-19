@@ -103,3 +103,13 @@ export class UploadFilesResultDto {
   /** Files that failed, with the reason. */
   failed!: BatchFailureDto[];
 }
+
+/** Body of POST /nodes/files, sent as multipart/form-data. */
+export class UploadFilesDto {
+  /** Files to upload, 10 MB max each. */
+  @ApiProperty({ type: "array", items: { type: "string", format: "binary" } })
+  files!: unknown[]; // documentation only: multer puts the files in req.files
+
+  /** UUID of the folder that will contain the files. Leave out for the top level. */
+  parentId?: string;
+}

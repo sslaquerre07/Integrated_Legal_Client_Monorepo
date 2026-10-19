@@ -30,7 +30,11 @@ const injectedRtkApi = api
         NodesControllerCreateFileApiResponse,
         NodesControllerCreateFileApiArg
       >({
-        query: () => ({ url: `/nodes/files`, method: "POST" }),
+        query: (queryArg) => ({
+          url: `/nodes/files`,
+          method: "POST",
+          body: queryArg.uploadFilesDto,
+        }),
         invalidatesTags: ["Nodes"],
       }),
       nodesControllerCreateFolder: build.mutation<
@@ -76,7 +80,9 @@ export type NodesControllerGetFileContentApiArg = {
 };
 export type NodesControllerCreateFileApiResponse =
   /** status 201  */ UploadFilesResultDto;
-export type NodesControllerCreateFileApiArg = void;
+export type NodesControllerCreateFileApiArg = {
+  uploadFilesDto: UploadFilesDto;
+};
 export type NodesControllerCreateFolderApiResponse =
   /** status 201  */ ResponseNodeDto;
 export type NodesControllerCreateFolderApiArg = void;
@@ -120,6 +126,11 @@ export type UploadFilesResultDto = {
   succeeded: ResponseNodeDto[];
   /** Files that failed, with the reason. */
   failed: BatchFailureDto[];
+};
+export type UploadFilesDto = {
+  /** Files to upload, 10 MB max each. */
+  files: Blob[];
+  parentId?: string;
 };
 export const {
   useNodesControllerGetFolderStructureQuery,

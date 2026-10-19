@@ -25,13 +25,19 @@ import {
   CreateNodeDto,
   FolderStructureDto,
   ResponseNodeDto,
+  UploadFilesDto,
   UploadFilesResultDto,
 } from "../dtos/nodes.dto";
 import { FilesService } from "./files.service";
 import { ItemNode } from "../entities/node.entity";
 import { BatchActionItemResult, BatchActionResult } from "./nodes.types";
 import { type Response } from "express";
-import { ApiOkResponse, ApiProduces } from "@nestjs/swagger";
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiProduces,
+} from "@nestjs/swagger";
 
 @Controller("nodes")
 export class NodesController {
@@ -108,6 +114,8 @@ export class NodesController {
    * @param parentId Optional UUID of the folder that will contain the uploaded files.
    */
   @Post("/files")
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({ type: UploadFilesDto })
   @UseInterceptors(FilesInterceptor("files"))
   async createFile(
     @UploadedFiles(
