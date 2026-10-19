@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { use, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Eye, FolderPlus, SearchIcon, Upload } from "lucide-react";
 
@@ -50,8 +50,6 @@ import {
 /* ------------------------------------------------------------------ */
 /* Types (move these next to your Redux slice when you wire it up)     */
 /* ------------------------------------------------------------------ */
-
-type Project = { client: string; name: string };
 
 type DocRequest = {
   id: string;
@@ -116,10 +114,23 @@ function splitFolder(data: FolderStructureDto | undefined, folderId?: string) {
 /* Page                                                                */
 /* ------------------------------------------------------------------ */
 
-export default function FileUploadShadPage() {
-  const { data, isLoading, isError } =
-    useNodesControllerGetFolderStructureQuery({ depth: 1 });
-  const { folders: myFolders, files: myFiles } = splitFolder(data);
+export default function FileUploadShadPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ folder?: string }>;
+}) {
+  const { folder: folderId } = use(searchParams); // undefined at the top level
+
+  const { currentData, isFetching, isError } =
+    useNodesControllerGetFolderStructureQuery({
+      depth: 2,
+      rootId: folderId,
+    });
+  const isFirstLoad = !currentData && isFetching;
+  const { folders: myFolders, files: myFiles } = splitFolder(
+    currentData,
+    folderId,
+  );
 
   // Nodes don't record who uploaded them yet, so the lawyer tab stays empty for now
   const lawyerFolders: ResponseNodeDto[] = [];
@@ -127,12 +138,10 @@ export default function FileUploadShadPage() {
 
   const router = useRouter();
 
-  // TODO(redux): swap each of these for a useSelector
-  // const project = MOCK_PROJECT;
-  // const requests = MOCK_REQUESTS;
-
-  // TODO(redux): build this from useDispatch
-  const actions = NOOP_ACTIONS;
+  const actions: PageActions = {
+    ...NOOP_ACTIONS,
+    openFolder: (folder) => router.push(`?folder=${folder.id}`),
+  };
 
   return (
     <div className="min-h-svh bg-background">
@@ -184,7 +193,7 @@ export default function FileUploadShadPage() {
 
           {/* ---------- Shared files ---------- */}
           {/* Uncontrolled: Radix tracks the active tab, so the page holds no state */}
-          <Tabs defaultValue="lawyer" className="gap-6">
+          <Tabs defaultValue="mine" className="gap-6">
             <TabsList>
               <TabsTrigger value="lawyer">
                 From your lawyer{" "}
@@ -222,7 +231,7 @@ export default function FileUploadShadPage() {
                 </Row>
               </Row>
 
-              {isLoading ? (
+              {isFirstLoad ? (
                 <p className="text-sm text-muted-foreground">Loading...</p>
               ) : isError ? (
                 <p className="text-sm text-destructive">

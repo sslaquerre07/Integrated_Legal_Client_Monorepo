@@ -8,11 +8,10 @@ import { useNodesControllerGetFolderStructureQuery } from "@/store/api/nodesApi.
 import Link from "next/link";
 
 export default function SandboxPage() {
-  const { data, isLoading, isError, error } =
-    useNodesControllerGetFolderStructureQuery({ depth: 1 });
+  const data_package = useNodesControllerGetFolderStructureQuery({ depth: 1 });
 
-  console.log({ data, isLoading, isError, error });
-  
+  console.log(data_package);
+
   return (
     <main className="flex min-h-screen items-center justify-center">
       <Link href="/">Go back</Link>

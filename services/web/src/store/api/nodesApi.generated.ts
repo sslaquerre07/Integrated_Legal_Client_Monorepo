@@ -110,11 +110,12 @@ export type NodesControllerDeleteNodesApiArg = {
   deleteNodesDto: DeleteNodesDto;
 };
 export type ResponseNodeDto = {
+  /** UUID of the parent folder, or null at the top level. */
+  parentId: string | null;
   id: string;
   name: string;
   isFolder: boolean;
   updatedAt: string;
-  parentId?: string;
 };
 export type FolderTreeItemDto = {
   /** UUID of the node. */

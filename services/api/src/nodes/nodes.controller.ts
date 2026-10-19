@@ -131,7 +131,7 @@ export class NodesController {
       }),
     )
     files: Express.Multer.File[],
-    @Body("parentId") parentId?: string,
+    @Body() { parentId }: UploadFilesDto,
   ): Promise<UploadFilesResultDto> {
     const results: BatchActionItemResult<ResponseNodeDto>[] = await Promise.all(
       files.map(async (file, index) => {

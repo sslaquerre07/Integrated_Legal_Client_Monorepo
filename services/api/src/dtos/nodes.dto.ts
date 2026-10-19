@@ -1,9 +1,13 @@
 import {
+  ArrayNotEmpty,
+  IsArray,
   IsBoolean,
   IsDate,
+  IsNotEmpty,
   IsOptional,
   IsString,
   IsUUID,
+  MaxLength,
 } from "class-validator";
 import { ItemNode } from "../entities/node.entity";
 import { ApiExtraModels, ApiProperty, getSchemaPath } from "@nestjs/swagger";
@@ -33,16 +37,16 @@ export class ResponseNodeDto {
   @IsDate()
   updatedAt!: Date;
 
-  @IsUUID()
-  @IsOptional()
-  parentId?: string;
+  /** UUID of the parent folder, or null at the top level. */
+  @ApiProperty({ type: String, format: "uuid", nullable: true })
+  parentId!: string | null;
 
   constructor(
     id: string,
     name: string,
     isFolder: boolean,
     updatedAt: Date,
-    parentId?: string,
+    parentId: string | null,
   ) {
     this.id = id;
     this.name = name;
@@ -56,7 +60,7 @@ export class ResponseNodeDto {
       entity.name,
       entity.isFolder,
       entity.updatedAt,
-      entity.parent?.id,
+      entity.parent?.id ?? null,
     );
   }
 }
@@ -111,6 +115,8 @@ export class UploadFilesDto {
   files!: unknown[]; // documentation only: multer puts the files in req.files
 
   /** UUID of the folder that will contain the files. Leave out for the top level. */
+  @IsOptional()
+  @IsUUID()
   parentId?: string;
 }
 
@@ -132,19 +138,31 @@ export class DeleteNodesResultDto {
 /** Body of DELETE /nodes. */
 export class DeleteNodesDto {
   /** UUIDs of the files or empty folders to delete. */
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsUUID("all", { each: true }) //`each` checks every item in the array
   ids!: string[];
 }
 
+/** Body of POST /nodes/folders. */
 export class CreateFolderDto {
   /** Name of the new folder. */
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255) //match your database column
   name!: string;
 
   /** UUID of the parent folder. Leave out to create the folder at the top level. */
+  @IsOptional()
+  @IsUUID()
   parentId?: string;
 }
 
 /** Body of PATCH /nodes/:id. Only renaming is supported. */
 export class UpdateNodeDto {
   /** New name for the file or folder. */
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
   name!: string;
 }
