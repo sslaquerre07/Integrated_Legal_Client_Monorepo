@@ -65,6 +65,17 @@ This repository includes a configured dev container at `.devcontainer/devcontain
 - Docker installed and running
 - VS Code with the Dev Containers extension
 
+### .env Setup
+Before opening the container, you will need to set up a `.env` file in the `service/api` with the following format:
+```bash
+# DB Information
+DATABASE_URL="postgresql://postgres:local_password_123@localhost:5432/monorepo_dev?schema=public"
+
+# GCP Information (Get this information from Google Cloud Console)
+GCP_PROJECT_ID="our-project-id"
+STORAGE_BUCKET_NAME="our-storage-bucket-name"
+```
+
 ### Open the project in the container
 1. Open the repository in VS Code.
 2. Use the command palette and select:
@@ -76,13 +87,18 @@ The dev container starts three services:
 - `web` and `api` — the application development containers
 - `db` — PostgreSQL 16, with a persistent `pgdata` volume
 
-The database is created as `dev_db` with the local development user `user` and password `password`. These are development-only credentials; do not use them for production or sensitive data. The app containers connect to PostgreSQL over the Compose network. Port `5432` is also published on localhost for database tools on your machine.
-
+#### DB Considerations
 The PostgreSQL schema is defined in `.devcontainer/init-scripts/init.sql`. PostgreSQL runs scripts in that directory when it initializes a new, empty data volume. The sample rows are in `.devcontainer/init-scripts/seed.sql`; the Dev Container runs the seed command after `npm install` each time it is created. The seed is safe to rerun.
 
-The API connects using `DATABASE_URL`. Its development and start commands load `services/api/.env` when present; environment variables already provided by the Dev Container take precedence. When running the API on the host, use `localhost` in the URL and ensure its credentials and database name match your local PostgreSQL setup. Inside the Compose network, use the database service hostname `db` and the database credentials configured in `docker-compose.yml`.
+#### Google Cloud Setup
+In order for your local environment to be able to communicate to Google Cloud Services such as our Storage Bucket, you will need to authenticate yourself with Google Cloud CLI with the following commands:
+```bash
+# Sign in to the Google Cloud CLI and select a project
+gcloud init
 
-The setup also includes the GitHub CLI and NestJS CLI features, plus VS Code extensions for ESLint, Prettier, Jest, and database access.
+# Set up Application Default Credentials for local applications and client libraries
+gcloud auth application-default login
+```
 
 ### Automatic install step
 After the container is created, the project installs dependencies and seeds the database:

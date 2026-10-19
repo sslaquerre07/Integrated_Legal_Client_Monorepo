@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { NodesModule } from './nodes/nodes.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ItemNode } from './entities/node.entity';
@@ -18,6 +19,9 @@ if (!databaseUrl) {
       schema: 'public',
       entities: [ItemNode],
       synchronize: true,
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
     NodesModule,
   ],

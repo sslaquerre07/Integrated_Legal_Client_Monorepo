@@ -8,6 +8,7 @@
 
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/jajera/features/gcloud-cli:1": {},
     "ghcr.io/devcontainers-extra/features/nestjs-cli:2": {}
   },
 
