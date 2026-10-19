@@ -21,7 +21,7 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { NodesService } from './nodes.service';
-import { CreateNodeDto, ResponseNodeDto } from '../dtos/nodes.dto';
+import { CreateNodeDto, FolderStructureDto, ResponseNodeDto } from '../dtos/nodes.dto';
 import { FilesService } from './files.service';
 import { ItemNode } from '../entities/node.entity';
 import { BatchActionItemResult, BatchActionResult } from './nodes.types';
@@ -58,7 +58,7 @@ export class NodesController {
   async getFolderStructure(
     @Query('depth', new DefaultValuePipe(1), ParseIntPipe) depth: number,
     @Query('rootId', new ParseUUIDPipe({ optional: true })) rootId?: string,
-  ) {
+  ) : Promise<FolderStructureDto> {
     if (depth < 1) {
       throw new BadRequestException('depth must be a positive integer');
     }

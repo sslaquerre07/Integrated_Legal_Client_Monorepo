@@ -61,7 +61,8 @@ const injectedRtkApi = api
     overrideExisting: false,
   });
 export { injectedRtkApi as nodesApi };
-export type NodesControllerGetFolderStructureApiResponse = unknown;
+export type NodesControllerGetFolderStructureApiResponse =
+  /** status 200  */ FolderStructureDto;
 export type NodesControllerGetFolderStructureApiArg = {
   /** Maximum number of tree levels to return, starting at the root. */
   depth: number;
@@ -92,6 +93,20 @@ export type ResponseNodeDto = {
   isFolder: boolean;
   updatedAt: string;
   parentId?: string;
+};
+export type FolderTreeItemDto = {
+  /** UUID of the node. */
+  id: string;
+  /** Child nodes. Empty when there are none or the depth limit was reached. */
+  children: FolderTreeItemDto[];
+};
+export type FolderStructureDto = {
+  /** Details of every node in `tree`, keyed by ID. */
+  entities: {
+    [key: string]: ResponseNodeDto;
+  };
+  /** The hierarchy, as IDs only. */
+  tree: FolderTreeItemDto[];
 };
 export const {
   useNodesControllerGetFolderStructureQuery,
