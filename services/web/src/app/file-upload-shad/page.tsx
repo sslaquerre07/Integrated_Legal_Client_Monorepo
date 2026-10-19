@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Eye, FolderPlus, SearchIcon, Upload } from "lucide-react";
 
 import { Badge } from "@repo/ui/components/ui/badge";
-import { Button } from "@repo/ui/components/ui/button";
+import { Button, buttonVariants } from "@repo/ui/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -41,22 +41,17 @@ import {
   RequestedUploadCard,
   UploadDropzone,
 } from "@repo/ui/components/upload-dropzone";
+import {
+  useNodesControllerGetFolderStructureQuery,
+  type FolderStructureDto,
+  type ResponseNodeDto,
+} from "@/store/api/nodesApi.generated";
 
 /* ------------------------------------------------------------------ */
 /* Types (move these next to your Redux slice when you wire it up)     */
 /* ------------------------------------------------------------------ */
 
 type Project = { client: string; name: string };
-
-type DocFolder = { id: string; name: string };
-
-type DocFile = {
-  id: string;
-  name: string;
-  addedAt: string; // ISO date
-  url?: string;
-  thumbnailUrl?: string;
-};
 
 type DocRequest = {
   id: string;
@@ -69,87 +64,17 @@ type DocRequest = {
 
 /** Everything the page can ask for. Each one becomes a dispatch later. */
 type PageActions = {
-  openFolder: (folder: DocFolder) => void;
-  openFile: (file: DocFile) => void;
-  downloadFile: (file: DocFile) => void;
-  deleteFolder: (folder: DocFolder) => void;
-  deleteFile: (file: DocFile) => void;
+  openFolder: (folder: ResponseNodeDto) => void;
+  openFile: (file: ResponseNodeDto) => void;
+  downloadFile: (file: ResponseNodeDto) => void;
+  deleteFolder: (folder: ResponseNodeDto) => void;
+  deleteFile: (file: ResponseNodeDto) => void;
   uploadFiles: (files: File[]) => void;
   createFolder: (name: string) => void;
   uploadRequested: (request: DocRequest, file: File) => void;
   viewRequested: (request: DocRequest) => void;
   removeRequested: (request: DocRequest) => void;
 };
-
-/* ------------------------------------------------------------------ */
-/* Mock data: replace with useSelector(...)                            */
-/* ------------------------------------------------------------------ */
-
-const MOCK_PROJECT: Project = { client: "Betty Gaming", name: "Incorporation" };
-
-const MOCK_REQUESTS: DocRequest[] = [
-  {
-    id: "r1",
-    title: "Minute book details",
-    description: "PDF only · drag & drop or click to browse",
-    accept: ".pdf,application/pdf",
-  },
-  {
-    id: "r2",
-    title: "Business details",
-    description: "PDF only · drag & drop or click to browse",
-    accept: ".pdf,application/pdf",
-    fileName: "Business Details.pdf",
-  },
-];
-
-const MOCK_LAWYER_FOLDERS: DocFolder[] = [
-  { id: "lf1", name: "Minute Book" },
-  { id: "lf2", name: "Share Issuances" },
-];
-
-const MOCK_LAWYER_FILES: DocFile[] = [
-  {
-    id: "l1",
-    name: "Articles of Incorporation.pdf",
-    addedAt: "2026-07-12T12:00:00",
-  },
-  {
-    id: "l2",
-    name: "By-law No. 1.pdf",
-    addedAt: "2026-07-12T12:00:00",
-  },
-  {
-    id: "l3",
-    name: "Organizational Resolutions.docx",
-    addedAt: "2026-07-10T12:00:00",
-  },
-  {
-    id: "l4",
-    name: "Shareholders' Agreement.docx",
-    addedAt: "2026-07-09T12:00:00",
-  },
-  {
-    id: "l5",
-    name: "Securities Register.xlsx",
-    addedAt: "2026-07-08T12:00:00",
-  },
-  {
-    id: "l6",
-    name: "Director Consents.pdf",
-    addedAt: "2026-07-08T12:00:00",
-  },
-];
-
-const MOCK_MY_FOLDERS: DocFolder[] = [{ id: "cf1", name: "Shareholder IDs" }];
-
-const MOCK_MY_FILES: DocFile[] = [
-  {
-    id: "c1",
-    name: "Signed NDA.pdf",
-    addedAt: "2026-07-12T12:00:00",
-  },
-];
 
 /* ------------------------------------------------------------------ */
 /* Actions: all no-ops for now, replace with dispatch(...)             */
@@ -176,21 +101,35 @@ const NOOP_ACTIONS: PageActions = {
 
 const dateFormat = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
 const formatDate = (iso: string) => dateFormat.format(new Date(iso));
+/** Items directly inside `folderId`, or at the top level when there's none. */
+function splitFolder(data: FolderStructureDto | undefined, folderId?: string) {
+  const items = Object.values(data?.entities ?? {})
+    .filter((node) => (node.parentId ?? null) === (folderId ?? null))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  return {
+    folders: items.filter((node) => node.isFolder),
+    files: items.filter((node) => !node.isFolder),
+  };
+}
 
 /* ------------------------------------------------------------------ */
 /* Page                                                                */
 /* ------------------------------------------------------------------ */
 
 export default function FileUploadShadPage() {
+  const { data, isLoading, isError } =
+    useNodesControllerGetFolderStructureQuery({ depth: 1 });
+  const { folders: myFolders, files: myFiles } = splitFolder(data);
+
+  // Nodes don't record who uploaded them yet, so the lawyer tab stays empty for now
+  const lawyerFolders: ResponseNodeDto[] = [];
+  const lawyerFiles: ResponseNodeDto[] = [];
+
   const router = useRouter();
 
   // TODO(redux): swap each of these for a useSelector
-  const project = MOCK_PROJECT;
-  const requests = MOCK_REQUESTS;
-  const lawyerFolders = MOCK_LAWYER_FOLDERS;
-  const lawyerFiles = MOCK_LAWYER_FILES;
-  const myFolders = MOCK_MY_FOLDERS;
-  const myFiles = MOCK_MY_FILES;
+  // const project = MOCK_PROJECT;
+  // const requests = MOCK_REQUESTS;
 
   // TODO(redux): build this from useDispatch
   const actions = NOOP_ACTIONS;
@@ -217,10 +156,10 @@ export default function FileUploadShadPage() {
 
             <Expanded>
               <p className="truncate text-xs text-muted-foreground">
-                {project.client}
+                Client Name
               </p>
               <h1 className="truncate text-base leading-tight font-semibold">
-                {project.name}
+                Project Name
               </h1>
             </Expanded>
 
@@ -241,7 +180,7 @@ export default function FileUploadShadPage() {
       <Container as="main" className="py-8">
         <Column gap={10}>
           {/* ---------- Action items first ---------- */}
-          <RequestedDocuments requests={requests} actions={actions} />
+          <RequestedDocuments requests={[]} actions={actions} />
 
           {/* ---------- Shared files ---------- */}
           {/* Uncontrolled: Radix tracks the active tab, so the page holds no state */}
@@ -283,21 +222,29 @@ export default function FileUploadShadPage() {
                 </Row>
               </Row>
 
-              <FileBrowser
-                folders={myFolders}
-                files={myFiles}
-                actions={actions}
-                editable
-              >
-                <UploadDropzone
-                  orientation="vertical"
-                  multiple
-                  title="Add files"
-                  description="Drag & drop or click to browse"
-                  onFiles={actions.uploadFiles}
-                  className="min-h-40"
-                />
-              </FileBrowser>
+              {isLoading ? (
+                <p className="text-sm text-muted-foreground">Loading...</p>
+              ) : isError ? (
+                <p className="text-sm text-destructive">
+                  Couldn't load your files
+                </p>
+              ) : (
+                <FileBrowser
+                  folders={myFolders}
+                  files={myFiles}
+                  actions={actions}
+                  editable
+                >
+                  <UploadDropzone
+                    orientation="vertical"
+                    multiple
+                    title="Add files"
+                    description="Drag & drop or click to browse"
+                    onFiles={actions.uploadFiles}
+                    className="min-h-40"
+                  />
+                </FileBrowser>
+              )}
             </TabsContent>
           </Tabs>
         </Column>
@@ -369,8 +316,8 @@ function FileBrowser({
   editable = false,
   children,
 }: {
-  folders: DocFolder[];
-  files: DocFile[];
+  folders: ResponseNodeDto[];
+  files: ResponseNodeDto[];
   actions: PageActions;
   editable?: boolean;
   /** Extra tiles after the files, e.g. an upload dropzone */
@@ -401,8 +348,7 @@ function FileBrowser({
             <FileCard
               key={file.id}
               name={file.name}
-              meta={formatDate(file.addedAt)}
-              thumbnailUrl={file.thumbnailUrl}
+              meta={formatDate(file.updatedAt)}
               onOpen={() => actions.openFile(file)}
               onDownload={() => actions.downloadFile(file)}
               onDelete={editable ? () => actions.deleteFile(file) : undefined}
@@ -450,21 +396,26 @@ function Count({ n }: { n: number }) {
 /** A label styled as a button: clicking it opens the file picker, no ref needed. */
 function UploadButton({ onFiles }: { onFiles: (files: File[]) => void }) {
   return (
-    <Button size="sm">
-      <label className="flex flex-row gap-x-1 ">
-        <Upload />
-        <div>Upload</div>
-        <input
-          type="file"
-          multiple
-          className="sr-only"
-          onChange={(e) => {
-            if (e.target.files?.length) onFiles(Array.from(e.target.files));
-            e.target.value = ""; // allow picking the same file again
-          }}
-        />
-      </label>
-    </Button>
+    <label
+      className={buttonVariants({
+        size: "sm",
+        // labels can't take focus, so show the ring when the hidden input has it
+        className:
+          "cursor-pointer focus-within:ring-[3px] focus-within:ring-ring/50",
+      })}
+    >
+      <Upload /> Upload
+      <input
+        type="file"
+        multiple
+        accept=".pdf,application/pdf"
+        className="sr-only"
+        onChange={(e) => {
+          if (e.target.files?.length) onFiles(Array.from(e.target.files));
+          e.target.value = "";
+        }}
+      />
+    </label>
   );
 }
 
@@ -476,10 +427,10 @@ function UploadButton({ onFiles }: { onFiles: (files: File[]) => void }) {
 function NewFolderDialog({ onCreate }: { onCreate: (name: string) => void }) {
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button variant="outline" size="sm">
-          <FolderPlus /> New folder
-        </Button>
+      <DialogTrigger
+        className={buttonVariants({ variant: "outline", size: "sm" })}
+      >
+        <FolderPlus /> New folder
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">
         <form
@@ -506,10 +457,8 @@ function NewFolderDialog({ onCreate }: { onCreate: (name: string) => void }) {
             aria-label="Folder name"
           />
           <DialogFooter>
-            <DialogClose>
-              <Button type="button" variant="outline">
-                Cancel
-              </Button>
+            <DialogClose className={buttonVariants({ variant: "outline" })}>
+              Cancel
             </DialogClose>
             <Button type="submit">Create</Button>
           </DialogFooter>

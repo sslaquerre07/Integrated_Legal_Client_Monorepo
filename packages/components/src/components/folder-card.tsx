@@ -8,7 +8,7 @@ import {
   Trash2,
 } from "lucide-react";
 
-import { Button } from "@repo/ui/components/ui/button";
+import { Button, buttonVariants } from "@repo/ui/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -62,30 +62,29 @@ export function FolderCard({
 
       {hasMenu && (
         <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label={`More actions for ${name}`}
-              className="relative z-10 size-8 shrink-0 rounded-full text-muted-foreground"
-            >
-              <EllipsisVertical />
-            </Button>
+          <DropdownMenuTrigger
+            aria-label={`More actions for ${name}`}
+            className={cn(
+              buttonVariants({ variant: "ghost", size: "icon" }),
+              "relative z-10 size-8 shrink-0 rounded-full text-muted-foreground",
+            )}
+          >
+            <EllipsisVertical />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-44">
             {onOpen && (
-              <DropdownMenuItem onSelect={onOpen}>
+              <DropdownMenuItem onClick={onOpen}>
                 <FolderOpen /> Open
               </DropdownMenuItem>
             )}
             {onRename && (
-              <DropdownMenuItem onSelect={onRename}>
+              <DropdownMenuItem onClick={onRename}>
                 <Pencil /> Rename
               </DropdownMenuItem>
             )}
             {onDelete && hasSafeActions && <DropdownMenuSeparator />}
             {onDelete && (
-              <DropdownMenuItem variant="destructive" onSelect={onDelete}>
+              <DropdownMenuItem variant="destructive" onClick={onDelete}>
                 <Trash2 /> Delete
               </DropdownMenuItem>
             )}
