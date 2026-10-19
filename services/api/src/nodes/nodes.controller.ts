@@ -22,6 +22,7 @@ import {
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { NodesService } from "./nodes.service";
 import {
+  CreateFolderDto,
   CreateNodeDto,
   DeleteNodesDto,
   DeleteNodesResultDto,
@@ -173,8 +174,7 @@ export class NodesController {
    */
   @Post("/folders")
   async createFolder(
-    @Body("name") name: string,
-    @Body("parentId") parentId?: string,
+    @Body() { name, parentId }: CreateFolderDto,
   ): Promise<ResponseNodeDto> {
     const nodeDto: CreateNodeDto = {
       name,

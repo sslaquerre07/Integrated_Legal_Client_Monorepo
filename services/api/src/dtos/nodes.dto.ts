@@ -134,3 +134,11 @@ export class DeleteNodesDto {
   /** UUIDs of the files or empty folders to delete. */
   ids!: string[];
 }
+
+export class CreateFolderDto {
+  /** Name of the new folder. */
+  name!: string;
+
+  /** UUID of the parent folder. Leave out to create the folder at the top level. */
+  parentId?: string;
+}

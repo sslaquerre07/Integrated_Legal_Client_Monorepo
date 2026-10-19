@@ -41,7 +41,11 @@ const injectedRtkApi = api
         NodesControllerCreateFolderApiResponse,
         NodesControllerCreateFolderApiArg
       >({
-        query: () => ({ url: `/nodes/folders`, method: "POST" }),
+        query: (queryArg) => ({
+          url: `/nodes/folders`,
+          method: "POST",
+          body: queryArg.createFolderDto,
+        }),
         invalidatesTags: ["Nodes"],
       }),
       nodesControllerUpdateNode: build.mutation<
@@ -89,7 +93,9 @@ export type NodesControllerCreateFileApiArg = {
 };
 export type NodesControllerCreateFolderApiResponse =
   /** status 201  */ ResponseNodeDto;
-export type NodesControllerCreateFolderApiArg = void;
+export type NodesControllerCreateFolderApiArg = {
+  createFolderDto: CreateFolderDto;
+};
 export type NodesControllerUpdateNodeApiResponse =
   /** status 200  */ ResponseNodeDto;
 export type NodesControllerUpdateNodeApiArg = {
@@ -137,6 +143,12 @@ export type UploadFilesResultDto = {
 export type UploadFilesDto = {
   /** Files to upload, 10 MB max each. */
   files: Blob[];
+  parentId?: string;
+};
+export type CreateFolderDto = {
+  /** stuff */
+  name: string;
+  /** stuff */
   parentId?: string;
 };
 export type DeletedNodeDto = {
