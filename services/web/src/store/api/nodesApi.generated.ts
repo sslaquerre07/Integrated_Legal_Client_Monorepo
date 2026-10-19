@@ -74,7 +74,8 @@ export type NodesControllerGetFileContentApiArg = {
   /** UUID of the file node to retrieve. */
   id: string;
 };
-export type NodesControllerCreateFileApiResponse = /** status 201  */ object;
+export type NodesControllerCreateFileApiResponse =
+  /** status 201  */ UploadFilesResultDto;
 export type NodesControllerCreateFileApiArg = void;
 export type NodesControllerCreateFolderApiResponse =
   /** status 201  */ ResponseNodeDto;
@@ -107,6 +108,18 @@ export type FolderStructureDto = {
   };
   /** The hierarchy, as IDs only. */
   tree: FolderTreeItemDto[];
+};
+export type BatchFailureDto = {
+  /** The step that failed. */
+  stage: "database" | "storage";
+  /** What went wrong. */
+  message: string;
+};
+export type UploadFilesResultDto = {
+  /** Nodes created for the files that uploaded. */
+  succeeded: ResponseNodeDto[];
+  /** Files that failed, with the reason. */
+  failed: BatchFailureDto[];
 };
 export const {
   useNodesControllerGetFolderStructureQuery,

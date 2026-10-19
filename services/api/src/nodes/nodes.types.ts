@@ -1,7 +1,6 @@
-export type BatchActionFailure = {
-  stage: string;
-  message: string;
-};
+import { BatchFailureDto } from "../dtos/nodes.dto";
+
+export type BatchActionFailure = BatchFailureDto;
 
 export type BatchActionResult<T> = {
   succeeded: Array<T>;

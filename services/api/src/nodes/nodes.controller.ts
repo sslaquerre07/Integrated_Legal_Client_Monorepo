@@ -25,6 +25,7 @@ import {
   CreateNodeDto,
   FolderStructureDto,
   ResponseNodeDto,
+  UploadFilesResultDto,
 } from "../dtos/nodes.dto";
 import { FilesService } from "./files.service";
 import { ItemNode } from "../entities/node.entity";
@@ -119,7 +120,7 @@ export class NodesController {
     )
     files: Express.Multer.File[],
     @Body("parentId") parentId?: string,
-  ): Promise<BatchActionResult<ResponseNodeDto>> {
+  ): Promise<UploadFilesResultDto> {
     const results: BatchActionItemResult<ResponseNodeDto>[] = await Promise.all(
       files.map(async (file, index) => {
         const nodeDto: CreateNodeDto = {

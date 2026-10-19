@@ -1,47 +1,64 @@
-import { IsBoolean, IsDate, IsOptional, IsString, IsUUID } from 'class-validator';
-import { ItemNode } from '../entities/node.entity';
-import { ApiExtraModels, ApiProperty, getSchemaPath } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsDate,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from "class-validator";
+import { ItemNode } from "../entities/node.entity";
+import { ApiExtraModels, ApiProperty, getSchemaPath } from "@nestjs/swagger";
 
 export class CreateNodeDto {
-    @IsString()
-    name!: string;
+  @IsString()
+  name!: string;
 
-    @IsBoolean()
-    isFolder!: boolean;
+  @IsBoolean()
+  isFolder!: boolean;
 
-    @IsUUID()
-    @IsOptional()
-    parentId?: string;
-};
+  @IsUUID()
+  @IsOptional()
+  parentId?: string;
+}
 
 export class ResponseNodeDto {
-    @IsUUID()
-    id!: string;
+  @IsUUID()
+  id!: string;
 
-    @IsString()
-    name!: string;
+  @IsString()
+  name!: string;
 
-    @IsBoolean()
-    isFolder!: boolean;
-    
-    @IsDate()
-    updatedAt!: Date;
+  @IsBoolean()
+  isFolder!: boolean;
 
-    @IsUUID()
-    @IsOptional()
-    parentId?: string;
+  @IsDate()
+  updatedAt!: Date;
 
+  @IsUUID()
+  @IsOptional()
+  parentId?: string;
 
-    constructor(id: string, name: string, isFolder: boolean, updatedAt: Date, parentId?: string) {
-        this.id = id;
-        this.name = name;
-        this.isFolder = isFolder;
-        this.updatedAt = updatedAt;
-        this.parentId = parentId;
-    }
-    static fromEntity(entity: ItemNode): ResponseNodeDto {
-        return new ResponseNodeDto(entity.id, entity.name, entity.isFolder, entity.updatedAt, entity.parent?.id);
-    }
+  constructor(
+    id: string,
+    name: string,
+    isFolder: boolean,
+    updatedAt: Date,
+    parentId?: string,
+  ) {
+    this.id = id;
+    this.name = name;
+    this.isFolder = isFolder;
+    this.updatedAt = updatedAt;
+    this.parentId = parentId;
+  }
+  static fromEntity(entity: ItemNode): ResponseNodeDto {
+    return new ResponseNodeDto(
+      entity.id,
+      entity.name,
+      entity.isFolder,
+      entity.updatedAt,
+      entity.parent?.id,
+    );
+  }
 }
 
 // Additional DTO classes
@@ -62,8 +79,27 @@ export class FolderStructureDto {
 
   /** Details of every node in `tree`, keyed by ID. */
   @ApiProperty({
-    type: 'object',
+    type: "object",
     additionalProperties: { $ref: getSchemaPath(ResponseNodeDto) },
   })
   entities!: Record<string, ResponseNodeDto>;
+}
+
+/** One item of a batch request that failed. */
+export class BatchFailureDto {
+  /** The step that failed. */
+  @ApiProperty({ enum: ["database", "storage"] })
+  stage!: "database" | "storage";
+
+  /** What went wrong. */
+  message!: string;
+}
+
+/** Response of POST /nodes/files. */
+export class UploadFilesResultDto {
+  /** Nodes created for the files that uploaded. */
+  succeeded!: ResponseNodeDto[];
+
+  /** Files that failed, with the reason. */
+  failed!: BatchFailureDto[];
 }
