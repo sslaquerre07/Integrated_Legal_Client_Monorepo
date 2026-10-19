@@ -35,7 +35,7 @@ import {
   Grid,
   Row,
 } from "@repo/ui/components/layout";
-import { FileCard, type FileKind } from "@repo/ui/components/file-card";
+import { FileCard } from "@repo/ui/components/file-card";
 import { FolderCard } from "@repo/ui/components/folder-card";
 import {
   RequestedUploadCard,
@@ -53,7 +53,6 @@ type DocFolder = { id: string; name: string };
 type DocFile = {
   id: string;
   name: string;
-  kind: FileKind;
   addedAt: string; // ISO date
   url?: string;
   thumbnailUrl?: string;
@@ -113,37 +112,31 @@ const MOCK_LAWYER_FILES: DocFile[] = [
   {
     id: "l1",
     name: "Articles of Incorporation.pdf",
-    kind: "pdf",
     addedAt: "2026-07-12T12:00:00",
   },
   {
     id: "l2",
     name: "By-law No. 1.pdf",
-    kind: "pdf",
     addedAt: "2026-07-12T12:00:00",
   },
   {
     id: "l3",
     name: "Organizational Resolutions.docx",
-    kind: "doc",
     addedAt: "2026-07-10T12:00:00",
   },
   {
     id: "l4",
     name: "Shareholders' Agreement.docx",
-    kind: "doc",
     addedAt: "2026-07-09T12:00:00",
   },
   {
     id: "l5",
     name: "Securities Register.xlsx",
-    kind: "sheet",
     addedAt: "2026-07-08T12:00:00",
   },
   {
     id: "l6",
     name: "Director Consents.pdf",
-    kind: "pdf",
     addedAt: "2026-07-08T12:00:00",
   },
 ];
@@ -154,7 +147,6 @@ const MOCK_MY_FILES: DocFile[] = [
   {
     id: "c1",
     name: "Signed NDA.pdf",
-    kind: "pdf",
     addedAt: "2026-07-12T12:00:00",
   },
 ];
@@ -409,7 +401,6 @@ function FileBrowser({
             <FileCard
               key={file.id}
               name={file.name}
-              kind={file.kind}
               meta={formatDate(file.addedAt)}
               thumbnailUrl={file.thumbnailUrl}
               onOpen={() => actions.openFile(file)}

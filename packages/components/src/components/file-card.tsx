@@ -27,78 +27,27 @@ import {
   DropdownMenuTrigger,
 } from "@repo/ui/components/ui/dropdown-menu";
 import { cn } from "@repo/ui/lib/utils";
+import { Expanded } from "./layout";
 
-export type FileKind =
-  | "pdf"
-  | "doc"
-  | "sheet"
-  | "slides"
-  | "image"
-  | "video"
-  | "audio"
-  | "archive"
-  | "code"
-  | "other";
-
-// Drive-style colour coding per file type
-const FILE_KINDS: Record<
-  FileKind,
-  { icon: LucideIcon; bg: string; text: string }
-> = {
-  pdf: { icon: FileText, bg: "bg-red-500", text: "text-red-500" },
-  doc: { icon: FileText, bg: "bg-blue-500", text: "text-blue-500" },
-  sheet: { icon: FileSpreadsheet, bg: "bg-green-600", text: "text-green-600" },
-  slides: { icon: Presentation, bg: "bg-amber-500", text: "text-amber-500" },
-  image: { icon: ImageIcon, bg: "bg-rose-500", text: "text-rose-500" },
-  video: { icon: Film, bg: "bg-red-600", text: "text-red-600" },
-  audio: { icon: Music, bg: "bg-violet-500", text: "text-violet-500" },
-  archive: { icon: FileArchive, bg: "bg-zinc-500", text: "text-zinc-500" },
-  code: { icon: FileCode, bg: "bg-sky-600", text: "text-sky-600" },
-  other: { icon: File, bg: "bg-zinc-500", text: "text-zinc-500" },
-};
-
-const EXTENSIONS: Partial<Record<FileKind, string[]>> = {
-  pdf: ["pdf"],
-  doc: ["doc", "docx", "odt", "rtf", "txt", "pages"],
-  sheet: ["xls", "xlsx", "csv", "ods", "numbers"],
-  slides: ["ppt", "pptx", "odp", "key"],
-  image: ["png", "jpg", "jpeg", "gif", "webp", "heic", "svg"],
-  video: ["mp4", "mov", "webm", "avi"],
-  audio: ["mp3", "wav", "m4a", "ogg"],
-  archive: ["zip", "rar", "7z", "tar", "gz"],
-  code: ["js", "ts", "tsx", "json", "html", "css", "py"],
-};
-
-/** Guess a FileKind from a file name, e.g. "Bylaws.pdf" → "pdf". */
-export function getFileKind(fileName: string): FileKind {
-  return "pdf";
-}
+// pdf: { icon: FileText, bg: "bg-red-500", text: "text-red-500" },
 
 /** The small coloured square badge Drive shows next to file names. */
-export function FileTypeIcon({
-  kind,
-  className,
-}: {
-  kind: FileKind;
-  className?: string;
-}) {
-  const { icon: Icon, bg } = FILE_KINDS[kind];
+export function FileTypeIcon({ className }: { className?: string }) {
   return (
     <span
       className={cn(
         "flex size-5 shrink-0 items-center justify-center rounded-lg text-white",
-        bg,
+        "bg-red-500",
         className,
       )}
     >
-      <Icon className="size-3.5" strokeWidth={2.25} />
+      <FileText className="size-3.5" strokeWidth={2.25} />
     </span>
   );
 }
 
 interface FileCardProps {
   name: string;
-  kind?: FileKind;
   /** Secondary line under the name, e.g. a date or "Shared by Jane". */
   meta?: string;
   /** Preview image (e.g. first page of a PDF). Falls back to a large icon. */
@@ -114,7 +63,6 @@ interface FileCardProps {
 
 export function FileCard({
   name,
-  kind = "other",
   meta,
   thumbnailUrl,
   onOpen,
@@ -123,14 +71,16 @@ export function FileCard({
   onDelete,
   className,
 }: FileCardProps) {
-  const { icon: Icon, text } = FILE_KINDS[kind];
   const hasMenu = Boolean(onOpen || onDownload || onRename || onDelete);
   const hasSafeActions = Boolean(onOpen || onDownload || onRename);
+
+  // TODO: Temporary thumbnail block
+  thumbnailUrl = "";
 
   return (
     <div
       className={cn(
-        "group relative flex min-w-0 flex-col rounded-xl bg-muted/50 px-2 pb-2 transition-colors hover:bg-muted",
+        "group relative flex min-w-0 flex-col min-h-12 rounded-xl bg-muted/50 px-2 pb-2 transition-colors hover:bg-muted",
         className,
       )}
     >
@@ -144,8 +94,8 @@ export function FileCard({
       />
 
       {/* Header: type badge, name (+ meta), kebab menu */}
-      <div className="flex min-h-12 items-center gap-3 py-1.5 pl-2">
-        <FileTypeIcon kind={kind} />
+      <Expanded className="flex min-h-12 items-center gap-x-3 pl-2">
+        <FileTypeIcon />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-medium">{name}</p>
           {meta && (
@@ -190,26 +140,22 @@ export function FileCard({
             </DropdownMenuContent>
           </DropdownMenu>
         )}
-      </div>
+      </Expanded>
 
       {/* Thumbnail (shorter on phones so a list of files doesn't scroll forever) */}
-      <div className="aspect-2/1 overflow-hidden rounded-lg bg-background sm:aspect-5/4">
-        {thumbnailUrl ? (
+      {thumbnailUrl ? (
+        <div className="aspect-2/1 overflow-hidden rounded-lg bg-background sm:aspect-5/4">
           // swap for next/image if you're on Next.js
           <img
             src={thumbnailUrl}
             alt=""
             className="size-full object-cover object-top"
           />
-        ) : (
-          <div className="flex size-full items-center justify-center">
-            <Icon
-              className={cn("size-16 opacity-60", text)}
-              strokeWidth={1.25}
-            />
-          </div>
-        )}
-      </div>
+          +
+        </div>
+      ) : (
+        <>{/* Nothing if no thumbnail */}</>
+      )}
     </div>
   );
 }
