@@ -14,7 +14,7 @@
     "@repo/components": "*",
     "next": "16.4.2",
     "react": "19.3.1",
-    "react-dom": "19.3.0",
+    "react-dom": "19.3.1",
     "react-redux": "^9.3.0",
     "types": "*"
   },
