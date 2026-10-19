@@ -15,9 +15,9 @@ export default function Home() {
       <div className="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
         <Card size="sm" className="flex flex-col justify-between">
           <CardHeader>
-            <CardTitle>File Upload</CardTitle>
+            <CardTitle>File Upload (Figma Port)</CardTitle>
             <CardDescription>
-              Default file upload implementation.
+              Default file upload implementation. Has our design language from Figma but not interactive components.
             </CardDescription>
           </CardHeader>
           <CardFooter>
@@ -36,9 +36,9 @@ export default function Home() {
 
         <Card size="sm" className="flex flex-col justify-between">
           <CardHeader>
-            <CardTitle>Alternative File Upload</CardTitle>
+            <CardTitle>Interactive File Upload</CardTitle>
             <CardDescription>
-              Shadcn file upload component variant.
+              Shadcn file upload variant, with interactive components. But it has default colors.
             </CardDescription>
           </CardHeader>
           <CardFooter>
@@ -57,9 +57,9 @@ export default function Home() {
 
         <Card size="sm" className="flex flex-col justify-between">
           <CardHeader>
-            <CardTitle>(Hardcoded) Two-Column File Upload</CardTitle>
+            <CardTitle>(Hardcoded) Alternative Two-Column File Upload</CardTitle>
             <CardDescription>
-              Split-view layout for file uploads.
+              Split-view layout for file uploads. Alternative Layout to consider. If rejected, it will be removed in future frontend PRs.
             </CardDescription>
           </CardHeader>
           <CardFooter>
