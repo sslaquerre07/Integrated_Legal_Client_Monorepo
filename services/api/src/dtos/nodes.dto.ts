@@ -113,3 +113,24 @@ export class UploadFilesDto {
   /** UUID of the folder that will contain the files. Leave out for the top level. */
   parentId?: string;
 }
+
+/** A deleted node. */
+export class DeletedNodeDto {
+  /** UUID of the deleted node. */
+  id!: string;
+}
+
+/** Response of DELETE /nodes. */
+export class DeleteNodesResultDto {
+  /** Nodes that were deleted. */
+  succeeded!: DeletedNodeDto[];
+
+  /** Nodes that couldn't be deleted, with the reason. */
+  failed!: BatchFailureDto[];
+}
+
+/** Body of DELETE /nodes. */
+export class DeleteNodesDto {
+  /** UUIDs of the files or empty folders to delete. */
+  ids!: string[];
+}

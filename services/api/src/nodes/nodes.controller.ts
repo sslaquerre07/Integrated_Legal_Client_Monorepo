@@ -23,6 +23,8 @@ import { FilesInterceptor } from "@nestjs/platform-express";
 import { NodesService } from "./nodes.service";
 import {
   CreateNodeDto,
+  DeleteNodesDto,
+  DeleteNodesResultDto,
   FolderStructureDto,
   ResponseNodeDto,
   UploadFilesDto,
@@ -204,8 +206,8 @@ export class NodesController {
    */
   @Delete()
   async deleteNodes(
-    @Body("ids") ids: string[],
-  ): Promise<BatchActionResult<{ id: string }>> {
+    @Body() { ids }: DeleteNodesDto,
+  ): Promise<DeleteNodesResultDto> {
     const results: BatchActionItemResult<{ id: string }>[] = await Promise.all(
       ids.map(async (id) => {
         try {

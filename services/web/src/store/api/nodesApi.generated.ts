@@ -58,7 +58,11 @@ const injectedRtkApi = api
         NodesControllerDeleteNodesApiResponse,
         NodesControllerDeleteNodesApiArg
       >({
-        query: () => ({ url: `/nodes`, method: "DELETE" }),
+        query: (queryArg) => ({
+          url: `/nodes`,
+          method: "DELETE",
+          body: queryArg.deleteNodesDto,
+        }),
         invalidatesTags: ["Nodes"],
       }),
     }),
@@ -92,8 +96,11 @@ export type NodesControllerUpdateNodeApiArg = {
   /** UUID of the node to update. */
   id: string;
 };
-export type NodesControllerDeleteNodesApiResponse = /** status 200  */ object;
-export type NodesControllerDeleteNodesApiArg = void;
+export type NodesControllerDeleteNodesApiResponse =
+  /** status 200  */ DeleteNodesResultDto;
+export type NodesControllerDeleteNodesApiArg = {
+  deleteNodesDto: DeleteNodesDto;
+};
 export type ResponseNodeDto = {
   id: string;
   name: string;
@@ -131,6 +138,20 @@ export type UploadFilesDto = {
   /** Files to upload, 10 MB max each. */
   files: Blob[];
   parentId?: string;
+};
+export type DeletedNodeDto = {
+  /** UUID of the deleted node. */
+  id: string;
+};
+export type DeleteNodesResultDto = {
+  /** Nodes that were deleted. */
+  succeeded: DeletedNodeDto[];
+  /** Nodes that couldn't be deleted, with the reason. */
+  failed: BatchFailureDto[];
+};
+export type DeleteNodesDto = {
+  /** UUIDs of the files or empty folders to delete. */
+  ids: string[];
 };
 export const {
   useNodesControllerGetFolderStructureQuery,
