@@ -17,7 +17,8 @@ export default function Home() {
           <CardHeader>
             <CardTitle>File Upload (Figma Port)</CardTitle>
             <CardDescription>
-              Default file upload implementation. Has our design language from Figma but not interactive components.
+              Default file upload implementation. Has our design language from
+              Figma but not interactive components.
             </CardDescription>
           </CardHeader>
           <CardFooter>
@@ -38,7 +39,8 @@ export default function Home() {
           <CardHeader>
             <CardTitle>Interactive File Upload</CardTitle>
             <CardDescription>
-              Shadcn file upload variant, with interactive components. But it has default colors.
+              Shadcn file upload variant, with interactive components. But it
+              has default colors.
             </CardDescription>
           </CardHeader>
           <CardFooter>
@@ -57,9 +59,12 @@ export default function Home() {
 
         <Card size="sm" className="flex flex-col justify-between">
           <CardHeader>
-            <CardTitle>(Hardcoded) Alternative Two-Column File Upload</CardTitle>
+            <CardTitle>
+              (Hardcoded) Alternative Two-Column File Upload
+            </CardTitle>
             <CardDescription>
-              Split-view layout for file uploads. Alternative Layout to consider. If rejected, it will be removed in future frontend PRs.
+              Split-view layout for file uploads. Alternative Layout to
+              consider. If rejected, it will be removed in future frontend PRs.
             </CardDescription>
           </CardHeader>
           <CardFooter>
@@ -75,7 +80,27 @@ export default function Home() {
             </Button>
           </CardFooter>
         </Card>
-
+        <Card size="sm" className="flex flex-col justify-between">
+          <CardHeader>
+            <CardTitle>(Hardcoded) Lawyer Docs Example</CardTitle>
+            <CardDescription>
+              Potential design for lawyer documents from Clients POV. Please let
+              me know what you think.
+            </CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full justify-between"
+              nativeButton={false}
+              render={<Link href="/lawyer-documents-example" />}
+            >
+              Go to Lawyer Documents Example
+              <ArrowRightIcon data-icon="inline-end" />
+            </Button>
+          </CardFooter>
+        </Card>
         <Card size="sm" className="flex flex-col justify-between">
           <CardHeader>
             <CardTitle>Sandbox</CardTitle>
