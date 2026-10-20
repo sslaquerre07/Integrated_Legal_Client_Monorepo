@@ -19,7 +19,8 @@
   "remoteUser": "root",
 
   "remoteEnv": {
-    "TURBO_CACHE_DIR": "/workspaces/${localWorkspaceFolderBasename}/.turbo/cache"
+    "TURBO_CACHE_DIR": "/workspaces/${localWorkspaceFolderBasename}/.turbo/cache",
+    "WATCHPACK_POLLING": "true"
   },
 
   "customizations": {

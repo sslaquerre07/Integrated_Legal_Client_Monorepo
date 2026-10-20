@@ -76,6 +76,12 @@ GCP_PROJECT_ID="our-project-id"
 STORAGE_BUCKET_NAME="our-storage-bucket-name"
 ```
 
+### .env.local Setup
+You will also need to setup a `.env.local` file in the `service/web` folder with the following format:
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
 ### Open the project in the container
 1. Open the repository in VS Code.
 2. Use the command palette and select:
@@ -122,6 +128,10 @@ npm run build
 npm run lint
 # Rerun the sample-data seed at any time
 npm --workspace services/api run db:seed
+# Add shadcn components (frontend)
+npm run ui add <component-name>
+# Run just the frontend
+npm run frontend
 ```
 
 The database volume persists across container rebuilds. To rerun sample data manually, use the seed command above; rebuilding the container alone does not rerun PostgreSQL's first-time initialization scripts.

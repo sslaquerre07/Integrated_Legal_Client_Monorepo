@@ -1,0 +1,9 @@
+{
+  "schemaFile": "http://localhost:3001/api-json",
+  "apiFile": "./src/store/api/baseApi.ts",
+  "apiImport": "baseApi",
+  "outputFile": "./src/store/api/nodesApi.generated.ts",
+  "exportName": "nodesApi",
+  "hooks": true,
+  "tag": true
+}
