@@ -18,7 +18,7 @@
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.16.18",
     "turbo": "2.11.8",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "packageManager": "npm@10.9.2"
 }
