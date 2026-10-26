@@ -14,8 +14,8 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@repo/components": ["./packages/components/src"],
-      "@repo/components/*": ["./packages/components/src/*"],
+      "@repo/ui": ["./packages/components/src"],
+      "@repo/ui/*": ["./packages/components/src/*"],
       "types": ["./packages/types"],
       "types/*": ["./packages/types/*"]
     }

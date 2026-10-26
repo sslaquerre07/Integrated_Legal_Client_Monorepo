@@ -12,6 +12,6 @@
     "skipLibCheck": true,
     "paths": { "@repo/ui/*": ["./src/*"] }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../../services/web/src/components/page_sections"],
   "exclude": ["node_modules", "dist"]
 }

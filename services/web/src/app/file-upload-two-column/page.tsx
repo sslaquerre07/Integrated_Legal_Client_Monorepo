@@ -45,7 +45,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@repo/ui/components/ui/input-group"
-import { Column, Expanded, Row } from "@repo/ui/components/layout"
+import { Column, Expanded, Row } from "@repo/ui/components/layout_components/layout"
 import { cn } from "@repo/ui/lib/utils"
 
 /* ------------------------------------------------------------------ */

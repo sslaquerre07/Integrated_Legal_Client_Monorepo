@@ -27,7 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@repo/ui/components/ui/dropdown-menu";
 import { cn } from "@repo/ui/lib/utils";
-import { Expanded } from "./layout";
+import { Expanded } from "../layout_components/layout";
 
 // pdf: { icon: FileText, bg: "bg-red-500", text: "text-red-500" },
 

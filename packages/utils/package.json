@@ -1,0 +1,25 @@
+{
+  "name": "@repo/utils",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "types": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "@types/react": "^19.0.0",
+    "eslint": "^10.11.0",
+    "typescript": "^6.0.3"
+  }
+}
