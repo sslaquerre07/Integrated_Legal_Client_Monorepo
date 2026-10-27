@@ -1,11 +1,10 @@
 "use client";
 
-import PageCard from "../sample-components/folder-card";
-import AddFileCard from "../sample-components/add-file-card";
-import Button from "../sample-components/button";
-import DraftDocumentCard from "../sample-components/draft-document-card";
+import Button from "../components/button/button";
+import DraftDocumentCard from "../components/card/draft-document-card";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import FileUploadSection from "../components/section/file-upload-section";
 
 export default function FileUploadPage() {
   const lawyerFile = useSelector((state: RootState) => state.lawyerFile);
@@ -18,22 +17,7 @@ export default function FileUploadPage() {
   return (
     <main className="bg-company min-h-screen text-white p-8">
       <div className="flex flex-col gap-7">
-        <div className="flex flex-row items-center justify-between">
-          <span className="whitespace-nowrap text-2xl font-semibold text-white">
-            Your Uploaded Files
-          </span>
-          <Button className="w-fit">Create Folder</Button>
-        </div>
-
-        <div className="flex flex-wrap gap-4">
-          <AddFileCard />
-          <PageCard />
-          <PageCard />
-          <PageCard />
-          <PageCard />
-          <PageCard />
-        </div>
-
+        <FileUploadSection />
         <div className="h-px w-full bg-white/10"></div>
 
         <div className="flex flex-row items-center justify-between">
