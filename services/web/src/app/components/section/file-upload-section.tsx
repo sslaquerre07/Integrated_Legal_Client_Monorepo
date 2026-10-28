@@ -1,18 +1,21 @@
 import FolderCard from "$src/app/components/card/folder-card";
 import AddFileCard from "$src/app/components/card/add-file-card";
 import Button from "$src/app/components/button/button";
+import { FileData } from "$src/app/constants/types/file-data";
 
 // TODO: Move this to a different folder when application grows
 type ListProps = {
   section_label: string;
   button_labels: readonly string[];
   folder_labels: readonly string[];
+  file_data: FileData;
 };
 
 export default function FileUploadSection({
   section_label,
   button_labels,
   folder_labels,
+  file_data,
 }: ListProps) {
   return (
     <>
@@ -27,11 +30,19 @@ export default function FileUploadSection({
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-4">
-        {folder_labels.map((text) => (
-          <FolderCard key={text} folder_name={text} />
-        ))}
-      </div>
+      {file_data ? (
+        <div className="flex flex-wrap gap-4 py-4">
+          {Object.values(file_data?.entities).map((entity) => (
+            <FolderCard key={entity.id} folder_name={entity.name} />
+          ))}{" "}
+        </div>
+      ) : (
+        <div className="flex flex-wrap gap-4 py-4">
+          {folder_labels.map((text) => (
+            <FolderCard key={text} folder_name={text} />
+          ))}
+        </div>
+      )}
     </>
   );
 }
