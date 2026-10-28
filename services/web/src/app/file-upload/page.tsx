@@ -10,7 +10,7 @@ import {
   BUTTON_LABELS,
   FOLDER_LABELS,
 } from "@/app/constants/hardcoded/hardcoded-section";
-import HorizontalDivider from "$src/app/components/divider/divider";
+import HorizontalDivider from "$src/app/components/divider/horizontal-divider";
 
 export default function FileUploadPage() {
   const lawyerFile = useSelector((state: RootState) => state.lawyerFile);
