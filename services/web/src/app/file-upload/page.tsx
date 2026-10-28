@@ -1,15 +1,15 @@
 "use client";
 
-import Button from "../components/button/button";
-import DraftDocumentCard from "../components/card/draft-document-card";
+import Button from "$src/app/components/button/button";
+import DraftDocumentCard from "$src/app/components/card/draft-document-card";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import FileUploadSection from "../components/section/file-upload-section";
+import { RootState } from "$src/store/store";
+import FileUploadSection from "$src/app/components/section/file-upload-section";
 import {
   SECTION_NAME,
   BUTTON_LABELS,
   FOLDER_LABELS,
-} from "@/app/constants/hardcoded/hardcoded-section";
+} from "$src/app/constants/hardcoded/hardcoded-section";
 import HorizontalDivider from "$src/app/components/divider/horizontal-divider";
 
 export default function FileUploadPage() {
