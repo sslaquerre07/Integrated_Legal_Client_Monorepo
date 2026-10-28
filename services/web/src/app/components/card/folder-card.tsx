@@ -1,4 +1,4 @@
-export default function FolderCard() {
+export default function FolderCard({ folder_name }: { folder_name: string }) {
   return (
     <div className="flex flex-1 items-center justify-between rounded-lg bg-white/5 px-3 py-2">
       <div className="flex flex-1 items-center gap-3">
@@ -15,7 +15,7 @@ export default function FolderCard() {
         </svg>
 
         <span className="min-w-0 whitespace-nowrap font-roboto-mono text-[clamp(10px,4.5cqw,20px)] font-semibold text-white">
-          Client Made Folder
+          {folder_name}
         </span>
       </div>
 

@@ -5,20 +5,25 @@ import DraftDocumentCard from "../components/card/draft-document-card";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import FileUploadSection from "../components/section/file-upload-section";
+import {
+  SECTION_NAME,
+  BUTTON_LABELS,
+  FOLDER_LABELS,
+} from "@/app/constants/hardcoded/hardcoded-section";
+import HorizontalDivider from "$src/app/components/divider/divider";
 
 export default function FileUploadPage() {
   const lawyerFile = useSelector((state: RootState) => state.lawyerFile);
-  //   let text = "Lawyer Draft 1";
-  //   let text2 = "Lawyer Draft 2";
-  //   let text3 = "Other Document 1";
-  //   let text4 = "Other Document 2";
-  //   let type = "approved";
-  //   let type2 = "pending";
   return (
     <main className="bg-company min-h-screen text-white p-8">
       <div className="flex flex-col gap-7">
-        <FileUploadSection />
-        <div className="h-px w-full bg-white/10"></div>
+        <FileUploadSection
+          section_label={SECTION_NAME}
+          button_labels={BUTTON_LABELS}
+          folder_labels={FOLDER_LABELS}
+        ></FileUploadSection>
+
+        <HorizontalDivider />
 
         <div className="flex flex-row items-center justify-between">
           <span className="whitespace-nowrap text-2xl font-semibold text-white">
@@ -26,8 +31,8 @@ export default function FileUploadPage() {
           </span>
 
           <div className="flex flex-row gap-2">
-            <Button className="w-fit">Drafts</Button>
-            <Button className="w-fit">Documents</Button>
+            <Button>Drafts</Button>
+            <Button>Documents</Button>
           </div>
         </div>
 
