@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { StoreProvider } from "../store/storeProvider";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter"; // v15-appRouter on Next 15
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +26,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex flex-col min-h-screen">
-        <StoreProvider>{children}</StoreProvider>
+        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+          <StoreProvider>{children}</StoreProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
