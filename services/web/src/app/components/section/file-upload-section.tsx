@@ -1,7 +1,7 @@
 import FolderCard from "$src/app/components/card/folder-card";
-import AddFileCard from "$src/app/components/card/add-file-card";
-import Button from "$src/app/components/button/button";
+import WrappedButton from "$src/app/components/button/wrapped-button";
 import { FileData } from "$src/app/constants/types/file-data";
+import WrappedItemCard from "$src/app/components/card/wrapped-item-card";
 
 // TODO: Move this to a different folder when application grows
 type ListProps = {
@@ -25,7 +25,7 @@ export default function FileUploadSection({
         </span>
         <div className="flex flex-row gap-2">
           {button_labels.map((text) => (
-            <Button key={text}>{text}</Button>
+            <WrappedButton key={text} content={text} isFolder={false} />
           ))}
         </div>
       </div>
@@ -33,13 +33,17 @@ export default function FileUploadSection({
       {file_data ? (
         <div className="flex flex-wrap gap-4 py-4">
           {Object.values(file_data?.entities).map((entity) => (
-            <FolderCard key={entity.id} folder_name={entity.name} />
+            <WrappedItemCard
+              key={entity.id}
+              content={entity.name}
+              isFolder={true}
+            />
           ))}{" "}
         </div>
       ) : (
         <div className="flex flex-wrap gap-4 py-4">
           {folder_labels.map((text) => (
-            <FolderCard key={text} folder_name={text} />
+            <WrappedItemCard key={text} content={text} isFolder={true} />
           ))}
         </div>
       )}

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Button from "$src/app/components/button/button";
 import DraftDocumentCard from "$src/app/components/card/draft-document-card";
 import { useSelector } from "react-redux";
 import { RootState } from "$src/store/store";
@@ -14,7 +13,8 @@ import {
 import HorizontalDivider from "$src/app/components/divider/horizontal-divider";
 import { useEffect } from "react";
 import { getFiles } from "$src/app/file-upload/utils/get-files";
-import { FileData } from "$src/app//constants/types/file-data";
+import { FileData } from "$src/app/constants/types/file-data";
+import WrappedButton from "$src/app/components/button/wrapped-button";
 
 export default function FileUploadPage() {
   // Temporary, until we figure out and implement the Redux store
@@ -66,8 +66,8 @@ export default function FileUploadPage() {
         </span>
 
         <div className="flex flex-row gap-2">
-          <Button>Drafts</Button>
-          <Button>Documents</Button>
+          <WrappedButton content="Drafts" isFolder={false} />
+          <WrappedButton content="Documents" isFolder={false} />
         </div>
       </div>
 
