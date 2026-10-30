@@ -1,11 +1,17 @@
-import { configureStore } from '@reduxjs/toolkit';
-import userReducer from './userSlice/userSlice';
-import lawyerFileReducer from './lawyerFile/laywerFileSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import userReducer from "./userSlice/userSlice";
+import lawyerFileReducer from "./lawyerFile/laywerFileSlice";
+import { nodesApiSlice } from "./nodesApi/nodesApiSlice";
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
     lawyerFile: lawyerFileReducer,
+    [nodesApiSlice.reducerPath]: nodesApiSlice.reducer,
+  },
+
+  middleware: (getDefaultMiddleware) => {
+    return getDefaultMiddleware().concat(nodesApiSlice.middleware);
   },
 });
 
