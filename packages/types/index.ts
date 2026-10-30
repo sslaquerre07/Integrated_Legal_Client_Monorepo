@@ -18,3 +18,6 @@ export interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'danger';
   disabled?: boolean;
 }
+
+// Export types for Redux
+export * from "./DTO"
