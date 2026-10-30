@@ -1,6 +1,4 @@
 "use client";
-
-import { useState } from "react";
 import DraftDocumentCard from "$src/app/components/card/draft-document-card";
 import { useSelector } from "react-redux";
 import { RootState } from "$src/store/store";
@@ -11,34 +9,10 @@ import {
   FOLDER_LABELS,
 } from "$src/app/constants/hardcoded/hardcoded-section";
 import HorizontalDivider from "$src/app/components/divider/horizontal-divider";
-import { useEffect } from "react";
-import { getFiles } from "$src/app/file-upload/utils/get-files";
-import { FileData } from "$src/app/constants/types/file-data";
 import WrappedButton from "$src/app/components/button/wrapped-button";
 
 export default function FileUploadPage() {
-  // Temporary, until we figure out and implement the Redux store
-  const [files, setFiles] = useState<FileData>({ tree: [], entities: {} });
-  const [error, setError] = useState<string | null>(null);
-
   const lawyerFile = useSelector((state: RootState) => state.lawyerFile);
-
-  useEffect(() => {
-    // prevent infinite fetch via "ignore" flag
-    let ignore = false;
-    getFiles()
-      .then((files) => {
-        if (!ignore) {
-          setFiles(files);
-        }
-      })
-      .catch((err) => {
-        if (!ignore) setError(err.message);
-      });
-    return () => {
-      ignore = true;
-    };
-  }, []);
 
   return (
     <main className="bg-company min-h-screen text-white p-8">
