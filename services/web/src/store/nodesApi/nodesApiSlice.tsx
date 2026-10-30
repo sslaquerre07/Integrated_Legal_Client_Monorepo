@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { FolderStructureDto } from "@repo/types"
+import { FolderStructureDto } from "@repo/types";
 
 const API = "http://localhost:3001";
 
@@ -13,10 +13,12 @@ export const nodesApiSlice = createApi({
     return {
       getFolderStructure: builder.query<
         FolderStructureDto,
-        { depth: number; rootId: string | null }
+        { depth: number; rootId?: string }
       >({
-        query: ({ depth }) =>
-          `/structure?depth=${depth}`,
+        query: ({ depth, rootId }) => ({
+          url: `\structure`,
+          params: { depth, rootId },
+        }),
       }),
     };
   },
