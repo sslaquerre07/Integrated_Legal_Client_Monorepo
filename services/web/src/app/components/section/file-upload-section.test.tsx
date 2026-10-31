@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import Section from "./section.tsx";
+import Section from "./section";
 import { FileDetail } from "$src/app/constants/types/file-detail";
 
 const files: FileDetail[] = [
