@@ -15,7 +15,7 @@ export default function WrappedItemCard({ content, isFolder }: ItemCardProps) {
   return (
     <Card className="relative whitespace-nowrap rounded-lg bg-white/5 text-white">
       <CardActionArea
-        className="flex h-full w-full items-center justify-start gap-3 py-4 pl-3 pr-20 font-roboto-mono text-xl font-bold"
+        className="flex h-full w-full min-w-56 items-center justify-start gap-3 py-4 pl-3 pr-20 font-roboto-mono text-xl font-bold"
         onClick={() => console.log("open", content)}
       >
         {icon}
