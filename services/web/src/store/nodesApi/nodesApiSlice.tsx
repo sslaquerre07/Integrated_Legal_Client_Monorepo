@@ -9,6 +9,7 @@ export const nodesApiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${API}/nodes`,
   }),
+  tagTypes: ["Folder"],
   endpoints: (builder) => {
     return {
       getFolderStructure: builder.query<
@@ -19,6 +20,7 @@ export const nodesApiSlice = createApi({
           url: `/structure`,
           params: { depth, rootId },
         }),
+        providesTags: ["Folder"],
       }),
       getFileContent: builder.query<string, { id: string }>({
         query: ({ id }) => ({
@@ -55,6 +57,20 @@ export const nodesApiSlice = createApi({
             body: formData,
           };
         },
+        invalidatesTags: ["Folder"],
+      }),
+      createFolder: builder.mutation<
+        NodeDto,
+        { name: string; parentId?: string }
+      >({
+        query: ({ name, parentId }) => {
+          return {
+            url: "/folders",
+            method: "POST",
+            body: { name, parentId },
+          };
+        },
+        invalidatesTags: ["Folder"],
       }),
     };
   },
@@ -64,4 +80,5 @@ export const {
   useGetFolderStructureQuery,
   useGetFileContentQuery,
   useCreateFileMutation,
+  useCreateFolderMutation,
 } = nodesApiSlice;
