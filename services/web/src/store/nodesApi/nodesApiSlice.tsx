@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { FolderStructureDto } from "@repo/types";
+import { FolderStructureDto, NodeDto, BatchActionResult } from "@repo/types";
 
 const API = "http://localhost:3001";
 
@@ -35,9 +35,33 @@ export const nodesApiSlice = createApi({
           },
         }),
       }),
+      createFile: builder.mutation<
+        BatchActionResult<NodeDto>,
+        { parentId?: string; files: File[] }
+      >({
+        query: ({ parentId, files }) => {
+          const formData = new FormData();
+          // Append parentId field (if it exists)
+          if (parentId) formData.append("parentId", parentId);
+
+          // Append each file
+          files.forEach((file) => {
+            formData.append("files", file);
+          });
+
+          return {
+            url: "/files",
+            method: "POST",
+            body: formData,
+          };
+        },
+      }),
     };
   },
 });
 
-export const { useGetFolderStructureQuery, useGetFileContentQuery } =
-  nodesApiSlice;
+export const {
+  useGetFolderStructureQuery,
+  useGetFileContentQuery,
+  useCreateFileMutation,
+} = nodesApiSlice;
