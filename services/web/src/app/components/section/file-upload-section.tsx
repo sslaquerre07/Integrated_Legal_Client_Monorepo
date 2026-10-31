@@ -4,7 +4,6 @@ import { FileDetail } from "$src/app/constants/types/file-detail";
 import FileCard from "@/app/components/card/file-card";
 import AddFileCard from "@/app/components/card/add-file-card";
 
-// TODO: Move this to a different folder when application grows
 type ListProps = {
   is_first_section?: boolean;
   section_label: string;
