@@ -82,6 +82,19 @@ export const nodesApiSlice = createApi({
         },
         invalidatesTags: ["Folder"],
       }),
+      deleteNodes: builder.mutation<
+        BatchActionResult<{ id: string }>,
+        { ids: string[] }
+      >({
+        query: ({ ids }) => {
+          return {
+            url: ``,
+            method: "DELETE",
+            body: { ids },
+          };
+        },
+        invalidatesTags: ["Folder"],
+      }),
     };
   },
 });
@@ -92,4 +105,5 @@ export const {
   useCreateFileMutation,
   useCreateFolderMutation,
   useRenameNodeMutation,
+  useDeleteNodesMutation
 } = nodesApiSlice;
