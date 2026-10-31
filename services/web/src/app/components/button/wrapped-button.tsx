@@ -6,7 +6,11 @@ type ButtonProps = {
   isFolder: boolean;
 };
 
-export default function WrappedButton({ content, isFolder }: ButtonProps) {
+export default function WrappedButton({
+  content,
+  isFolder,
+}: ButtonProps) {
+  // "extra" functionality - in case we need a smaller folder button
   const icon = isFolder ? <FolderIcon /> : undefined;
   return (
     <Button
@@ -15,6 +19,7 @@ export default function WrappedButton({ content, isFolder }: ButtonProps) {
       disableElevation
       startIcon={icon}
       sx={{ textTransform: "none" }}
+      onClick={() => console.log("clicked", content)}
     >
       {content}
     </Button>
