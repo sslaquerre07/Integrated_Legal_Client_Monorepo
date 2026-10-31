@@ -1,7 +1,7 @@
 "use client";
 import { useSelector } from "react-redux";
 import { RootState } from "$src/store/store";
-import FileUploadSection from "$src/app/components/section/file-upload-section";
+import Section from "$src/app/components/section/section";
 import {
   SECTION_NAME,
   BUTTON_LABELS,
@@ -17,7 +17,7 @@ export default function FileUploadPage() {
   return (
     <main className="bg-company min-h-screen text-white p-8">
       <div className="flex flex-col gap-7">
-        <FileUploadSection
+        <Section
           is_first_section
           section_label={SECTION_NAME}
           button_labels={BUTTON_LABELS}
@@ -26,7 +26,7 @@ export default function FileUploadPage() {
 
         <HorizontalDivider />
 
-        <FileUploadSection
+        <Section
           section_label={SECTION_NAME2}
           files={FILES2}
         />

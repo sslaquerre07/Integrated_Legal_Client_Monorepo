@@ -4,19 +4,19 @@ import { FileDetail } from "$src/app/constants/types/file-detail";
 import FileCard from "@/app/components/card/file-card";
 import AddFileCard from "@/app/components/card/add-file-card";
 
-type ListProps = {
+type SectionProps = {
   is_first_section?: boolean;
   section_label: string;
   button_labels?: readonly string[];
   files?: readonly FileDetail[];
 };
 
-export default function FileUploadSection({
+export default function Section({
   is_first_section = false, // false by default
   section_label,
   button_labels,
   files,
-}: ListProps) {
+}: SectionProps) {
   return (
     <>
       <div className="flex flex-row items-center justify-between">
