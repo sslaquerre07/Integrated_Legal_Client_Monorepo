@@ -72,6 +72,16 @@ export const nodesApiSlice = createApi({
         },
         invalidatesTags: ["Folder"],
       }),
+      renameNode: builder.mutation<NodeDto, { id: string; name: string }>({
+        query: ({ id, name }) => {
+          return {
+            url: `/${id}`,
+            method: "PATCH",
+            body: { name },
+          };
+        },
+        invalidatesTags: ["Folder"],
+      }),
     };
   },
 });
@@ -81,4 +91,5 @@ export const {
   useGetFileContentQuery,
   useCreateFileMutation,
   useCreateFolderMutation,
+  useRenameNodeMutation,
 } = nodesApiSlice;
