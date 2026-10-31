@@ -9,7 +9,7 @@ type ItemCardProps = {
   isFolder: boolean;
 };
 
-export default function WrappedItemCard({ content, isFolder }: ItemCardProps) {
+export default function ItemCard({ content, isFolder }: ItemCardProps) {
   const icon = isFolder ? <FolderIcon fontSize="large" /> : undefined;
 
   return (

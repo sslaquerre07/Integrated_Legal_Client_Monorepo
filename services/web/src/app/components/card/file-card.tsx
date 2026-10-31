@@ -3,17 +3,17 @@ import CardActionArea from "@mui/material/CardActionArea";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-type WrappedTripleLayerCardProps = {
+type FileCardProps = {
   name: string;
   type: string;
   date_uploaded: string;
 };
 
-export default function WrappedTripleLayerCard({
+export default function FileCard({
   name,
   type,
   date_uploaded,
-}: WrappedTripleLayerCardProps) {
+}: FileCardProps) {
   const isApproved = type === "approved";
   const statusLabel = isApproved ? "Approved" : "Waiting for Approval";
   const statusColor = isApproved ? "text-highlighted" : "text-pending-yellow";

@@ -1,8 +1,8 @@
 import WrappedButton from "$src/app/components/button/wrapped-button";
-import WrappedItemCard from "$src/app/components/card/wrapped-item-card";
+import ItemCard from "@/app/components/card/item-card";
 import { FileDetail } from "$src/app/constants/types/file-detail";
-import WrappedTripleLayerCard from "$src/app/components/card/wrapped-triple-layer-card";
-import WrappedAddFileCard from "$src/app/components/card/wrapped-add-file-card";
+import FileCard from "@/app/components/card/file-card";
+import AddFileCard from "@/app/components/card/add-file-card";
 
 // TODO: Move this to a different folder when application grows
 type ListProps = {
@@ -35,12 +35,12 @@ export default function FileUploadSection({
 
       {files && (
         <div className="flex flex-wrap gap-4 py-4">
-          {is_first_section ? <WrappedAddFileCard /> : undefined}
+          {is_first_section ? <AddFileCard /> : undefined}
           {files.map((file) =>
             file.isFolder ? (
-              <WrappedItemCard key={file.name} content={file.name} isFolder card_type={file.card_type} />
+              <ItemCard key={file.name} content={file.name} isFolder />
             ) : (
-              <WrappedTripleLayerCard
+              <FileCard
                 key={file.name}
                 name={file.name}
                 type={file.type}
