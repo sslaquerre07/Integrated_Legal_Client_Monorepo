@@ -14,7 +14,7 @@ export default function AddFileCard() {
 
       <span
         aria-hidden
-        className="pointer-events-none absolute right-3 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-lg bg-teal-400/5 text-"
+        className="pointer-events-none absolute right-3 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-lg bg-teal-400/5 text-highlighted"
       >
         <AddIcon fontSize="large" />
       </span>
