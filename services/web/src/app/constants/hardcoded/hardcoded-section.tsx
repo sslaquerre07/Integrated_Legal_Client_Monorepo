@@ -20,28 +20,24 @@ export const FILES: readonly FileDetail[] = [
     type: "pending",
     date_uploaded: "10/15/2026",
     isFolder: true,
-    card_type: "regular"
   },
   {
     name: "Folder 2",
     type: "pending",
     date_uploaded: "10/15/2026",
     isFolder: true,
-    card_type: "regular"
   },
   {
     name: "Folder 3",
     type: "pending",
     date_uploaded: "10/15/2026",
     isFolder: true,
-    card_type: "regular"
   },
   {
     name: "Folder 4",
     type: "pending",
     date_uploaded: "10/15/2026",
     isFolder: true,
-    card_type: "regular"
   },
 ];
 
