@@ -4,7 +4,7 @@ import FileUploadPage from "./page";
 import {
     SECTION_NAME,
     SECTION_NAME2,
-} from "$src/app/constants/hardcoded/hardcoded-section";
+} from "$src/app/constants/hardcoded/hardcoded-section-data";
 
 jest.mock("react-redux", () => ({
     useSelector: jest.fn(),

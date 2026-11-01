@@ -1,19 +1,6 @@
 import { FileDetail } from "$src/app/constants/types/file-detail";
 
-// SECTION 1
-export const SECTION_NAME = "Your Uploaded Files";
-
-export const BUTTON_LABELS: readonly string[] = [
-  "Create Folder",
-  "Upload File",
-];
-
-export const FOLDER_LABELS: readonly string[] = [
-  "Folder 1",
-  "Folder 2",
-  "Folder 3",
-];
-
+// SECTION 1 data
 export const FILES: readonly FileDetail[] = [
   {
     name: "Folder 1",
@@ -41,9 +28,7 @@ export const FILES: readonly FileDetail[] = [
   },
 ];
 
-// SECTION 2
-export const SECTION_NAME2 = "Lawyer Documents Drafts";
-
+// SECTION 2 data
 export const FILES2: readonly FileDetail[] = [
   {
     name: "File 1",
