@@ -21,12 +21,16 @@ import {
 } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { NodesService } from "./nodes.service";
-import { CreateNodeDto, ResponseNodeDto } from "../dtos/nodes.dto";
 import { FilesService } from "./files.service";
 import { ItemNode } from "../entities/node.entity";
 import { type Response } from "express";
 
-import { BatchActionItemResult, BatchActionResult, NodeDto } from "@repo/types";
+import {
+  BatchActionItemResult,
+  BatchActionResult,
+  CreateNodeDto,
+  NodeDto,
+} from "@repo/types";
 import { toNodeDto } from "./utils";
 
 @Controller("nodes")
@@ -111,8 +115,8 @@ export class NodesController {
     )
     files: Express.Multer.File[],
     @Body("parentId") parentId?: string,
-  ): Promise<BatchActionResult<ResponseNodeDto>> {
-    const results: BatchActionItemResult<ResponseNodeDto>[] = await Promise.all(
+  ): Promise<BatchActionResult<NodeDto>> {
+    const results: BatchActionItemResult<NodeDto>[] = await Promise.all(
       files.map(async (file, index) => {
         const nodeDto: CreateNodeDto = {
           name: file.originalname,
@@ -133,7 +137,7 @@ export class NodesController {
           await this.filesService.uploadFile(file, node.id);
           return {
             success: true as const,
-            value: ResponseNodeDto.fromEntity(node),
+            value: toNodeDto(node),
           };
         } catch (error) {
           await this.nodesService.deleteNode(node.id);
@@ -175,9 +179,9 @@ export class NodesController {
   async updateNode(
     @Param("id", new ParseUUIDPipe()) id: string,
     @Body() nodeDto: Partial<CreateNodeDto>,
-  ): Promise<ResponseNodeDto> {
+  ): Promise<NodeDto> {
     const updatedNode = await this.nodesService.updateNode(id, nodeDto);
-    return ResponseNodeDto.fromEntity(updatedNode);
+    return toNodeDto(updatedNode);
   }
 
   /**
