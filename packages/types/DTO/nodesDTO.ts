@@ -17,7 +17,7 @@ export interface NodeDto {
   parentId?: string;
 }
 
-export type FolderStructureDto = {
+export interface FolderStructureDto {
   tree: TreeNodeDto[];
   entities: Record<string, NodeDto>;
 };
