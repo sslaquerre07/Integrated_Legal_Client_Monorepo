@@ -20,5 +20,5 @@ export interface ButtonProps {
 }
 
 // Export types for Redux
-export * from "./DTO"
+export * from "./DTO/nodesDTO"
 export * from "./BatchActionTypes"
