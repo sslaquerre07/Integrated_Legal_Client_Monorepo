@@ -3,6 +3,12 @@ export interface TreeNodeDto {
   children: object[];
 }
 
+export interface CreateNodeDto {
+  name: string;
+  isFolder: boolean;
+  parentId?: string;
+}
+
 export interface NodeDto {
   id: string;
   name: string;
