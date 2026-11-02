@@ -26,7 +26,8 @@ import { FilesService } from "./files.service";
 import { ItemNode } from "../entities/node.entity";
 import { type Response } from "express";
 
-import { BatchActionItemResult, BatchActionResult } from "@repo/types";
+import { BatchActionItemResult, BatchActionResult, NodeDto } from "@repo/types";
+import { toNodeDto } from "./utils";
 
 @Controller("nodes")
 export class NodesController {
@@ -155,14 +156,14 @@ export class NodesController {
   async createFolder(
     @Body("name") name: string,
     @Body("parentId") parentId?: string,
-  ): Promise<ResponseNodeDto> {
+  ): Promise<NodeDto> {
     const nodeDto: CreateNodeDto = {
       name,
       isFolder: true,
       parentId: parentId ?? undefined,
     };
     const node = await this.nodesService.createNode(nodeDto);
-    return ResponseNodeDto.fromEntity(node);
+    return toNodeDto(node);
   }
 
   /**
