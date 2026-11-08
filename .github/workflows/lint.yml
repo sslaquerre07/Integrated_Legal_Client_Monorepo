@@ -64,4 +64,4 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm ci
-      - run: npm --prefix packages/shared run lint
+      - run: npm --prefix packages/types run lint
