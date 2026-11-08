@@ -1,7 +1,6 @@
 // State
 
 import { createSlice } from "@reduxjs/toolkit";
-import { StatementSync } from "node:sqlite";
 
 interface LaywerFileState {
   name: string;
@@ -27,7 +26,7 @@ const lawyerFileSlice = createSlice({
   initialState: initialState,
   reducers: {
     rename: (state) => {
-      let curr = state.name;
+      const curr = state.name;
       if (curr == initialState.name) {
         state.name = "File Name Alternative";
       } else {
