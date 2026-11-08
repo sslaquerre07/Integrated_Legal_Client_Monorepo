@@ -1,18 +1,25 @@
 // app/api/nodes/nodes.service.ts
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateNodeDto, ResponseNodeDto } from '../dtos/nodes.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ItemNode } from '../entities/node.entity';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { ItemNode } from "../entities/node.entity";
+import { CreateNodeDto, NodeDto } from "@repo/types";
 
 @Injectable()
 export class NodesService {
-  constructor(@InjectRepository(ItemNode) private readonly repository: Repository<ItemNode>) {}
+  constructor(
+    @InjectRepository(ItemNode)
+    private readonly repository: Repository<ItemNode>,
+  ) {}
 
   // Private helper functions
   private async findNodeOrThrow(
     id: string,
-    message = 'Node not found',
+    message = "Node not found",
   ): Promise<ItemNode> {
     const node = await this.repository.findOneBy({ id });
 
@@ -28,17 +35,23 @@ export class NodesService {
     const entities: Record<string, any> = {};
 
     nodes.forEach((node) => {
-      entities[node.id] = new ResponseNodeDto(node.id, node.name, node.is_folder, node.updated_at, node.parent_id);
+      entities[node.id] = <NodeDto>{
+        id: node.id,
+        name: node.name,
+        isFolder: node.is_folder,
+        updatedAt: node.updated_at,
+        parentId: node.parent_id,
+      };
       structuralMap.set(node.id, { id: node.id, children: [] });
     });
     nodes.forEach((node) => {
       const structuralNode = structuralMap.get(node.id);
-      if(node.parent_id && structuralMap.has(node.parent_id)) {
+      if (node.parent_id && structuralMap.has(node.parent_id)) {
         structuralMap.get(node.parent_id).children.push(structuralNode);
       } else if (!node.parent_id) {
         tree.push(structuralNode);
       }
-    })
+    });
 
     return { tree, entities };
   }
@@ -71,7 +84,10 @@ export class NodesService {
   async createNode(nodeDto: CreateNodeDto) {
     const node = this.repository.create(nodeDto);
     if (nodeDto.parentId) {
-      const parentNode = await this.findNodeOrThrow(nodeDto.parentId, 'Parent node not found');
+      const parentNode = await this.findNodeOrThrow(
+        nodeDto.parentId,
+        "Parent node not found",
+      );
       node.parent = parentNode;
     }
 
@@ -80,7 +96,7 @@ export class NodesService {
 
   // Only updates name for now, but can be extended to update other fields
   async updateNode(id: string, nodeDto: Partial<CreateNodeDto>) {
-    const node = await this.findNodeOrThrow(id, 'Node not found');
+    const node = await this.findNodeOrThrow(id, "Node not found");
 
     if (nodeDto.name) {
       node.name = nodeDto.name;
@@ -89,12 +105,14 @@ export class NodesService {
   }
 
   async deleteNode(id: string) {
-    const node = await this.findNodeOrThrow(id, 'Node not found');
+    const node = await this.findNodeOrThrow(id, "Node not found");
     // Note: For now, we are only allowing the deletion of empty folders
     if (node.isFolder) {
       const child = await this.repository.findOneBy({ parent: { id } });
       if (child) {
-        throw new ConflictException('Cannot delete a folder that contains nodes');
+        throw new ConflictException(
+          "Cannot delete a folder that contains nodes",
+        );
       }
     }
 
