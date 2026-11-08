@@ -8,7 +8,7 @@ import { env } from 'node:process';
 const databaseUrl = env.DATABASE_URL;
 
 if (!databaseUrl) {
-  throw new Error('DATABASE_URL must be set to connect to PostgreSQL.');
+  throw new Error("DATABASE_URL must be set to connect to PostgreSQL.");
 }
 
 @Module({
