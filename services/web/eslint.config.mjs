@@ -1,4 +1,3 @@
-// apps/fe/eslint.config.mjs
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 import nextVitals from "eslint-config-next/core-web-vitals";
@@ -6,8 +5,7 @@ import nextTs from "eslint-config-next/typescript";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default [
   // 1. Next.js Core Web Vitals and TS configs
@@ -23,7 +21,6 @@ export default [
     files: ["**/src/**/*.ts", "**/src/**/*.tsx"],
     languageOptions: {
       parserOptions: {
-        projectService: true,
         tsconfigRootDir: __dirname,
       },
     },

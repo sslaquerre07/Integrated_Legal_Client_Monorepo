@@ -1,16 +1,23 @@
 // packages/shared/types/eslint.config.mjs
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default [
   // Standard ESLint recommended rules
   js.configs.recommended,
-
-  // TypeScript recommended rules (strict ruleset optimized for type packages)
   ...tseslint.configs.recommended,
 
   {
     files: ["**/*.ts"],
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: __dirname,
+      },
+    },
     rules: {
       // 1. Unused Variables
       "@typescript-eslint/no-unused-vars": [
