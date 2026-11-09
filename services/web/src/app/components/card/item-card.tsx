@@ -4,14 +4,22 @@ import CardActionArea from "@mui/material/CardActionArea";
 import FolderIcon from "@mui/icons-material/Folder";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
+import { useDeleteNodesMutation } from "@/store/nodesApi/nodesApiSlice";
 
 type ItemCardProps = {
+  id: string;
   content: string;
   isFolder: boolean;
 };
 
-export default function ItemCard({ content, isFolder }: ItemCardProps) {
+export default function ItemCard({ id, content, isFolder }: ItemCardProps) {
   const icon = isFolder ? <FolderIcon fontSize="large" /> : undefined;
+
+  const [deleteNodesMutation] = useDeleteNodesMutation();
+
+  function handleDeleteNode() {
+    deleteNodesMutation({ ids: [id] });
+  }
 
   return (
     <Card className="relative whitespace-nowrap rounded-lg bg-white/5 text-white">
@@ -27,7 +35,7 @@ export default function ItemCard({ content, isFolder }: ItemCardProps) {
         aria-label="delete"
         size="large"
         className="absolute right-3 top-1/2 -translate-y-1/2 h-12 w-12 rounded-lg bg-teal-400/5 text-white"
-        onClick={() => console.log("delete", content)}
+        onClick={handleDeleteNode}
       >
         <CloseIcon />
       </IconButton>

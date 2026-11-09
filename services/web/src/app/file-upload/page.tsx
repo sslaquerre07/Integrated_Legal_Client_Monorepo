@@ -20,7 +20,6 @@ export default function FileUploadPage() {
     depth: 2,
   });
 
-  // const folders, files = parseFoldersAndFilesFromParentId();
   if (isLoading) {
     return <div>Loading..</div>;
   }
