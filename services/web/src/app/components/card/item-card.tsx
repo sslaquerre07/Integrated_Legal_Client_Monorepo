@@ -1,3 +1,4 @@
+"use client";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import FolderIcon from "@mui/icons-material/Folder";

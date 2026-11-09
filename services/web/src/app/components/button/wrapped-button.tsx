@@ -1,3 +1,4 @@
+"use client";
 import Button from "@mui/material/Button";
 import FolderIcon from "@mui/icons-material/Folder";
 

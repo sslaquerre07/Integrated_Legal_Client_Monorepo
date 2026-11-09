@@ -50,7 +50,7 @@ export class NodesController {
       if (result.success) {
         batchResult.succeeded.push(result.value);
       } else {
-        const { success: _success, ...failure } = result;
+        const { success: _, ...failure } = result;
         batchResult.failed.push(failure);
       }
     });
@@ -117,7 +117,7 @@ export class NodesController {
     @Body("parentId") parentId?: string,
   ): Promise<BatchActionResult<NodeDto>> {
     const results: BatchActionItemResult<NodeDto>[] = await Promise.all(
-      files.map(async (file, index) => {
+      files.map(async (file) => {
         const nodeDto: CreateNodeDto = {
           name: file.originalname,
           isFolder: false,

@@ -8,7 +8,19 @@
     "test": "turbo run test",
     "test:fe": "npm run test --workspace=web",
     "test:be": "npm run test --workspace=api",
-    "test:all": "npm run test --workspaces --if-present"
+    "test:all": "npm run test --workspaces --if-present",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "services/web/**/*.{ts,tsx}": [
+      "eslint --config services/web/eslint.config.mjs --fix"
+    ],
+    "services/api/**/*.ts": [
+      "eslint --config services/api/eslint.config.mjs --fix"
+    ],
+    "packages/types/**/*.ts": [
+      "eslint --config packages/types/eslint.config.mjs --fix"
+    ]
   },
   "workspaces": [
     "services/*",
@@ -17,6 +29,8 @@
   "devDependencies": {
     "@swc/cli": "^0.8.1",
     "@swc/core": "^1.16.18",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
     "turbo": "2.11.10",
     "typescript": "^6.0.3"
   },
