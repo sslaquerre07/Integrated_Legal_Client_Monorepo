@@ -1,30 +1,42 @@
+"use client";
+
 import Section from "$src/app/components/section/section";
-import {
-  FILES,
-  FILES2,
-} from "@/app/constants/hardcoded/hardcoded-section-data";
-import { SECTION_BUTTONS } from "$src/app/constants/page/file-upload/section-buttons";
-import { SECTION_NAME_1, SECTION_NAME_2 } from "$src/app/constants/page/file-upload/section-names";
 import HorizontalDivider from "$src/app/components/divider/horizontal-divider";
+import { parseFoldersAndFilesFromParentId } from "@/app/utils/node-helper";
+import { useGetFolderStructureQuery } from "@/store/nodesApi/nodesApiSlice";
+
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+// import { setCurrentId } from '$src/store'
 
 export default function FileUploadPage() {
+  const curr_id = useSelector((state: RootState) => state.currentId.value);
+
+  // Logging data
+  console.log(curr_id);
+
+  const { data, isLoading } = useGetFolderStructureQuery({
+    rootId: curr_id || undefined,
+    depth: 2,
+  });
+
+  // const folders, files = parseFoldersAndFilesFromParentId();
+  if (isLoading) {
+    return <div>Loading..</div>;
+  }
+
+  const { files, folders } = parseFoldersAndFilesFromParentId(data!.entities);
 
   return (
     <main className="bg-company min-h-screen text-white p-8">
       <div className="flex flex-col gap-7">
-        <Section
-          is_first_section
-          section_label={SECTION_NAME_1}
-          button_labels={SECTION_BUTTONS}
-          files={FILES}
-        />
+        <Section isFolderSection nodes={folders} />
 
         <HorizontalDivider />
 
-        <Section
-          section_label={SECTION_NAME_2}
-          files={FILES2}
-        />
+        <Section nodes={files} />
+
+        {/* <Section section_label={SECTION_NAME_2} files={FILES2} /> */}
       </div>
     </main>
   );

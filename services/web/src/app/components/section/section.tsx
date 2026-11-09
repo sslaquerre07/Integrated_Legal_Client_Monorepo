@@ -1,54 +1,54 @@
-import WrappedButton from "$src/app/components/button/wrapped-button";
 import ItemCard from "@/app/components/card/item-card";
-import { FileDetail } from "$src/app/constants/types/file-detail";
-import FileCard from "@/app/components/card/file-card";
+// import { FileDetail } from "$src/app/constants/types/file-detail";
 import AddFileCard from "@/app/components/card/add-file-card";
+import CreateFolderButton from "../button/create-folder-button";
+// import { useGetFolderStructureQuery } from "@/store/nodesApi/nodesApiSlice";
+// import { getRootFolders } from "@/app/utils/note-util";
+import { SECTION_NAME_1, SECTION_NAME_2 } from "$src/app/constants/page/file-upload/section-names";
+import { NodeDto } from "@repo/types";
 
 type SectionProps = {
-  is_first_section?: boolean;
-  section_label: string;
-  button_labels?: readonly string[];
-  files?: readonly FileDetail[];
+  isFolderSection?: boolean; // Currently, we have 2 different sections - Files and Folder
+  nodes: NodeDto[];  
 };
 
+// todo: conditionally render files and folders
+// todo: so file section will display files on the same level.
+// todo: folder sesction will display folders on the same level.
+// todo: call newly created function
+
 export default function Section({
-  is_first_section = false, // false by default
-  section_label,
-  button_labels,
-  files,
+  isFolderSection = false,
+  nodes,
 }: SectionProps) {
+  const section_label = isFolderSection ? SECTION_NAME_1 : SECTION_NAME_2;
+
   return (
     <>
       <div className="flex flex-row items-center justify-between">
         <span className="whitespace-nowrap text-2xl font-semibold text-white">
           {section_label}
         </span>
-        {button_labels && (
-          <div className="flex flex-row gap-2">
-            {button_labels.map((text) => (
-              <WrappedButton key={text} content={text} isFolder={false} />
-            ))}
-          </div>
+        <CreateFolderButton />
+      </div>
+
+      <div className="flex flex-wrap gap-4 py-4">
+        {nodes.map((node) => (
+          <ItemCard key={node.name} content={node.name} isFolder />
+        )
         )}
       </div>
 
-      {files && (
-        <div className="flex flex-wrap gap-4 py-4">
-          {is_first_section ? <AddFileCard /> : undefined}
-          {files.map((file) =>
-            file.isFolder ? (
-              <ItemCard key={file.name} content={file.name} isFolder />
-            ) : (
-              <FileCard
-                key={file.name}
-                name={file.name}
-                type={file.type}
-                date_uploaded={file.date_uploaded}
-              />
-            ),
-          )}
-        </div>
-      )}
+      {/* {folders && ( 
+      //   <div className="flex flex-wrap gap-4 py-4">
+      //     {is_first_section ? <AddFileCard /> : undefined}
+      //     {folders.map((file) =>
+      //       file.isFolder ? (
+      //         <ItemCard key={file.name} content={file.name} isFolder />
+      //       ) : undefined,
+      //     )}
+      //   </div>
+      // )}*/}
     </>
   );
 }
