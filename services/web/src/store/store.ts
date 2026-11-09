@@ -1,12 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./userSlice/userSlice";
-import lawyerFileReducer from "./lawyerFile/laywerFileSlice";
+import currentIdReducer from "./currentId/currentIdSlice";
 import { nodesApiSlice } from "./nodesApi/nodesApiSlice";
 
 export const store = configureStore({
   reducer: {
-    user: userReducer,
-    lawyerFile: lawyerFileReducer,
+    currentId: currentIdReducer,
     [nodesApiSlice.reducerPath]: nodesApiSlice.reducer,
   },
 
