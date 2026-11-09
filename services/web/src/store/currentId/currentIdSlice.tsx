@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface CurrentIdState {
-  current_id: string;
+  value: string;
 }
 
 const initialState: CurrentIdState = {
-  current_id: "",
+  value: "",
 };
 
 const currentIdSlice = createSlice({
@@ -13,11 +13,11 @@ const currentIdSlice = createSlice({
   initialState,
   reducers: {
     setCurrentId: (state, action: PayloadAction<string>) => {
-      state.current_id = action.payload;
+      state.value = action.payload;
     },
   },
 });
 
-export const { setCurrentId } = currentIdSlice.actions;
+export const { setCurrentId,  } = currentIdSlice.actions;
 
 export default currentIdSlice.reducer;
