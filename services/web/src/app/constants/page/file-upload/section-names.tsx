@@ -1,3 +1,3 @@
-export const SECTION_NAME_1 = "Your Uploaded Files";
+export const SECTION_NAME_1 = "Folders";
 
-export const SECTION_NAME_2 = "Lawyer Documents Drafts";
+export const SECTION_NAME_2 = "Files";
