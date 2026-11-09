@@ -22,8 +22,6 @@ jobs:
           # Explicitly disables registry pushing               
           push: false    
           tags: web-image:local              
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Build Backend Image
         uses: docker/build-push-action@v6
@@ -32,6 +30,4 @@ jobs:
           file: ./Dockerfile.deploy.be 
           # Explicitly disables registry pushing            
           push: false                         
-          tags: api-image:local             
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          tags: api-image:local

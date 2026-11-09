@@ -66,9 +66,8 @@ ENV NODE_ENV=production
 ENV PORT=3001
 ENV HOSTNAME="0.0.0.0"
 
-# Copy production node_modules and built dist bundle from builder stage
+# Copy dependencies and built dist bundle from builder stage
 COPY --from=builder --chown=node:node /app/node_modules ./node_modules
-COPY --from=builder --chown=node:node /app/services/api/node_modules ./services/api/node_modules
 COPY --from=builder --chown=node:node /app/services/api/dist ./services/api/dist
 COPY --from=builder --chown=node:node /app/services/api/package.json ./services/api/package.json
 
