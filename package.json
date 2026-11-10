@@ -28,7 +28,7 @@
   ],
   "devDependencies": {
     "@swc/cli": "^0.8.1",
-    "@swc/core": "^1.16.18",
+    "@swc/core": "^1.16.22",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
     "turbo": "2.11.10",
