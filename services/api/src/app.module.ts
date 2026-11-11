@@ -16,6 +16,7 @@ if (!databaseUrl) {
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: databaseUrl,
+      password: env.DB_PASSWORD,
       schema: 'public',
       entities: [ItemNode],
       synchronize: true,
