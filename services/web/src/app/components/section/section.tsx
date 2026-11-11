@@ -7,8 +7,8 @@ import {NodeDto} from "@repo/types";
 import CreateFolderModal from "../modal/create-folder-modal";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import IconButton from "@mui/material/IconButton";
-import { useDispatch } from "react-redux";
-import { popCurrentNodeFromHistory } from "@/store/nodeHistory/nodeHistorySlice";
+import {useDispatch} from "react-redux";
+import {popCurrentNodeFromHistory} from "@/store/nodeHistory/nodeHistorySlice";
 
 type SectionProps = {
   isFolderSection?: boolean; // Currently, we have 2 different sections - Files and Folder

@@ -5,9 +5,9 @@ import CardActionArea from "@mui/material/CardActionArea";
 import FolderIcon from "@mui/icons-material/Folder";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import { useDeleteNodesMutation } from "@/store/nodesApi/nodesApiSlice";
-import { NodeDto } from "@repo/types";
-import { pushCurrentNodeToHistory } from "@/store/nodeHistory/nodeHistorySlice";
+import {useDeleteNodesMutation} from "@/store/nodesApi/nodesApiSlice";
+import {NodeDto} from "@repo/types";
+import {pushCurrentNodeToHistory} from "@/store/nodeHistory/nodeHistorySlice";
 
 type ItemCardProps = {
   node: NodeDto;
@@ -32,8 +32,8 @@ export default function ItemCard({node}: ItemCardProps) {
     const new_node = {
       id: id,
       name: content,
-      parentId: node.parentId || ""
-    }
+      parentId: node.parentId || "",
+    };
 
     // Push the new_node
     dispatch(pushCurrentNodeToHistory(new_node));
