@@ -1,0 +1,55 @@
+import * as React from "react";
+import Box from "@mui/material/Box";
+
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import WrappedButton from "$src/app/components/button/wrapped-button";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "80%",
+  maxWidth: 800,
+  boxShadow: 24,
+  p: 4,
+};
+
+type WrappedModalProps = {
+  title: string;
+  content: React.ReactNode; // This can be a React component or any valid React node
+};
+
+export default function WrappedModal({
+  title,
+  content,
+}: WrappedModalProps) {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  return (
+    <div>
+      <WrappedButton onClick={handleOpen} content="Open modal" />
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style} className="bg-company rounded-lg">
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            className="font-roboto-mono text-xl font-bold"
+          >
+            {title}
+          </Typography>
+          {content}
+        </Box>
+      </Modal>
+    </div>
+  );
+}
