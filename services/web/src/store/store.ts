@@ -1,10 +1,10 @@
-import { configureStore } from "@reduxjs/toolkit";
-import currentIdReducer from "./currentId/currentIdSlice";
-import { nodesApiSlice } from "./nodesApi/nodesApiSlice";
+import {configureStore} from "@reduxjs/toolkit";
+import nodeHistoryReducer from "./nodeHistory/nodeHistorySlice";
+import {nodesApiSlice} from "./nodesApi/nodesApiSlice";
 
 export const store = configureStore({
   reducer: {
-    currentId: currentIdReducer,
+    nodeHistory: nodeHistoryReducer,
     [nodesApiSlice.reducerPath]: nodesApiSlice.reducer,
   },
 
