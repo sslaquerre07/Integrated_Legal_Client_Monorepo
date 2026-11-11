@@ -1,23 +1,18 @@
 import ItemCard from "@/app/components/card/item-card";
-// import { FileDetail } from "$src/app/constants/types/file-detail";
-import CreateFolderButton from "../button/create-folder-button";
-// import { useGetFolderStructureQuery } from "@/store/nodesApi/nodesApiSlice";
-// import { getRootFolders } from "@/app/utils/note-util";
 import {
   SECTION_NAME_1,
   SECTION_NAME_2,
 } from "$src/app/constants/page/file-upload/section-names";
 import { NodeDto } from "@repo/types";
+import CreateFolderModal from "../modal/create-folder-modal";
 
 type SectionProps = {
   isFolderSection?: boolean; // Currently, we have 2 different sections - Files and Folder
   nodes: NodeDto[];
 };
 
-// todo: conditionally render files and folders
 // todo: so file section will display files on the same level.
 // todo: folder sesction will display folders on the same level.
-// todo: call newly created function
 
 export default function Section({
   isFolderSection = false,
@@ -31,7 +26,8 @@ export default function Section({
         <span className="whitespace-nowrap text-2xl font-semibold text-white">
           {section_label}
         </span>
-        <CreateFolderButton />
+        <CreateFolderModal />
+
       </div>
 
       <div className="flex flex-wrap gap-4 py-4">
