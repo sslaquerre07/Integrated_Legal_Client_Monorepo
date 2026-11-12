@@ -27,9 +27,6 @@ services:
       dockerfile: services/api/Dockerfile
     working_dir: /workspaces/Integrated_Legal_Client_Monorepo
     command: sleep infinity
-    environment:
-      NODE_ENV: development
-      DATABASE_URL: postgres://user:password@db:5432/dev_db
     volumes:
       - ..:/workspaces/Integrated_Legal_Client_Monorepo:cached
     depends_on:
