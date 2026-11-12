@@ -16,7 +16,7 @@
     "@mui/icons-material": "^9.5.0",
     "@mui/material": "^9.5.0",
     "@mui/material-nextjs": "^9.5.0",
-    "@reduxjs/toolkit": "^2.12.0",
+    "@reduxjs/toolkit": "^2.14.0",
     "@repo/components": "*",
     "next": "16.4.2",
     "react": "19.3.1",
