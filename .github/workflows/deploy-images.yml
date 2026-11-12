@@ -1,4 +1,4 @@
-name: Push Docker Images to Google Artifact Registry 
+name: Push & Deploy Images 
 
 on:
   push:
@@ -19,11 +19,18 @@ jobs:
 
   build_and_push_images:
     needs: changes
-    if: needs.changes.outputs.types == 'true' || needs.changes.outputs.root == 'true' || needs.changes.outputs.fe == 'true' || needs.changes.outputs.be == 'true'
+    if: >-
+      needs.changes.outputs.types == 'true' ||
+      needs.changes.outputs.root == 'true' ||
+      needs.changes.outputs.fe == 'true' ||
+      needs.changes.outputs.be == 'true'
     permissions:
       contents: read
       id-token: write
     runs-on: ubuntu-latest
+    env:
+      CONDITION_BACKEND: ${{ needs.changes.outputs.types == 'true' || needs.changes.outputs.root == 'true' || needs.changes.outputs.be == 'true' }}
+      CONDITION_FRONTEND: ${{ needs.changes.outputs.types == 'true' || needs.changes.outputs.root == 'true' || needs.changes.outputs.fe == 'true' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -51,7 +58,7 @@ jobs:
           registry: ${{ env.AR_REPO_LOCATION }}-docker.pkg.dev
 
       - name: Build Backend Image
-        if: needs.changes.outputs.types == 'true' || needs.changes.outputs.root == 'true' || needs.changes.outputs.be == 'true'
+        if: env.CONDITION_BACKEND == 'true'
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -60,10 +67,56 @@ jobs:
           tags: ${{ github.event_name == 'push' && format('{0}/backend:{1}', secrets.AR_URL, github.sha) || 'backend:local' }}
 
       - name: Build Frontend Image
-        if: needs.changes.outputs.types == 'true' || needs.changes.outputs.root == 'true' || needs.changes.outputs.fe == 'true'
+        if: env.CONDITION_FRONTEND == 'true'
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile.deploy.fe
           push: ${{ github.event_name == 'push' }}
           tags: ${{ github.event_name == 'push' && format('{0}/frontend:{1}', secrets.AR_URL, github.sha) || 'frontend:local' }}
+
+      # --- GITOPS DISPATCH STEP STARTS HERE ---
+
+      - name: Generate Ephemeral GitHub App Token
+        if: github.event_name == 'push'
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: sslaquerre07
+          repositories: Integrated_Legal_Client_Deployment
+
+      - name: Checkout Deployment Repository Using App Token
+        if: github.event_name == 'push'
+        uses: actions/checkout@v4
+        with:
+          repository: 'sslaquerre07/Integrated_Legal_Client_Deployment'
+          token: ${{ steps.generate-token.outputs.token }}
+          ref: 'main'
+
+      - name: Update Backend Image Tag If Changed
+        if: github.event_name == 'push' && env.CONDITION_BACKEND == 'true'
+        run: |
+          cd terraform/
+          sed -i 's|registry-repo/backend:.*\"|registry-repo/backend:${{ github.sha }}|g' main.tf
+
+      - name: Update Frontend Image Tag If Changed
+        if: github.event_name == 'push' && env.CONDITION_FRONTEND == 'true'
+        run: |
+          cd terraform/
+          sed -i 's|registry-repo/frontend:.*\"|registry-repo/frontend:${{ github.sha }}|g' main.tf
+
+      - name: Create Pull Request with Image Tag Update
+        if: >-
+          github.event_name == 'push' &&
+          (env.CONDITION_BACKEND == 'true' || env.CONDITION_FRONTEND == 'true')
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          commit-message: "chore: update container image tags to sha-${{ github.sha }}"
+          branch: update-image-tags-${{ github.sha }}
+          title: "Automated GitOps: Update Image Tags to sha-${{ github.sha }}"
+          body: "Automated pipeline update triggered by application build commit ${{ github.sha }}."
+          base: main
+          signoff: false
