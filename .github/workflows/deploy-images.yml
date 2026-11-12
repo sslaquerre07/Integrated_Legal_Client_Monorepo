@@ -99,13 +99,27 @@ jobs:
         if: github.event_name == 'push' && env.CONDITION_BACKEND == 'true'
         run: |
           cd terraform/
-          sed -i 's|application-images-fe-and-be/backend:.*\"|application-images-fe-and-be/backend:${{ github.sha }}|g' main.tf
+          python3 -c '
+          import re
+          with open("main.tf", "r") as f:
+              content = f.read()
+          new_content = re.sub(r"(application-images-fe-and-be/backend:)[^\"]+", r"\1${{ github.sha }}", content)
+          with open("main.tf", "w") as f:
+              f.write(new_content)
+          '
 
       - name: Update Frontend Image Tag If Changed
         if: github.event_name == 'push' && env.CONDITION_FRONTEND == 'true'
         run: |
           cd terraform/
-          sed -i 's|application-images-fe-and-be/frontend:.*\"|application-images-fe-and-be/frontend:${{ github.sha }}|g' main.tf
+          python3 -c '
+          import re
+          with open("main.tf", "r") as f:
+              content = f.read()
+          new_content = re.sub(r"(application-images-fe-and-be/frontend:)[^\"]+", r"\1${{ github.sha }}", content)
+          with open("main.tf", "w") as f:
+              f.write(new_content)
+          '
 
       - name: Create Pull Request with Image Tag Update
         if: >-
