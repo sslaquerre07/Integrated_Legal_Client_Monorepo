@@ -4,29 +4,17 @@ on:
   pull_request:
     branches: ["main"]
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      fe: ${{ steps.filter.outputs.fe }}
-      be: ${{ steps.filter.outputs.be }}
-      types: ${{ steps.filter.outputs.types }}
-    steps:
-      - uses: actions/checkout@v7
-      - uses: dorny/paths-filter@v4
-        id: filter
-        with:
-          filters: |
-            fe:
-              - 'services/web/**'
-            be:
-              - 'services/api/**'
-            types:
-              - 'packages/types/**'
+  check-paths:
+    uses: ./.github/workflows/path-filter.yml
 
   lint-fe:
-    needs: changes
-    if: needs.changes.outputs.fe == 'true'
+    needs: check-paths
+    if: needs.check-paths.outputs.fe == 'true'
     name: Lint Frontend
     runs-on: ubuntu-latest
     steps:
@@ -39,8 +27,8 @@ jobs:
       - run: npm --prefix services/web run lint
 
   lint-be:
-    needs: changes
-    if: needs.changes.outputs.be == 'true'
+    needs: check-paths
+    if: needs.check-paths.outputs.be == 'true'
     name: Lint Backend
     runs-on: ubuntu-latest
     steps:
@@ -53,8 +41,8 @@ jobs:
       - run: npm --prefix services/api run lint
 
   lint-types:
-    needs: changes
-    if: needs.changes.outputs.types == 'true'
+    needs: check-paths
+    if: needs.check-paths.outputs.types == 'true'
     name: Lint Shared Types
     runs-on: ubuntu-latest
     steps:
