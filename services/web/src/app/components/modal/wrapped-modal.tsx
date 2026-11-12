@@ -31,7 +31,7 @@ export default function WrappedModal({
 
   return (
     <div>
-      <WrappedButton onClick={handleOpen} content="Open modal" />
+      <WrappedButton onClick={handleOpen} content={title} />
       <Modal
         open={open}
         onClose={handleClose}
