@@ -99,13 +99,13 @@ jobs:
         if: github.event_name == 'push' && env.CONDITION_BACKEND == 'true'
         run: |
           cd terraform/
-          sed -i 's|registry-repo/backend:.*\"|registry-repo/backend:${{ github.sha }}|g' main.tf
+          sed -i 's|application-images-fe-and-be/backend:.*\"|application-images-fe-and-be/backend:${{ github.sha }}|g' main.tf
 
       - name: Update Frontend Image Tag If Changed
         if: github.event_name == 'push' && env.CONDITION_FRONTEND == 'true'
         run: |
           cd terraform/
-          sed -i 's|registry-repo/frontend:.*\"|registry-repo/frontend:${{ github.sha }}|g' main.tf
+          sed -i 's|application-images-fe-and-be/frontend:.*\"|application-images-fe-and-be/frontend:${{ github.sha }}|g' main.tf
 
       - name: Create Pull Request with Image Tag Update
         if: >-
