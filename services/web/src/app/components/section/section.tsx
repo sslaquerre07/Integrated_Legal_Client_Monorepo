@@ -3,12 +3,13 @@ import {
   SECTION_NAME_1,
   SECTION_NAME_2,
 } from "$src/app/constants/page/file-upload/section-names";
-import {NodeDto} from "@repo/types";
+import { NodeDto } from "@repo/types";
 import CreateFolderModal from "../modal/create-folder-modal";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import IconButton from "@mui/material/IconButton";
-import {useDispatch} from "react-redux";
-import {popCurrentNodeFromHistory} from "@/store/nodeHistory/nodeHistorySlice";
+import { useDispatch } from "react-redux";
+import { popCurrentNodeFromHistory } from "@/store/nodeHistory/nodeHistorySlice";
+import CreateFileModal from "../modal/create-file-modal";
 
 type SectionProps = {
   isFolderSection?: boolean; // Currently, we have 2 different sections - Files and Folder
@@ -49,6 +50,7 @@ export default function Section({
           </span>
         </div>
         <CreateFolderModal />
+        <CreateFileModal />
       </div>
 
       <div className="flex flex-wrap gap-4 py-4">
