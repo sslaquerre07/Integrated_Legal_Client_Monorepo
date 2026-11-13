@@ -1,23 +1,21 @@
 "use client";
-import {useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import FolderIcon from "@mui/icons-material/Folder";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import {
-  useDeleteNodesMutation,
-} from "@/store/nodesApi/nodesApiSlice";
-import {NodeDto} from "@repo/types";
-import {pushCurrentNodeToHistory} from "@/store/nodeHistory/nodeHistorySlice";
+import { useDeleteNodesMutation } from "@/store/nodesApi/nodesApiSlice";
+import { NodeDto } from "@repo/types";
+import { pushCurrentNodeToHistory } from "@/store/nodeHistory/nodeHistorySlice";
 import RenameNodeModal from "../modal/rename-node-modal";
 
 type ItemCardProps = {
   node: NodeDto;
 };
 
-export default function ItemCard({node}: ItemCardProps) {
-  const {id, isFolder, name: content} = node;
+export default function ItemCard({ node }: ItemCardProps) {
+  const { id, isFolder, name: content } = node;
 
   const icon = isFolder ? <FolderIcon fontSize="large" /> : undefined;
 
@@ -28,17 +26,20 @@ export default function ItemCard({node}: ItemCardProps) {
    * Pushes the nodeState to the nodeHistory
    */
   function handleSelect() {
-    dispatch(
-      pushCurrentNodeToHistory({
-        id,
-        name: content,
-        parentId: node.parentId || "",
-      }),
-    );
+    // Don't push to history if not a folder
+    if (isFolder) {
+      dispatch(
+        pushCurrentNodeToHistory({
+          id,
+          name: content,
+          parentId: node.parentId || "",
+        }),
+      );
+    }
   }
 
   function handleDeleteNode() {
-    deleteNodesMutation({ids: [id]});
+    deleteNodesMutation({ ids: [id] });
   }
 
   return (
