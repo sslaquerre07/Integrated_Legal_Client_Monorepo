@@ -11,7 +11,7 @@ services:
       - "127.0.0.1:5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./init-scripts:/docker-entrypoint-initdb.d:ro
+      - ./seed.sql:/seed.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user -d dev_db"]
       interval: 5s
@@ -47,6 +47,8 @@ services:
     environment:
       NODE_ENV: development
       DATABASE_URL: postgres://user:password@db:5432/dev_db
+      GCP_PROJECT_ID: integrated-legal-client-portal
+      STORAGE_BUCKET_NAME: ilcp-storage-bucket-dev
     volumes:
       - ..:/workspaces/Integrated_Legal_Client_Monorepo:cached
     depends_on:
