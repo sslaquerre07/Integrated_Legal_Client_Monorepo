@@ -7,8 +7,11 @@ import { NodeDto } from "@repo/types";
 import CreateFolderModal from "../modal/create-folder-modal";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import IconButton from "@mui/material/IconButton";
-import { useDispatch } from "react-redux";
-import { popCurrentNodeFromHistory } from "@/store/nodeHistory/nodeHistorySlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getCurrentNode,
+  popCurrentNodeFromHistory,
+} from "@/store/nodeHistory/nodeHistorySlice";
 import CreateFileModal from "../modal/create-file-modal";
 
 type SectionProps = {
@@ -22,6 +25,8 @@ export default function Section({
 }: SectionProps) {
   const section_label = isFolderSection ? SECTION_NAME_1 : SECTION_NAME_2;
   const dispatch = useDispatch();
+  const curr_id = useSelector(getCurrentNode)?.id;
+  const isRootFolder = curr_id == "";
 
   /**
    * Navigates to the previous (parent) folder by popping from nodeHistory
@@ -35,7 +40,7 @@ export default function Section({
     <>
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-5">
-          {isFolderSection ? (
+          {isFolderSection && !isRootFolder ? (
             <IconButton
               aria-label="back"
               size="large"
@@ -49,10 +54,12 @@ export default function Section({
             {section_label}
           </span>
         </div>
-        <div className="flex flex-row items-center gap-2">
-        <CreateFolderModal />
-        <CreateFileModal />
-        </div>
+        {isFolderSection ? (
+          <div className="flex flex-row items-center gap-2">
+            <CreateFolderModal />
+            <CreateFileModal />
+          </div>
+        ) : null}
       </div>
 
       <div className="flex flex-wrap gap-4 py-4">
