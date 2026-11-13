@@ -18,7 +18,7 @@
     "@mui/material-nextjs": "^9.5.0",
     "@reduxjs/toolkit": "^2.14.0",
     "@repo/components": "*",
-    "next": "16.4.2",
+    "next": "16.4.6",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "react-redux": "^9.3.1",
