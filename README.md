@@ -65,16 +65,9 @@ This repository includes a configured dev container at `.devcontainer/devcontain
 - Docker installed and running
 - VS Code with the Dev Containers extension
 
-### .env Setup
-Before opening the container, you will need to set up a `.env` file in the `service/api` with the following format:
-```bash
-# DB Information
-DATABASE_URL="postgresql://postgres:local_password_123@localhost:5432/monorepo_dev?schema=public"
-
 # GCP Information (Get this information from Google Cloud Console)
 GCP_PROJECT_ID="our-project-id"
 STORAGE_BUCKET_NAME="our-storage-bucket-name"
-```
 
 ### Open the project in the container
 1. Open the repository in VS Code.
@@ -87,24 +80,35 @@ The dev container starts three services:
 - `web` and `api` — the application development containers
 - `db` — PostgreSQL 16, with a persistent `pgdata` volume
 
-#### DB Considerations
-The PostgreSQL schema is defined in `.devcontainer/init-scripts/init.sql`. PostgreSQL runs scripts in that directory when it initializes a new, empty data volume. The sample rows are in `.devcontainer/init-scripts/seed.sql`; the Dev Container runs the seed command after `npm install` each time it is created. The seed is safe to rerun.
+#### Database in the Dev Container
+The `db` service runs PostgreSQL 16 and stores its data in the persistent `pgdata` volume. The API schema is managed by TypeORM migrations; when the Dev Container is created, `postCreateCommand` installs dependencies and applies pending migrations after the database is healthy.
+
+When new migrations are added, apply them in the Dev Container with:
+
+```bash
+npm --workspace services/api run migration:run
+```
+
+Sample rows are not loaded automatically. To load them manually, open Docker Desktop, select the running `db` container, and open its **Exec** tab. Run:
+
+```bash
+psql -U user -h localhost -d dev_db -f /seed.sql
+```
+
+If the initial migration fails because `nodes` already exists from the previous setup, reset the local database from the `db` container's **Exec** tab:
+
+```bash
+dropdb -U user -h localhost dev_db
+createdb -U user -h localhost dev_db
+```
+
+Enter the database password (`password`) if prompted. **This permanently deletes all data in the local database.** Then run `npm --workspace services/api run migration:run` in the Dev Container terminal to recreate the schema. Afterward, you can optionally run the `psql` seed command above.
 
 #### Google Cloud Setup
 In order for your local environment to be able to communicate to Google Cloud Services such as our Storage Bucket, you will need to authenticate yourself with Google Cloud CLI with the following commands:
 ```bash
 # Sign in to the Google Cloud CLI and select a project
 gcloud init
-
-# Set up Application Default Credentials for local applications and client libraries
-gcloud auth application-default login
-```
-
-### Automatic install step
-After the container is created, the project installs dependencies and seeds the database:
-
-```bash
-npm install && npm --workspace services/api run db:seed
 ```
 
 ### Forwarded ports
@@ -120,11 +124,7 @@ npm install
 npm run dev
 npm run build
 npm run lint
-# Rerun the sample-data seed at any time
-npm --workspace services/api run db:seed
 ```
-
-The database volume persists across container rebuilds. To rerun sample data manually, use the seed command above; rebuilding the container alone does not rerun PostgreSQL's first-time initialization scripts.
 
 ## Notes
 
