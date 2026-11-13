@@ -49,8 +49,10 @@ export default function Section({
             {section_label}
           </span>
         </div>
+        <div className="flex flex-row items-center gap-2">
         <CreateFolderModal />
         <CreateFileModal />
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-4 py-4">
