@@ -1,5 +1,6 @@
 import { parse } from 'pg-connection-string';
 
+// Configuration for the database connection
 export function getDatabaseConfig(getEnv: (name: string) => string | undefined) {
   const databaseUrl = getEnv('DATABASE_URL');
   const urlConfig = databaseUrl ? parse(databaseUrl) : undefined;
