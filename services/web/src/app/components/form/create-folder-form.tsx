@@ -24,7 +24,7 @@ export default function CreateFolderForm() {
     <div>
       <FormControl className="flex flex-col gap-2 my-8">
         <InputLabel htmlFor="my-input" className="text-white">
-          {CREATE_FOLDER_MODAL_CONTENT.modal.inputLabel}
+          {CREATE_FOLDER_MODAL_CONTENT.form.inputLabel}
         </InputLabel>
         <Input
           id="folder-name"
@@ -33,7 +33,7 @@ export default function CreateFolderForm() {
           onChange={(e) => setFolderName(e.target.value)}
         />
         <FormHelperText id="folder-name-helper-text" className="text-white">
-          {CREATE_FOLDER_MODAL_CONTENT.modal.helperText}
+          {CREATE_FOLDER_MODAL_CONTENT.form.helperText}
         </FormHelperText>
       </FormControl>
       <WrappedButton content="Submit" onClick={handleCreate} />
