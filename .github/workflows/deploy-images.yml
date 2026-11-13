@@ -103,7 +103,7 @@ jobs:
           import re
           with open("main.tf", "r") as f:
               content = f.read()
-          new_content = re.sub(r"(application-images-fe-and-be/backend:)[^\"]+", r"\1${{ github.sha }}", content)
+          new_content = re.sub(r"(application-images-fe-and-be/backend:)[^\"]+", r"\g<1>${{ github.sha }}", content)
           with open("main.tf", "w") as f:
               f.write(new_content)
           '
@@ -116,7 +116,7 @@ jobs:
           import re
           with open("main.tf", "r") as f:
               content = f.read()
-          new_content = re.sub(r"(application-images-fe-and-be/frontend:)[^\"]+", r"\1${{ github.sha }}", content)
+          new_content = re.sub(r"(application-images-fe-and-be/frontend:)[^\"]+", r"\g<1>${{ github.sha }}", content)
           with open("main.tf", "w") as f:
               f.write(new_content)
           '
