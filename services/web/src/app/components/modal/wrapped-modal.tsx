@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import WrappedButton from "$src/app/components/button/wrapped-button";
 
 const style = {
   position: "absolute",
@@ -18,12 +17,14 @@ const style = {
 
 type WrappedModalProps = {
   title: string;
-  content: React.ReactNode; // This can be a React component or any valid React node
+  content: React.ReactNode;
+  trigger: (open: () => void) => React.ReactNode; // The component (e.g., button) that opens the modal
 };
 
 export default function WrappedModal({
   title,
   content,
+  trigger,
 }: WrappedModalProps) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -31,7 +32,8 @@ export default function WrappedModal({
 
   return (
     <div>
-      <WrappedButton onClick={handleOpen} content={title} />
+      {trigger(handleOpen)}
+
       <Modal
         open={open}
         onClose={handleClose}
