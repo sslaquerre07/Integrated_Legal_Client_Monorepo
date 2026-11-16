@@ -7,6 +7,10 @@ import {
   pushCurrentNodeToHistory,
 } from "$src/store/nodeHistory/nodeHistorySlice";
 import { NodeDto } from "@repo/types";
+import {
+  fileCardMockData,
+  folderCardMockData,
+} from "$src/app/constants/test-data/node-test-data";
 import Section from "./section";
 
 // Mock child components so these tests focus on Section's layout and navigation
@@ -35,20 +39,6 @@ jest.mock(
     },
 );
 
-const folder: NodeDto = {
-  id: "folder-id",
-  isFolder: true,
-  name: "Documents",
-  updatedAt: "2026-11-16T15:56:19Z",
-};
-
-const file: NodeDto = {
-  id: "file-id",
-  isFolder: false,
-  name: "report.pdf",
-  updatedAt: "2026-11-16T15:56:19Z",
-};
-
 function renderSection(
   nodes: NodeDto[] = [],
   isFolderSection = false,
@@ -66,25 +56,25 @@ function renderSection(
 
 describe("Section", () => {
   it("renders the Files heading by default", () => {
-    renderSection([file]);
+    renderSection([fileCardMockData]);
 
     expect(screen.getByText("Files")).toBeInTheDocument();
     expect(screen.queryByText("Folders")).not.toBeInTheDocument();
   });
 
   it("renders the Folders heading for a folder section", () => {
-    renderSection([folder], true);
+    renderSection([folderCardMockData], true);
 
     expect(screen.getByText("Folders")).toBeInTheDocument();
     expect(screen.queryByText("Files")).not.toBeInTheDocument();
   });
 
   it("renders one item card for every node", () => {
-    renderSection([folder, file]);
+    renderSection([folderCardMockData, fileCardMockData]);
 
     expect(screen.getAllByTestId("item-card")).toHaveLength(2);
-    expect(screen.getByText("Documents")).toBeInTheDocument();
-    expect(screen.getByText("report.pdf")).toBeInTheDocument();
+    expect(screen.getByText(folderCardMockData.name)).toBeInTheDocument();
+    expect(screen.getByText(fileCardMockData.name)).toBeInTheDocument();
   });
 
   it("renders no item cards when the node list is empty", () => {
@@ -129,8 +119,8 @@ describe("Section", () => {
     const store = makeStore();
     store.dispatch(
       pushCurrentNodeToHistory({
-        id: folder.id,
-        name: folder.name,
+        id: folderCardMockData.id,
+        name: folderCardMockData.name,
         parentId: "",
       }),
     );

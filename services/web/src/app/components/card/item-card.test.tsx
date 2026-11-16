@@ -6,6 +6,10 @@ import { makeStore } from "$src/store/store";
 import { Provider } from "react-redux";
 import { getCurrentNode } from "$src/store/nodeHistory/nodeHistorySlice";
 import { useDeleteNodesMutation } from "$src/store/nodesApi/nodesApiSlice";
+import {
+  fileCardMockData,
+  folderCardMockData,
+} from "$src/app/constants/test-data/node-test-data";
 
 // Keep the real API slice for the store, but replace the mutation hook so the
 // test verifies the component's request without possibility of making a network call
@@ -13,20 +17,6 @@ jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
   const actual = jest.requireActual("$src/store/nodesApi/nodesApiSlice");
   return { ...actual, useDeleteNodesMutation: jest.fn() };
 });
-
-const fileCardNode: NodeDto = {
-  id: "test-id",
-  isFolder: false,
-  name: "Test File",
-  updatedAt: "2026-11-16T15:56:19Z",
-};
-
-const folderCardNode: NodeDto = {
-  id: "folder-id",
-  isFolder: true,
-  name: "Test Folder",
-  updatedAt: "2026-11-16T15:56:19Z",
-};
 
 describe("ItemCard", () => {
   const deleteNodesMutation = jest.fn();
@@ -53,46 +43,46 @@ describe("ItemCard", () => {
   };
 
   it("renders the content", () => {
-    renderItemCard(fileCardNode);
+    renderItemCard(fileCardMockData);
     expect(screen.getByText("Test File")).toBeInTheDocument();
   });
 
   it("deletes the node when the delete button is clicked", () => {
-    renderItemCard(fileCardNode);
+    renderItemCard(fileCardMockData);
 
     fireEvent.click(screen.getByRole("button", { name: "delete" }));
 
     expect(deleteNodesMutation).toHaveBeenCalledWith({
-      ids: [fileCardNode.id],
+      ids: [fileCardMockData.id],
     });
   });
 
   it("renders the folder icon when isFolder is true", () => {
-    renderItemCard(folderCardNode);
+    renderItemCard(folderCardMockData);
     expect(screen.getByTestId("FolderIcon")).toBeInTheDocument();
   });
 
   it("does not render the folder icon when isFolder is false", () => {
-    renderItemCard(fileCardNode);
+    renderItemCard(fileCardMockData);
     expect(screen.queryByTestId("FolderIcon")).not.toBeInTheDocument();
   });
 
   it("adds a folder to navigation history when its content is clicked", () => {
-    const { store } = renderItemCard(folderCardNode);
+    const { store } = renderItemCard(folderCardMockData);
 
-    fireEvent.click(screen.getByText(folderCardNode.name));
+    fireEvent.click(screen.getByText(folderCardMockData.name));
 
     expect(getCurrentNode(store.getState())).toEqual({
-      id: folderCardNode.id,
-      name: folderCardNode.name,
+      id: folderCardMockData.id,
+      name: folderCardMockData.name,
       parentId: "",
     });
   });
 
   it("does not add a file to navigation history when its content is clicked", () => {
-    const { store } = renderItemCard(fileCardNode);
+    const { store } = renderItemCard(fileCardMockData);
 
-    fireEvent.click(screen.getByText(fileCardNode.name));
+    fireEvent.click(screen.getByText(fileCardMockData.name));
 
     expect(getCurrentNode(store.getState())).toEqual({
       id: "",
