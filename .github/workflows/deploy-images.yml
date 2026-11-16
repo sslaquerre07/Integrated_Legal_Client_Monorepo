@@ -59,7 +59,7 @@ jobs:
 
       - name: Build Backend Image
         if: env.CONDITION_BACKEND == 'true'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile.deploy.be
@@ -68,7 +68,7 @@ jobs:
 
       - name: Build Frontend Image
         if: env.CONDITION_FRONTEND == 'true'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile.deploy.fe
