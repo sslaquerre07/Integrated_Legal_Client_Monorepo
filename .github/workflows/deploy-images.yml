@@ -89,7 +89,7 @@ jobs:
 
       - name: Checkout Deployment Repository Using App Token
         if: github.event_name == 'push'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: 'sslaquerre07/Integrated_Legal_Client_Deployment'
           token: ${{ steps.generate-token.outputs.token }}
