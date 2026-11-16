@@ -5,9 +5,9 @@ import CardActionArea from "@mui/material/CardActionArea";
 import FolderIcon from "@mui/icons-material/Folder";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import { useDeleteNodesMutation } from "@/store/nodesApi/nodesApiSlice";
+import { useDeleteNodesMutation } from "$src/store/nodesApi/nodesApiSlice";
 import { NodeDto } from "@repo/types";
-import { pushCurrentNodeToHistory } from "@/store/nodeHistory/nodeHistorySlice";
+import { pushCurrentNodeToHistory } from "$src/store/nodeHistory/nodeHistorySlice";
 import RenameNodeModal from "../modal/rename-node-modal";
 
 type ItemCardProps = {

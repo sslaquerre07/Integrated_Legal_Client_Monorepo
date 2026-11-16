@@ -2,9 +2,9 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import ItemCard from "./item-card";
 import { NodeDto } from "@repo/types";
-import { makeStore } from "@/store/store";
+import { makeStore } from "$src/store/store";
 import { Provider } from "react-redux";
-import { getCurrentNode } from "@/store/nodeHistory/nodeHistorySlice";
+import { getCurrentNode } from "$src/store/nodeHistory/nodeHistorySlice";
 import { useDeleteNodesMutation } from "$src/store/nodesApi/nodesApiSlice";
 
 // Keep the real API slice for the store, but replace the mutation hook so the

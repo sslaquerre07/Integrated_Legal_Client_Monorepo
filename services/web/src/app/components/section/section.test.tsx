@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { Provider } from "react-redux";
-import { makeStore } from "@/store/store";
+import { makeStore } from "$src/store/store";
 import {
   getCurrentNode,
   pushCurrentNodeToHistory,
-} from "@/store/nodeHistory/nodeHistorySlice";
+} from "$src/store/nodeHistory/nodeHistorySlice";
 import { NodeDto } from "@repo/types";
 import Section from "./section";
 

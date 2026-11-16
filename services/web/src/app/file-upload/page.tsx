@@ -2,10 +2,10 @@
 
 import Section from "$src/app/components/section/section";
 import HorizontalDivider from "$src/app/components/divider/horizontal-divider";
-import {parseFoldersAndFilesFromParentId} from "@/app/utils/node-helper";
-import {useGetFolderStructureQuery} from "@/store/nodesApi/nodesApiSlice";
+import {parseFoldersAndFilesFromParentId} from "$src/app/utils/node-helper";
+import {useGetFolderStructureQuery} from "$src/store/nodesApi/nodesApiSlice";
 import {useSelector} from "react-redux";
-import {getCurrentNode} from "@/store/nodeHistory/nodeHistorySlice";
+import {getCurrentNode} from "$src/store/nodeHistory/nodeHistorySlice";
 
 export default function FileUploadPage() {
   const curr_id = useSelector(getCurrentNode)?.id;

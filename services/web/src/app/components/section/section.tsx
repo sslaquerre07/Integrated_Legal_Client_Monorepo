@@ -1,4 +1,4 @@
-import ItemCard from "@/app/components/card/item-card";
+import ItemCard from "$src/app/components/card/item-card";
 import {
   SECTION_NAME_1,
   SECTION_NAME_2,
@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getCurrentNode,
   popCurrentNodeFromHistory,
-} from "@/store/nodeHistory/nodeHistorySlice";
+} from "$src/store/nodeHistory/nodeHistorySlice";
 import CreateFileModal from "../modal/create-file-modal";
 
 type SectionProps = {

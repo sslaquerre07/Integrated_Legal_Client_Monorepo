@@ -1,5 +1,5 @@
-import { getCurrentNode } from "@/store/nodeHistory/nodeHistorySlice";
-import { useCreateFileMutation } from "@/store/nodesApi/nodesApiSlice";
+import { getCurrentNode } from "$src/store/nodeHistory/nodeHistorySlice";
+import { useCreateFileMutation } from "$src/store/nodesApi/nodesApiSlice";
 import { FormControl, Input } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
