@@ -125,7 +125,7 @@ jobs:
         if: >-
           github.event_name == 'push' &&
           (env.CONDITION_BACKEND == 'true' || env.CONDITION_FRONTEND == 'true')
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ steps.generate-token.outputs.token }}
           commit-message: "chore: update container image tags to sha-${{ github.sha }}"
