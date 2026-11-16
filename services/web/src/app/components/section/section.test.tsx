@@ -11,22 +11,29 @@ import Section from "./section";
 
 // Mock child components so these tests focus on Section's layout and navigation
 // decisions rather than duplicating the children’s own behavior tests.
-jest.mock("$src/app/components/card/item-card", () => ({
-  __esModule: true,
-  default: ({ node }: { node: NodeDto }) => (
-    <div data-testid="item-card">{node.name}</div>
-  ),
-}));
+jest.mock(
+  "$src/app/components/card/item-card",
+  () =>
+    function ItemCardMock({ node }: { node: NodeDto }) {
+      return <div data-testid="item-card">{node.name}</div>;
+    },
+);
 
-jest.mock("$src/app/components/modal/create-folder-modal", () => ({
-  __esModule: true,
-  default: () => <button type="button">Create Folder</button>,
-}));
+jest.mock(
+  "$src/app/components/modal/create-folder-modal",
+  () =>
+    function CreateFolderModalMock() {
+      return <button type="button">Create Folder</button>;
+    },
+);
 
-jest.mock("$src/app/components/modal/create-file-modal", () => ({
-  __esModule: true,
-  default: () => <button type="button">Create File</button>,
-}));
+jest.mock(
+  "$src/app/components/modal/create-file-modal",
+  () =>
+    function CreateFileModalMock() {
+      return <button type="button">Create File</button>;
+    },
+);
 
 const folder: NodeDto = {
   id: "folder-id",

@@ -13,28 +13,36 @@ jest.mock("$src/store/nodesApi/nodesApiSlice", () => ({
   useGetFolderStructureQuery: jest.fn(),
 }));
 
-jest.mock("$src/app/components/section/section", () => ({
-  __esModule: true,
-  default: ({
-    isFolderSection = false,
-    nodes,
-  }: {
-    isFolderSection?: boolean;
-    nodes: NodeDto[];
-  }) => (
-    <section data-testid={isFolderSection ? "folder-section" : "file-section"}>
-      <h2>{isFolderSection ? "Folders" : "Files"}</h2>
-      {nodes.map((node) => (
-        <span key={node.id}>{node.name}</span>
-      ))}
-    </section>
-  ),
-}));
+jest.mock(
+  "$src/app/components/section/section",
+  () =>
+    function SectionMock({
+      isFolderSection = false,
+      nodes,
+    }: {
+      isFolderSection?: boolean;
+      nodes: NodeDto[];
+    }) {
+      return (
+        <section
+          data-testid={isFolderSection ? "folder-section" : "file-section"}
+        >
+          <h2>{isFolderSection ? "Folders" : "Files"}</h2>
+          {nodes.map((node) => (
+            <span key={node.id}>{node.name}</span>
+          ))}
+        </section>
+      );
+    },
+);
 
-jest.mock("$src/app/components/divider/horizontal-divider", () => ({
-  __esModule: true,
-  default: () => <hr data-testid="section-divider" />,
-}));
+jest.mock(
+  "$src/app/components/divider/horizontal-divider",
+  () =>
+    function HorizontalDividerMock() {
+      return <hr data-testid="section-divider" />;
+    },
+);
 
 const rootFolder: NodeDto = {
   id: "folder-id",

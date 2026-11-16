@@ -2,10 +2,13 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import RenameNodeModal from "./rename-node-modal";
 
-jest.mock("$src/app/components/form/rename-node-form", () => ({
-  __esModule: true,
-  default: () => <div data-testid="rename-node-form">Rename form</div>,
-}));
+jest.mock(
+  "$src/app/components/form/rename-node-form",
+  () =>
+    function RenameNodeFormMock() {
+      return <div data-testid="rename-node-form">Rename form</div>;
+    },
+);
 
 describe("RenameNodeModal", () => {
   it("renders a rename trigger", () => {
