@@ -12,16 +12,12 @@ export default function CreateFileForm() {
 
   // Uploads the user-selected files
   const handleCreateFile = () => {
-    // Log the state
-    console.log("files: ", files);
 
     // Upload the files
     createFile({ parentId: curr_id, files });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Log e first
-    console.log("e: ", e);
 
     // Set state files
     const new_files = Array.from(e.target.files!);
