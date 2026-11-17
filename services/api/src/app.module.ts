@@ -1,27 +1,22 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NodesModule } from './nodes/nodes.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ItemNode } from './entities/node.entity';
-import { env } from 'node:process';
-
-const databaseUrl = env.DATABASE_URL;
-
-if (!databaseUrl) {
-  throw new Error("DATABASE_URL must be set to connect to PostgreSQL.");
-}
+import { getDatabaseConfig } from './database/database.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url: databaseUrl,
-      schema: 'public',
-      entities: [ItemNode],
-      synchronize: true,
-    }),
-    ConfigModule.forRoot({
-      isGlobal: true,
+    ConfigModule.forRoot({ isGlobal: true, ignoreEnvFile: true }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        return {
+          ...getDatabaseConfig((name) => configService.get<string>(name)),
+          entities: [ItemNode],
+        };
+      },
     }),
     NodesModule,
   ],

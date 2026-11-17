@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   watchOptions: {
     pollIntervalMs: 500,
   },
+  output: "standalone",
 };
 
 export default nextConfig;

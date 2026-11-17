@@ -7,7 +7,11 @@
     },
     "dev": {
       "cache": false,
-      "passThroughEnv": ["DATABASE_URL"],
+      "passThroughEnv": [
+        "DATABASE_URL",
+        "GCP_PROJECT_ID",
+        "STORAGE_BUCKET_NAME"
+      ],
       "persistent": true
     },
     "lint": {
