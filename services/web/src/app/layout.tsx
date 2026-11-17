@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { StoreProvider } from "../store/storeProvider";
+import { StoreProvider } from "$src/store/storeProvider";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter"; // v15-appRouter on Next 15
 
 const geistSans = Geist({

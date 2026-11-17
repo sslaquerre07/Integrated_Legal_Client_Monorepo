@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import { useDeleteNodesMutation } from "$src/store/nodesApi/nodesApiSlice";
 import { NodeDto } from "@repo/types";
 import { pushCurrentNodeToHistory } from "$src/store/nodeHistory/nodeHistorySlice";
-import RenameNodeModal from "../modal/rename-node-modal";
+import RenameNodeModal from "$src/app/components/modal/rename-node-modal";
 
 type ItemCardProps = {
   node: NodeDto;

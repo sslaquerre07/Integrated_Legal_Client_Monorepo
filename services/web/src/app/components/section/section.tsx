@@ -4,7 +4,7 @@ import {
   SECTION_NAME_2,
 } from "$src/app/constants/page/file-upload/section-names";
 import { NodeDto } from "@repo/types";
-import CreateFolderModal from "../modal/create-folder-modal";
+import CreateFolderModal from "$src/app/components/modal/create-folder-modal";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import IconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,7 +12,7 @@ import {
   getCurrentNode,
   popCurrentNodeFromHistory,
 } from "$src/store/nodeHistory/nodeHistorySlice";
-import CreateFileModal from "../modal/create-file-modal";
+import CreateFileModal from "$src/app/components/modal/create-file-modal";
 
 type SectionProps = {
   isFolderSection?: boolean; // Currently, we have 2 different sections - Files and Folder

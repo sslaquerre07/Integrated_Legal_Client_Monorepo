@@ -3,7 +3,7 @@ import { useCreateFileMutation } from "$src/store/nodesApi/nodesApiSlice";
 import { FormControl, Input } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import WrappedButton from "../button/wrapped-button";
+import WrappedButton from "$src/app/components/button/wrapped-button";
 
 export default function CreateFileForm() {
   const [createFile] = useCreateFileMutation();

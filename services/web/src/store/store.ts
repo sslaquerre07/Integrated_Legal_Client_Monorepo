@@ -1,6 +1,6 @@
 import {configureStore} from "@reduxjs/toolkit";
-import nodeHistoryReducer from "./nodeHistory/nodeHistorySlice";
-import {nodesApiSlice} from "./nodesApi/nodesApiSlice";
+import nodeHistoryReducer from "$src/store/nodeHistory/nodeHistorySlice";
+import {nodesApiSlice} from "$src/store/nodesApi/nodesApiSlice";
 
 /**
  * Creates a Redux store with the node history and nodes API reducers.
