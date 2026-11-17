@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { useSelector } from "react-redux";
 import { useCreateFileMutation } from "$src/store/nodesApi/nodesApiSlice";
+import { getCurrentFolderId } from "$src/store/folderStructureSlice/FolderStructureSlice";
 import CreateFileForm from "./create-file-form";
 
 jest.mock("react-redux", () => ({
@@ -12,45 +13,55 @@ jest.mock("$src/store/nodesApi/nodesApiSlice", () => ({
   useCreateFileMutation: jest.fn(),
 }));
 
+jest.mock("$src/store/folderStructureSlice/FolderStructureSlice", () => ({
+  getCurrentFolderId: jest.fn(),
+}));
+
 const mockUseSelector = useSelector as unknown as jest.Mock;
 const mockUseCreateFileMutation = useCreateFileMutation as jest.Mock;
+
+function mockCurrentFolderId(currentFolderId: string | null) {
+  mockUseSelector.mockImplementation((selector) =>
+    selector === getCurrentFolderId ? currentFolderId : undefined,
+  );
+}
+
+function getFileInput(container: HTMLElement) {
+  return container.querySelector('input[type="file"]') as HTMLInputElement;
+}
 
 describe("CreateFileForm", () => {
   const createFile = jest.fn();
 
   beforeEach(() => {
-    createFile.mockReset();
-    mockUseSelector.mockReturnValue({ id: "current-folder-id" });
+    jest.clearAllMocks();
+    mockCurrentFolderId("current-folder-id");
     mockUseCreateFileMutation.mockReturnValue([createFile]);
-    jest.spyOn(console, "log").mockImplementation(() => undefined);
-  });
-
-  afterEach(() => {
-    jest.restoreAllMocks();
   });
 
   it("renders a multiple-file input and submit button", () => {
     const { container } = render(<CreateFileForm />);
-    const fileInput = container.querySelector('input[type="file"]');
+    const fileInput = getFileInput(container);
 
     expect(fileInput).toBeInTheDocument();
     expect(fileInput).toHaveAttribute("multiple");
-    expect(
-      screen.getByRole("button", { name: "Submit" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
+  });
+
+  it("reads the current folder id from the folder structure slice", () => {
+    render(<CreateFileForm />);
+
+    expect(mockUseSelector).toHaveBeenCalledWith(getCurrentFolderId);
   });
 
   it("uploads the selected files to the current folder", () => {
     const { container } = render(<CreateFileForm />);
-    const fileInput = container.querySelector(
-      'input[type="file"]',
-    ) as HTMLInputElement;
     const files = [
       new File(["contract"], "contract.pdf", { type: "application/pdf" }),
       new File(["evidence"], "evidence.txt", { type: "text/plain" }),
     ];
 
-    fireEvent.change(fileInput, { target: { files } });
+    fireEvent.change(getFileInput(container), { target: { files } });
     fireEvent.click(screen.getByRole("button", { name: "Submit" }));
 
     expect(createFile).toHaveBeenCalledWith({
@@ -59,22 +70,26 @@ describe("CreateFileForm", () => {
     });
   });
 
-  it("uploads files without a parent when the root folder is selected", () => {
-    mockUseSelector.mockReturnValue({ id: "" });
-    const { container } = render(<CreateFileForm />);
-    const fileInput = container.querySelector(
-      'input[type="file"]',
-    ) as HTMLInputElement;
-    const file = new File(["readme"], "readme.txt", { type: "text/plain" });
+  it.each([
+    ["an empty string", ""],
+    ["null", null],
+  ])(
+    "uploads files without a parent when the current folder id is %s",
+    (_, currentFolderId) => {
+      mockCurrentFolderId(currentFolderId);
+      const { container } = render(<CreateFileForm />);
+      const file = new File(["readme"], "readme.txt", { type: "text/plain" });
 
-    fireEvent.change(fileInput, { target: { files: [file] } });
-    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+      fireEvent.change(getFileInput(container), { target: { files: [file] } });
+      fireEvent.click(screen.getByRole("button", { name: "Submit" }));
 
-    expect(createFile).toHaveBeenCalledWith({
-      parentId: "",
-      files: [file],
-    });
-  });
+      expect(createFile).toHaveBeenCalledTimes(1);
+      expect(createFile.mock.calls[0][0]).toStrictEqual({
+        parentId: undefined,
+        files: [file],
+      });
+    },
+  );
 
   it("submits an empty file list when no files are selected", () => {
     render(<CreateFileForm />);
