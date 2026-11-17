@@ -3,9 +3,9 @@ import "@testing-library/jest-dom";
 import { Provider } from "react-redux";
 import { makeStore } from "$src/store/store";
 import {
-  getCurrentNode,
-  pushCurrentNodeToHistory,
-} from "$src/store/nodeHistory/nodeHistorySlice";
+  getCurrentFolderId,
+  openFolder,
+} from "$src/store/folderStructureSlice/FolderStructureSlice";
 import { NodeDto } from "@repo/types";
 import {
   fileCardMockData,
@@ -13,8 +13,11 @@ import {
 } from "$src/app/constants/test-data/node-test-data";
 import Section from "./section";
 
-// Mock child components so these tests focus on Section's layout and navigation
-// decisions rather than duplicating the children’s own behavior tests.
+jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
+  global.fetch = jest.fn() as unknown as typeof fetch;
+  return jest.requireActual("$src/store/nodesApi/nodesApiSlice");
+});
+
 jest.mock(
   "$src/app/components/card/item-card",
   () =>
@@ -42,8 +45,8 @@ jest.mock(
 function renderSection(
   nodes: NodeDto[] = [],
   isFolderSection = false,
+  store = makeStore(),
 ) {
-  const store = makeStore();
   return {
     store,
     ...render(
@@ -52,6 +55,12 @@ function renderSection(
       </Provider>,
     ),
   };
+}
+
+function makeStoreInsideFolder() {
+  const store = makeStore();
+  store.dispatch(openFolder(folderCardMockData.id));
+  return store;
 }
 
 describe("Section", () => {
@@ -115,28 +124,28 @@ describe("Section", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("pops the current folder from history when back is clicked", () => {
-    const store = makeStore();
-    store.dispatch(
-      pushCurrentNodeToHistory({
-        id: folderCardMockData.id,
-        name: folderCardMockData.name,
-        parentId: "",
-      }),
-    );
+  it("shows the back button inside a folder", () => {
+    renderSection([], true, makeStoreInsideFolder());
 
-    render(
-      <Provider store={store}>
-        <Section isFolderSection nodes={[]} />
-      </Provider>,
-    );
+    expect(screen.getByRole("button", { name: "back" })).toBeInTheDocument();
+  });
+
+  it("never shows the back button in the files section", () => {
+    renderSection([], false, makeStoreInsideFolder());
+
+    expect(
+      screen.queryByRole("button", { name: "back" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("returns to the parent folder when back is clicked", () => {
+    const { store } = renderSection([], true, makeStoreInsideFolder());
 
     fireEvent.click(screen.getByRole("button", { name: "back" }));
 
-    expect(getCurrentNode(store.getState())).toEqual({
-      id: "",
-      name: "",
-      parentId: "",
-    });
+    expect(getCurrentFolderId(store.getState())).toBeFalsy();
+    expect(
+      screen.queryByRole("button", { name: "back" }),
+    ).not.toBeInTheDocument();
   });
 });
