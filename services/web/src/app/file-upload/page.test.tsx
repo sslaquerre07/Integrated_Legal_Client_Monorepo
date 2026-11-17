@@ -4,6 +4,10 @@ import { useSelector } from "react-redux";
 import { NodeDto } from "@repo/types";
 import FileUploadPage from "./page";
 import { useGetFolderStructureQuery } from "$src/store/nodesApi/nodesApiSlice";
+import {
+  folderStructureMockData,
+  rootFolderMockData,
+} from "$src/app/constants/test-data/node-test-data";
 
 jest.mock("react-redux", () => ({
   useSelector: jest.fn(),
@@ -44,55 +48,6 @@ jest.mock(
     },
 );
 
-const rootFolder: NodeDto = {
-  id: "folder-id",
-  isFolder: true,
-  name: "Documents",
-  updatedAt: "2026-11-16T15:56:19Z",
-};
-
-const rootFile: NodeDto = {
-  id: "file-id",
-  isFolder: false,
-  name: "readme.pdf",
-  updatedAt: "2026-11-16T15:56:19Z",
-};
-
-const childFolder: NodeDto = {
-  id: "child-folder-id",
-  isFolder: true,
-  name: "Contracts",
-  parentId: rootFolder.id,
-  updatedAt: "2026-11-16T15:56:19Z",
-};
-
-const childFile: NodeDto = {
-  id: "child-file-id",
-  isFolder: false,
-  name: "contract.pdf",
-  parentId: rootFolder.id,
-  updatedAt: "2026-11-16T15:56:19Z",
-};
-
-const unrelatedFile: NodeDto = {
-  id: "unrelated-file-id",
-  isFolder: false,
-  name: "unrelated.pdf",
-  parentId: "another-folder-id",
-  updatedAt: "2026-11-16T15:56:19Z",
-};
-
-const folderStructure = {
-  tree: [],
-  entities: {
-    [rootFolder.id]: rootFolder,
-    [rootFile.id]: rootFile,
-    [childFolder.id]: childFolder,
-    [childFile.id]: childFile,
-    [unrelatedFile.id]: unrelatedFile,
-  },
-};
-
 const mockUseSelector = useSelector as unknown as jest.Mock;
 const mockUseGetFolderStructureQuery =
   useGetFolderStructureQuery as jest.Mock;
@@ -127,7 +82,7 @@ describe("FileUploadPage", () => {
 
   it("requests the root folder structure at depth two", () => {
     mockUseGetFolderStructureQuery.mockReturnValue({
-      data: folderStructure,
+      data: folderStructureMockData,
       isLoading: false,
     });
 
@@ -141,7 +96,7 @@ describe("FileUploadPage", () => {
 
   it("renders root folders and files in separate sections", () => {
     mockUseGetFolderStructureQuery.mockReturnValue({
-      data: folderStructure,
+      data: folderStructureMockData,
       isLoading: false,
     });
 
@@ -160,16 +115,16 @@ describe("FileUploadPage", () => {
   });
 
   it("requests and renders children for the selected folder", () => {
-    mockUseSelector.mockReturnValue({ id: rootFolder.id });
+    mockUseSelector.mockReturnValue({ id: rootFolderMockData.id });
     mockUseGetFolderStructureQuery.mockReturnValue({
-      data: folderStructure,
+      data: folderStructureMockData,
       isLoading: false,
     });
 
     render(<FileUploadPage />);
 
     expect(mockUseGetFolderStructureQuery).toHaveBeenCalledWith({
-      rootId: rootFolder.id,
+      rootId: rootFolderMockData.id,
       depth: 2,
     });
     expect(screen.getByTestId("folder-section")).toHaveTextContent(
