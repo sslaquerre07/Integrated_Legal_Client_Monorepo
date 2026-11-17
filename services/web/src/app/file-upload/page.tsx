@@ -2,26 +2,28 @@
 
 import Section from "$src/app/components/section/section";
 import HorizontalDivider from "$src/app/components/divider/horizontal-divider";
-import {parseFoldersAndFilesFromParentId} from "$src/app/utils/node-helper";
-import {useGetFolderStructureQuery} from "$src/store/nodesApi/nodesApiSlice";
-import {useSelector} from "react-redux";
-import {getCurrentNode} from "$src/store/nodeHistory/nodeHistorySlice";
+import { parseFoldersAndFilesFromParentId } from "$src/app/utils/node-helper";
+import { useGetFolderStructureQuery } from "$src/store/nodesApi/nodesApiSlice";
+import { useSelector } from "react-redux";
+import { getCurrentFolderId, getEntities } from "$src/store/folderStructureSlice/FolderStructureSlice";
 
 export default function FileUploadPage() {
-  const curr_id = useSelector(getCurrentNode)?.id;
 
-  const {data, isLoading} = useGetFolderStructureQuery({
-    rootId: curr_id || undefined,
-    depth: 2,
-  });
+  const currentFolderId = useSelector(getCurrentFolderId);
+  const entities = useSelector(getEntities);
 
-  if (isLoading || !data) {
+  const { isLoading } = useGetFolderStructureQuery(
+    { rootId: currentFolderId ?? undefined, depth: 2 },
+    { refetchOnMountOrArgChange: true },
+  );
+
+  if (isLoading) {
     return <div>Loading..</div>;
   }
 
-  const {files, folders} = parseFoldersAndFilesFromParentId(
-    data!.entities,
-    curr_id,
+  const { files, folders } = parseFoldersAndFilesFromParentId(
+    entities,
+    currentFolderId || undefined,
   );
 
   return (

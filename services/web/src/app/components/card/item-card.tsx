@@ -7,8 +7,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import { useDeleteNodesMutation } from "$src/store/nodesApi/nodesApiSlice";
 import { NodeDto } from "@repo/types";
-import { pushCurrentNodeToHistory } from "$src/store/nodeHistory/nodeHistorySlice";
 import RenameNodeModal from "../modal/rename-node-modal";
+import { openFolder } from "$src/store/folderStructureSlice/FolderStructureSlice";
 
 type ItemCardProps = {
   node: NodeDto;
@@ -21,20 +21,12 @@ export default function ItemCard({ node }: ItemCardProps) {
 
   const [deleteNodesMutation] = useDeleteNodesMutation();
   const dispatch = useDispatch();
-
   /**
    * Pushes the nodeState to the nodeHistory
    */
   function handleSelect() {
-    // Don't push to history if not a folder
     if (isFolder) {
-      dispatch(
-        pushCurrentNodeToHistory({
-          id,
-          name: content,
-          parentId: node.parentId || "",
-        }),
-      );
+      dispatch(openFolder(id));
     }
   }
 

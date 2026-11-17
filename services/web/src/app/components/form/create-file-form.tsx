@@ -1,20 +1,20 @@
-import { getCurrentNode } from "$src/store/nodeHistory/nodeHistorySlice";
 import { useCreateFileMutation } from "$src/store/nodesApi/nodesApiSlice";
 import { FormControl, Input } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import WrappedButton from "../button/wrapped-button";
+import { getCurrentFolderId } from "$src/store/folderStructureSlice/FolderStructureSlice";
 
 export default function CreateFileForm() {
   const [createFile] = useCreateFileMutation();
-  const curr_id = useSelector(getCurrentNode)?.id;
+  const currentFolderId = useSelector(getCurrentFolderId);
   const [files, setFiles] = useState<File[]>([]);
 
   // Uploads the user-selected files
   const handleCreateFile = () => {
 
     // Upload the files
-    createFile({ parentId: curr_id, files });
+    createFile({ parentId: currentFolderId || undefined, files });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
