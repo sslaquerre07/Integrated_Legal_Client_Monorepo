@@ -1,6 +1,6 @@
-import {configureStore} from "@reduxjs/toolkit";
-import nodeHistoryReducer from "./nodeHistory/nodeHistorySlice";
-import {nodesApiSlice} from "./nodesApi/nodesApiSlice";
+import { configureStore } from "@reduxjs/toolkit";
+import { nodesApiSlice } from "./nodesApi/nodesApiSlice";
+import folderStructureReducer from "./folderStructureSlice/FolderStructureSlice";
 
 /**
  * Creates a Redux store with the node history and nodes API reducers.
@@ -12,16 +12,16 @@ import {nodesApiSlice} from "./nodesApi/nodesApiSlice";
  */
 export const makeStore = () => {
   return configureStore({
-  reducer: {
-    nodeHistory: nodeHistoryReducer,
-    [nodesApiSlice.reducerPath]: nodesApiSlice.reducer,
-  },
+    reducer: {
+      folderStructure: folderStructureReducer,
+      [nodesApiSlice.reducerPath]: nodesApiSlice.reducer,
+    },
 
-  middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(nodesApiSlice.middleware);
-  },
-});
-}
+    middleware: (getDefaultMiddleware) => {
+      return getDefaultMiddleware().concat(nodesApiSlice.middleware);
+    },
+  });
+};
 
 // Create store that this app will use
 export const store = makeStore();
