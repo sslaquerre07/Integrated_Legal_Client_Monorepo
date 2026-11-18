@@ -2,9 +2,9 @@ import React from "react";
 import { FormControl, FormHelperText, Input, InputLabel } from "@mui/material";
 import WrappedButton from "$src/app/components/button/wrapped-button";
 import { useCreateFolderMutation } from "$src/store/nodesApi/nodesApiSlice";
-import { CREATE_FOLDER_MODAL_CONTENT } from "$src/app/constants/hardcoded/modal-content/create-folder-content";
 import { useSelector } from "react-redux";
 import { getCurrentFolderId } from "$src/store/folderStructureSlice/FolderStructureSlice";
+import { CREATE_FOLDER_MODAL_CONTENT } from "$src/app/constants/language/modal-content";
 
 export default function CreateFolderForm() {
   const [folderName, setFolderName] = React.useState("");

@@ -1,8 +1,4 @@
 import NodeCard from "$src/app/components/card/node-card";
-import {
-  SECTION_NAME_1,
-  SECTION_NAME_2,
-} from "$src/app/constants/page/file-upload/section-names";
 import { NodeDto } from "@repo/types";
 import CreateFolderModal from "$src/app/components/modal/create-folder-modal";
 import ArrowBack from "@mui/icons-material/ArrowBack";
@@ -10,6 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
 import CreateFileModal from "../modal/create-file-modal";
 import { getCurrentFolderId, goBack } from "$src/store/folderStructureSlice/FolderStructureSlice";
+import { SECTION_NAME_1, SECTION_NAME_2 } from "$src/app/constants/language/node-section-content";
 
 type NodeSectionProps = {
   isFolderNodeSection?: boolean; // Currently, we have 2 different sections - Files and Folder

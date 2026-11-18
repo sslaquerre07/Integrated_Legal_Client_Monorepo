@@ -1,8 +1,8 @@
-import {RENAME_NODE_MODAL_CONTENT} from "$src/app/constants/hardcoded/modal-content/rename-node-content";
 import {useRenameNodeMutation} from "$src/store/nodesApi/nodesApiSlice";
 import {FormControl, FormHelperText, Input, InputLabel} from "@mui/material";
 import React from "react";
 import WrappedButton from "$src/app/components/button/wrapped-button";
+import { RENAME_NODE_MODAL_CONTENT } from "$src/app/constants/language/modal-content";
 
 export default function RenameNodeForm(id: string, initialName: string) {
   const [newName, setNewName] = React.useState(initialName);
