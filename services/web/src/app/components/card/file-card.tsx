@@ -23,7 +23,6 @@ export default function FileCard({
     <Card className="min-w-fit flex-1 rounded-lg bg-white/5 text-white">
       <CardActionArea
         className="flex h-full w-full items-center justify-between px-3 py-2"
-        onClick={() => console.log("open", name)}
       >
         <Stack spacing={0.5} useFlexGap className="items-start">
           <Typography

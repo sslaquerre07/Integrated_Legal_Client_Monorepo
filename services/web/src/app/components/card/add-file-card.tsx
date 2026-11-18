@@ -8,7 +8,6 @@ export default function AddFileCard() {
     <Card className="relative whitespace-nowrap rounded-lg bg-highlighted/10 text-highlighted">
       <CardActionArea
         className="flex h-full w-full min-w-56 items-center justify-start gap-3 py-4 pl-3 pr-20 font-roboto-mono text-xl font-bold"
-        onClick={() => console.log("open add file modal")}
       >
         Add Files
       </CardActionArea>

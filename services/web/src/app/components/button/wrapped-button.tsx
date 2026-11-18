@@ -15,7 +15,7 @@ export default function WrappedButton({
 }: ButtonProps) {
   // "extra" functionality - in case we need a smaller folder button
   const icon = isFolder ? <FolderIcon /> : undefined;
-  const onClickFunction = onClick || (() => console.log("clicked", content));
+  const onClickFunction = onClick;
   return (
     <Button
       variant="contained"
