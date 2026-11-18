@@ -10,11 +10,11 @@ import { NodeDto } from "@repo/types";
 import RenameNodeModal from "../modal/rename-node-modal";
 import { openFolder } from "$src/store/folderStructureSlice/FolderStructureSlice";
 
-type ItemCardProps = {
+type NodeCardProps = {
   node: NodeDto;
 };
 
-export default function ItemCard({ node }: ItemCardProps) {
+export default function NodeCard({ node }: NodeCardProps) {
   const { id, isFolder, name: content } = node;
 
   const icon = isFolder ? <FolderIcon fontSize="large" /> : undefined;

@@ -1,4 +1,4 @@
-import ItemCard from "$src/app/components/card/item-card";
+import NodeCard from "$src/app/components/card/node-card";
 import {
   SECTION_NAME_1,
   SECTION_NAME_2,
@@ -60,7 +60,7 @@ export default function Section({
 
       <div className="flex flex-wrap gap-4 py-4">
         {nodes.map((node) => (
-          <ItemCard key={node.id} node={node} />
+          <NodeCard key={node.id} node={node} />
         ))}
       </div>
     </>

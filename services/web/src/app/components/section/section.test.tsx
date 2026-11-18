@@ -19,10 +19,10 @@ jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
 });
 
 jest.mock(
-  "$src/app/components/card/item-card",
+  "$src/app/components/card/node-card",
   () =>
-    function ItemCardMock({ node }: { node: NodeDto }) {
-      return <div data-testid="item-card">{node.name}</div>;
+    function NodeCardMock({ node }: { node: NodeDto }) {
+      return <div data-testid="node-card">{node.name}</div>;
     },
 );
 
@@ -78,18 +78,18 @@ describe("Section", () => {
     expect(screen.queryByText("Files")).not.toBeInTheDocument();
   });
 
-  it("renders one item card for every node", () => {
+  it("renders one node card for every node", () => {
     renderSection([folderCardMockData, fileCardMockData]);
 
-    expect(screen.getAllByTestId("item-card")).toHaveLength(2);
+    expect(screen.getAllByTestId("node-card")).toHaveLength(2);
     expect(screen.getByText(folderCardMockData.name)).toBeInTheDocument();
     expect(screen.getByText(fileCardMockData.name)).toBeInTheDocument();
   });
 
-  it("renders no item cards when the node list is empty", () => {
+  it("renders no node cards when the node list is empty", () => {
     renderSection();
 
-    expect(screen.queryByTestId("item-card")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("node-card")).not.toBeInTheDocument();
   });
 
   it("shows create controls only for folder sections", () => {

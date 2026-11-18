@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import ItemCard from "./item-card";
+import NodeCard from "./node-card";
 import { NodeDto } from "@repo/types";
 import { makeStore } from "$src/store/store";
 import { Provider } from "react-redux";
@@ -19,7 +19,7 @@ jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
   return { ...actual, useDeleteNodesMutation: jest.fn() };
 });
 
-describe("ItemCard", () => {
+describe("NodeCard", () => {
   const deleteNodesMutation = jest.fn();
 
   beforeEach(() => {
@@ -30,7 +30,7 @@ describe("ItemCard", () => {
     ]);
   });
 
-  const renderItemCard = (node: NodeDto) => {
+  const renderNodeCard = (node: NodeDto) => {
     const store = makeStore();
     const dispatchSpy = jest.spyOn(store, "dispatch");
     return {
@@ -38,19 +38,19 @@ describe("ItemCard", () => {
       dispatchSpy,
       ...render(
         <Provider store={store}>
-          <ItemCard node={node} />
+          <NodeCard node={node} />
         </Provider>,
       ),
     };
   };
 
   it("renders the content", () => {
-    renderItemCard(fileCardMockData);
+    renderNodeCard(fileCardMockData);
     expect(screen.getByText("Test File")).toBeInTheDocument();
   });
 
   it("deletes the node when the delete button is clicked", () => {
-    renderItemCard(fileCardMockData);
+    renderNodeCard(fileCardMockData);
 
     fireEvent.click(screen.getByRole("button", { name: "delete" }));
 
@@ -60,17 +60,17 @@ describe("ItemCard", () => {
   });
 
   it("renders the folder icon when isFolder is true", () => {
-    renderItemCard(folderCardMockData);
+    renderNodeCard(folderCardMockData);
     expect(screen.getByTestId("FolderIcon")).toBeInTheDocument();
   });
 
   it("does not render the folder icon when isFolder is false", () => {
-    renderItemCard(fileCardMockData);
+    renderNodeCard(fileCardMockData);
     expect(screen.queryByTestId("FolderIcon")).not.toBeInTheDocument();
   });
 
   it("opens the folder when its content is clicked", () => {
-    const { dispatchSpy } = renderItemCard(folderCardMockData);
+    const { dispatchSpy } = renderNodeCard(folderCardMockData);
 
     fireEvent.click(screen.getByText(folderCardMockData.name));
 
@@ -78,7 +78,7 @@ describe("ItemCard", () => {
   });
 
   it("does not open anything when a file's content is clicked", () => {
-    const { dispatchSpy } = renderItemCard(fileCardMockData);
+    const { dispatchSpy } = renderNodeCard(fileCardMockData);
 
     fireEvent.click(screen.getByText(fileCardMockData.name));
 
