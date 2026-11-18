@@ -27,3 +27,8 @@ export function parseFoldersAndFilesFromParentId(
 
   return {files, folders};
 }
+
+export const folderStructureArgs = (rootId: string | null) => ({
+  depth: 2,
+  rootId: rootId ?? undefined,
+});

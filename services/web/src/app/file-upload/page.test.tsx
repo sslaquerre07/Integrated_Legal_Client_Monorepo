@@ -8,7 +8,7 @@ import {
   getCurrentFolderId,
   getEntities,
 } from "$src/store/folderStructureSlice/FolderStructureSlice";
-import { parseFoldersAndFilesFromParentId } from "$src/app/utils/node-helper";
+import { parseFoldersAndFilesFromParentId } from "$src/utils/node-helper";
 import {
   fileCardMockData,
   folderCardMockData,
@@ -27,7 +27,7 @@ jest.mock("$src/store/folderStructureSlice/FolderStructureSlice", () => ({
   getEntities: jest.fn(),
 }));
 
-jest.mock("$src/app/utils/node-helper", () => ({
+jest.mock("$src/utils/node-helper", () => ({
   parseFoldersAndFilesFromParentId: jest.fn(),
 }));
 

@@ -2,7 +2,7 @@
 
 import Section from "$src/app/components/section/node-section";
 import HorizontalDivider from "$src/app/components/divider/horizontal-divider";
-import { parseFoldersAndFilesFromParentId } from "$src/app/utils/node-helper";
+import { parseFoldersAndFilesFromParentId } from "$src/utils/node-helper";
 import { useGetFolderStructureQuery } from "$src/store/nodesApi/nodesApiSlice";
 import { useSelector } from "react-redux";
 import { getCurrentFolderId, getEntities } from "$src/store/folderStructureSlice/FolderStructureSlice";
