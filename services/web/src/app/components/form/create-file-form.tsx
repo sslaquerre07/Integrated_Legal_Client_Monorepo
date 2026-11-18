@@ -12,14 +12,12 @@ export default function CreateFileForm() {
 
   // Uploads the user-selected files
   const handleCreateFile = () => {
-
-    // Upload the files
     createFile({ parentId: currentFolderId || undefined, files });
   };
 
+  // Updates the state object whenever user changes their uploads
+  // Beneficial once we implement a custom drag-and-drop component
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-    // Set state files
     const new_files = Array.from(e.target.files!);
     setFiles(new_files);
   };
