@@ -32,7 +32,7 @@ jest.mock("$src/utils/node-helper", () => ({
 }));
 
 jest.mock(
-  "$src/app/components/section/node-section",
+  "$src/app/file-upload/components/node-section",
   () =>
     function NodeSectionMock({
       isFolderNodeSection = false,
@@ -55,7 +55,7 @@ jest.mock(
 );
 
 jest.mock(
-  "$src/app/components/divider/horizontal-divider",
+  "$src/app/components/horizontal-divider",
   () =>
     function HorizontalDividerMock() {
       return <hr data-testid="section-divider" />;

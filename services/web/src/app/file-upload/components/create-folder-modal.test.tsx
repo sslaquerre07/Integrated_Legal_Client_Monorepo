@@ -3,7 +3,7 @@ import "@testing-library/jest-dom";
 import CreateFolderModal from "./create-folder-modal";
 
 jest.mock(
-  "$src/app/components/form/create-folder-form",
+  "$src/app/file-upload/components/create-folder-form",
   () =>
     function CreateFolderFormMock() {
       return <div data-testid="create-folder-form">Folder form</div>;

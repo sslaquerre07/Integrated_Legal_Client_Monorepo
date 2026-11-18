@@ -1,5 +1,5 @@
-import WrappedModal from "$src/app/components/modal/wrapped-modal";
-import RenameNodeForm from "$src/app/components/form/rename-node-form";
+import WrappedModal from "$src/app/components/wrapped-modal";
+import RenameNodeForm from "$src/app/file-upload/components/rename-node-form";
 import IconButton from "@mui/material/IconButton";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import { RENAME_NODE_MODAL_CONTENT } from "$src/app/constants/language/modal-content";

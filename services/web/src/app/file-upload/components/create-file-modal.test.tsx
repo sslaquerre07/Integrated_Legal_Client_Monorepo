@@ -3,7 +3,7 @@ import "@testing-library/jest-dom";
 import CreateFileModal from "./create-file-modal";
 
 jest.mock(
-  "$src/app/components/form/create-file-form",
+  "$src/app/file-upload/components/create-file-form",
   () => 
     function CreateFileFormMock() {
       return <div data-testid="create-file-form">File form</div>

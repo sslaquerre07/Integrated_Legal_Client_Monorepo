@@ -11,7 +11,7 @@ import {
   fileCardMockData,
   folderCardMockData,
 } from "$src/app/constants/test-data/node-test-data";
-import Section from "./node-section";
+import NodeSection from "./node-section";
 
 jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
   global.fetch = jest.fn() as unknown as typeof fetch;
@@ -19,7 +19,7 @@ jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
 });
 
 jest.mock(
-  "$src/app/components/card/node-card",
+  "$src/app/file-upload/components/node-card",
   () =>
     function NodeCardMock({ node }: { node: NodeDto }) {
       return <div data-testid="node-card">{node.name}</div>;
@@ -27,7 +27,7 @@ jest.mock(
 );
 
 jest.mock(
-  "$src/app/components/modal/create-folder-modal",
+  "$src/app/file-upload/components/create-folder-modal",
   () =>
     function CreateFolderModalMock() {
       return <button type="button">Create Folder</button>;
@@ -35,7 +35,7 @@ jest.mock(
 );
 
 jest.mock(
-  "$src/app/components/modal/create-file-modal",
+  "$src/app/file-upload/components/create-file-modal",
   () =>
     function CreateFileModalMock() {
       return <button type="button">Create File</button>;
@@ -51,7 +51,7 @@ function renderSection(
     store,
     ...render(
       <Provider store={store}>
-        <Section isFolderNodeSection={isFolderSection} nodes={nodes} />
+        <NodeSection isFolderNodeSection={isFolderSection} nodes={nodes} />
       </Provider>,
     ),
   };
@@ -63,7 +63,7 @@ function makeStoreInsideFolder() {
   return store;
 }
 
-describe("Section", () => {
+describe("NodeSection", () => {
   it("renders the Files heading by default", () => {
     renderSection([fileCardMockData]);
 
@@ -104,7 +104,7 @@ describe("Section", () => {
 
     rerender(
       <Provider store={makeStore()}>
-        <Section nodes={[]} />
+        <NodeSection nodes={[]} />
       </Provider>,
     );
 

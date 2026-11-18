@@ -1,7 +1,7 @@
 "use client";
 
-import Section from "$src/app/components/section/node-section";
-import HorizontalDivider from "$src/app/components/divider/horizontal-divider";
+import Section from "$src/app/file-upload/components/node-section";
+import HorizontalDivider from "$src/app/components/horizontal-divider";
 import { parseFoldersAndFilesFromParentId } from "$src/utils/node-helper";
 import { useGetFolderStructureQuery } from "$src/store/nodesApi/nodesApiSlice";
 import { useSelector } from "react-redux";

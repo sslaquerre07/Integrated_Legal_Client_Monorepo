@@ -3,7 +3,7 @@ import "@testing-library/jest-dom";
 import RenameNodeModal from "./rename-node-modal";
 
 jest.mock(
-  "$src/app/components/form/rename-node-form",
+  "$src/app/file-upload/components/rename-node-form",
   () =>
     function RenameNodeFormMock() {
       return <div data-testid="rename-node-form">Rename form</div>;

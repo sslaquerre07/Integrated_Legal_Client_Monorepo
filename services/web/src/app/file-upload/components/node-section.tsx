@@ -1,10 +1,10 @@
-import NodeCard from "$src/app/components/card/node-card";
+import NodeCard from "$src/app/file-upload/components/node-card";
 import { NodeDto } from "@repo/types";
-import CreateFolderModal from "$src/app/components/modal/create-folder-modal";
+import CreateFolderModal from "$src/app/file-upload/components/create-folder-modal";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import IconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
-import CreateFileModal from "../modal/create-file-modal";
+import CreateFileModal from "./create-file-modal";
 import { getCurrentFolderId, goBack } from "$src/store/folderStructureSlice/FolderStructureSlice";
 import { SECTION_NAME_1, SECTION_NAME_2 } from "$src/app/constants/language/node-section-content";
 

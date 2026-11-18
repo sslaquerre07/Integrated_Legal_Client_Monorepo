@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
-import WrappedButton from "$src/app/components/button/wrapped-button";
+import WrappedButton from "$src/app/components/wrapped-button";
 import { useCreateFolderMutation } from "$src/store/nodesApi/nodesApiSlice";
 
 export default function CreateFolderButton() {

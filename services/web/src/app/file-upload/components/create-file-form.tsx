@@ -2,7 +2,7 @@ import { useCreateFileMutation } from "$src/store/nodesApi/nodesApiSlice";
 import { FormControl, Input } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import WrappedButton from "../button/wrapped-button";
+import WrappedButton from "../../components/wrapped-button";
 import { getCurrentFolderId } from "$src/store/folderStructureSlice/FolderStructureSlice";
 
 export default function CreateFileForm() {

@@ -7,7 +7,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import { useDeleteNodesMutation } from "$src/store/nodesApi/nodesApiSlice";
 import { NodeDto } from "@repo/types";
-import RenameNodeModal from "../modal/rename-node-modal";
+import RenameNodeModal from "./rename-node-modal";
 import { openFolder } from "$src/store/folderStructureSlice/FolderStructureSlice";
 
 type NodeCardProps = {

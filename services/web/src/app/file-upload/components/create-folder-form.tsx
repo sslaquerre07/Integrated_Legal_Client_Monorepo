@@ -1,6 +1,6 @@
 import React from "react";
 import { FormControl, FormHelperText, Input, InputLabel } from "@mui/material";
-import WrappedButton from "$src/app/components/button/wrapped-button";
+import WrappedButton from "$src/app/components/wrapped-button";
 import { useCreateFolderMutation } from "$src/store/nodesApi/nodesApiSlice";
 import { useSelector } from "react-redux";
 import { getCurrentFolderId } from "$src/store/folderStructureSlice/FolderStructureSlice";
