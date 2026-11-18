@@ -11,16 +11,16 @@ import { useDispatch, useSelector } from "react-redux";
 import CreateFileModal from "../modal/create-file-modal";
 import { getCurrentFolderId, goBack } from "$src/store/folderStructureSlice/FolderStructureSlice";
 
-type SectionProps = {
-  isFolderSection?: boolean; // Currently, we have 2 different sections - Files and Folder
+type NodeSectionProps = {
+  isFolderNodeSection?: boolean; // Currently, we have 2 different sections - Files and Folder
   nodes: NodeDto[];
 };
 
-export default function Section({
-  isFolderSection = false,
+export default function NodeSection({
+  isFolderNodeSection = false,
   nodes,
-}: SectionProps) {
-  const section_label = isFolderSection ? SECTION_NAME_1 : SECTION_NAME_2;
+}: NodeSectionProps) {
+  const section_label = isFolderNodeSection ? SECTION_NAME_1 : SECTION_NAME_2;
   const dispatch = useDispatch();
   const isRootFolder = (useSelector(getCurrentFolderId)) || false;
 
@@ -36,7 +36,7 @@ export default function Section({
     <>
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-5">
-          {isFolderSection && isRootFolder ? (
+          {isFolderNodeSection && isRootFolder ? (
             <IconButton
               aria-label="back"
               size="large"
@@ -50,7 +50,7 @@ export default function Section({
             {section_label}
           </span>
         </div>
-        {isFolderSection ? (
+        {isFolderNodeSection ? (
           <div className="flex flex-row items-center gap-2">
             <CreateFolderModal />
             <CreateFileModal />

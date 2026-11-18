@@ -11,7 +11,7 @@ import {
   fileCardMockData,
   folderCardMockData,
 } from "$src/app/constants/test-data/node-test-data";
-import Section from "./section";
+import Section from "./node-section";
 
 jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
   global.fetch = jest.fn() as unknown as typeof fetch;
@@ -51,7 +51,7 @@ function renderSection(
     store,
     ...render(
       <Provider store={store}>
-        <Section isFolderSection={isFolderSection} nodes={nodes} />
+        <Section isFolderNodeSection={isFolderSection} nodes={nodes} />
       </Provider>,
     ),
   };

@@ -1,6 +1,6 @@
 "use client";
 
-import Section from "$src/app/components/section/section";
+import Section from "$src/app/components/section/node-section";
 import HorizontalDivider from "$src/app/components/divider/horizontal-divider";
 import { parseFoldersAndFilesFromParentId } from "$src/app/utils/node-helper";
 import { useGetFolderStructureQuery } from "$src/store/nodesApi/nodesApiSlice";
@@ -29,7 +29,7 @@ export default function FileUploadPage() {
   return (
     <main className="bg-company min-h-screen text-white p-8">
       <div className="flex flex-col gap-7">
-        <Section isFolderSection nodes={folders} />
+        <Section isFolderNodeSection nodes={folders} />
 
         <HorizontalDivider />
 

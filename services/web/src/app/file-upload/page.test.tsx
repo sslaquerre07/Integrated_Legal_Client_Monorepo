@@ -32,20 +32,20 @@ jest.mock("$src/app/utils/node-helper", () => ({
 }));
 
 jest.mock(
-  "$src/app/components/section/section",
+  "$src/app/components/section/node-section",
   () =>
-    function SectionMock({
-      isFolderSection = false,
+    function NodeSectionMock({
+      isFolderNodeSection = false,
       nodes,
     }: {
-      isFolderSection?: boolean;
+      isFolderNodeSection?: boolean;
       nodes: NodeDto[];
     }) {
       return (
         <section
-          data-testid={isFolderSection ? "folder-section" : "file-section"}
+          data-testid={isFolderNodeSection ? "folder-section" : "file-section"}
         >
-          <h2>{isFolderSection ? "Folders" : "Files"}</h2>
+          <h2>{isFolderNodeSection ? "Folders" : "Files"}</h2>
           {nodes.map((node) => (
             <span key={node.id}>{node.name}</span>
           ))}
