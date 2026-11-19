@@ -3,7 +3,7 @@ import { FormControl, FormHelperText, Input, InputLabel } from "@mui/material";
 import WrappedButton from "$src/app/components/wrapped-button";
 import { useCreateFolderMutation } from "$src/store/nodesApi/nodesApiSlice";
 import { useSelector } from "react-redux";
-import { CREATE_FOLDER_MODAL_CONTENT } from "$src/app/constants/language/modal-content";
+import { messages } from "$src/i18n/messages";
 import { selectCurrentId } from "$src/store/folderNav/folderNavSlice";
 
 export default function CreateFolderForm() {
@@ -24,7 +24,7 @@ export default function CreateFolderForm() {
     <div>
       <FormControl className="flex flex-col gap-2 my-8">
         <InputLabel htmlFor="my-input" className="text-white">
-          {CREATE_FOLDER_MODAL_CONTENT.form.inputLabel}
+          {messages.FileUpload.createFolderModal.form.inputLabel}
         </InputLabel>
         <Input
           id="folder-name"
@@ -33,7 +33,7 @@ export default function CreateFolderForm() {
           onChange={(e) => setFolderName(e.target.value)}
         />
         <FormHelperText id="folder-name-helper-text" className="text-white">
-          {CREATE_FOLDER_MODAL_CONTENT.form.helperText}
+          {messages.FileUpload.createFolderModal.form.helperText}
         </FormHelperText>
       </FormControl>
       <WrappedButton content="Submit" onClick={handleCreate} />

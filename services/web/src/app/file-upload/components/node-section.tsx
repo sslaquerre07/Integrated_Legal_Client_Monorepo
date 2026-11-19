@@ -5,10 +5,8 @@ import ArrowBack from "@mui/icons-material/ArrowBack";
 import IconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
 import CreateFileModal from "./create-file-modal";
-import {
-  SECTION_NAME_1,
-  SECTION_NAME_2,
-} from "$src/app/constants/language/node-section-content";
+import { messages } from "$src/i18n/messages";
+
 import {
   openFolder,
   selectBackId,
@@ -45,7 +43,9 @@ function NodeSectionHeader({
 }: {
   isFolderNodeSection: boolean;
 }) {
-  const section_label = isFolderNodeSection ? SECTION_NAME_1 : SECTION_NAME_2;
+  const section_label = isFolderNodeSection
+    ? messages.FileUpload.sections.folders
+    : messages.FileUpload.sections.files;
   const isAtRootFolder = useSelector(selectCurrentId) ? false : true;
   return (
     <div className="flex flex-row items-center justify-between">

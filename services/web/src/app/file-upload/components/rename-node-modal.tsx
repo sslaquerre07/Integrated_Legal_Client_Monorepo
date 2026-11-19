@@ -2,7 +2,7 @@ import WrappedModal from "$src/app/components/wrapped-modal";
 import RenameNodeForm from "$src/app/file-upload/components/rename-node-form";
 import IconButton from "@mui/material/IconButton";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
-import { RENAME_NODE_MODAL_CONTENT } from "$src/app/constants/language/modal-content";
+import { messages } from "$src/i18n/messages";
 
 type RenameNodeModalProps = {
   id: string;
@@ -10,7 +10,7 @@ type RenameNodeModalProps = {
 };
 
 export default function RenameNodeModal({id, name}: RenameNodeModalProps) {
-  const title = RENAME_NODE_MODAL_CONTENT.title;
+  const title = messages.FileUpload.renameNodeModal.title;
   const renameModalTitle = title + " " + name;
   return (
     <WrappedModal
@@ -29,3 +29,4 @@ export default function RenameNodeModal({id, name}: RenameNodeModalProps) {
     />
   );
 }
+
