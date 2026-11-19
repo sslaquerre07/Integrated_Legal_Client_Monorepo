@@ -27,7 +27,7 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@swc/cli": "^0.8.1",
+    "@swc/cli": "^0.8.2",
     "@swc/core": "^1.16.22",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
