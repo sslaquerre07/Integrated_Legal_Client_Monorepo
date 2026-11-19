@@ -85,13 +85,28 @@ describe("FileUploadPage", () => {
     expect(screen.queryByTestId("file-section")).not.toBeInTheDocument();
   });
 
+  it("shows an error state when the folder structure fails to load", () => {
+    mockUseGetFolderStructureQuery.mockReturnValue({
+      isLoading: false,
+      isError: true,
+    });
+
+    render(<FileUploadPage />);
+
+    expect(
+      screen.getByText("An error occured trying to load this folder"),
+    ).toBeInTheDocument();
+    expect(screen.queryByTestId("folder-section")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("file-section")).not.toBeInTheDocument();
+  });
+
   it("requests the root folder structure at depth two", () => {
     render(<FileUploadPage />);
 
-    expect(mockUseGetFolderStructureQuery).toHaveBeenCalledWith(
-      { rootId: undefined, depth: 2 },
-      { refetchOnMountOrArgChange: true },
-    );
+    expect(mockUseGetFolderStructureQuery).toHaveBeenCalledWith({
+      rootId: undefined,
+      depth: 2,
+    });
   });
 
   it("reads root nodes from the folder navigation slice", () => {
@@ -124,10 +139,10 @@ describe("FileUploadPage", () => {
 
     render(<FileUploadPage />);
 
-    expect(mockUseGetFolderStructureQuery).toHaveBeenCalledWith(
-      { rootId: folderCardMockData.id, depth: 2 },
-      { refetchOnMountOrArgChange: true },
-    );
+    expect(mockUseGetFolderStructureQuery).toHaveBeenCalledWith({
+      rootId: folderCardMockData.id,
+      depth: 2,
+    });
     expect(mockUseSelector).toHaveBeenCalledWith(selectCurrentId);
     expect(mockUseSelector).toHaveBeenCalledWith(selectFilesAndFolders);
   });

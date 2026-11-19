@@ -2,8 +2,8 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { useSelector } from "react-redux";
 import { useCreateFolderMutation } from "$src/store/nodesApi/nodesApiSlice";
-import { getCurrentFolderId } from "$src/store/folderStructureSlice/FolderStructureSlice";
 import CreateFolderForm from "./create-folder-form";
+import { selectCurrentId } from "$src/store/folderNav/folderNavSlice";
 
 jest.mock("react-redux", () => ({
   useSelector: jest.fn(),
@@ -13,8 +13,8 @@ jest.mock("$src/store/nodesApi/nodesApiSlice", () => ({
   useCreateFolderMutation: jest.fn(),
 }));
 
-jest.mock("$src/store/folderStructureSlice/FolderStructureSlice", () => ({
-  getCurrentFolderId: jest.fn(),
+jest.mock("$src/store/folderNav/folderNavSlice", () => ({
+  selectCurrentId: jest.fn(),
 }));
 
 const mockUseSelector = useSelector as unknown as jest.Mock;
@@ -22,7 +22,7 @@ const mockUseCreateFolderMutation = useCreateFolderMutation as jest.Mock;
 
 function mockCurrentFolderId(currentFolderId: string | null) {
   mockUseSelector.mockImplementation((selector) =>
-    selector === getCurrentFolderId ? currentFolderId : undefined,
+    selector === selectCurrentId ? currentFolderId : undefined,
   );
 }
 
@@ -50,7 +50,7 @@ describe("CreateFolderForm", () => {
   it("reads the current folder id from the folder structure slice", () => {
     render(<CreateFolderForm />);
 
-    expect(mockUseSelector).toHaveBeenCalledWith(getCurrentFolderId);
+    expect(mockUseSelector).toHaveBeenCalledWith(selectCurrentId);
   });
 
   it("does not create a folder when the name is blank", () => {

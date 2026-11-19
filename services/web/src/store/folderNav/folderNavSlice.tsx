@@ -43,10 +43,13 @@ export default folderNavSlice.reducer;
 
 const EMPTY_RECORD: Record<string, NodeDto> = {};
 
-const selectFolderStructure = (state: RootState) =>
-  nodesApiSlice.endpoints.getFolderStructure.select(
-    folderStructureArgs(selectCurrentId(state)),
-  )(state);
+const selectFolderStructure = createSelector(
+  [selectCurrentId, (state: RootState) => state],
+  (currentId, state) => {
+    const args = folderStructureArgs(currentId);
+    return nodesApiSlice.endpoints.getFolderStructure.select(args)(state);
+  },
+);
 
 // Only export a subset of the selectors - ones needed outside this file
 

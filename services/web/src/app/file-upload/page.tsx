@@ -8,14 +8,14 @@ import {
   selectCurrentId,
   selectFilesAndFolders,
 } from "$src/store/folderNav/folderNavSlice";
+import { folderStructureArgs } from "$src/utils/node-helper";
 
 export default function FileUploadPage() {
   const currentFolderId = useSelector(selectCurrentId);
   const { files, folders } = useSelector(selectFilesAndFolders);
 
   const { isLoading, isError } = useGetFolderStructureQuery(
-    { rootId: currentFolderId ?? undefined, depth: 2 },
-    { refetchOnMountOrArgChange: true },
+    folderStructureArgs(currentFolderId)
   );
 
   if (isLoading) {
