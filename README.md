@@ -89,17 +89,18 @@ When new migrations are added, apply them in the Dev Container with:
 npm --workspace services/api run migration:run
 ```
 
-Sample rows are not loaded automatically. To load them manually, open Docker Desktop, select the running `db` container, and open its **Exec** tab. Run:
-
-```bash
-psql -U user -h localhost -d dev_db -f /seed.sql
-```
-
-If the initial migration fails because `nodes` already exists from the previous setup, reset the local database from the `db` container's **Exec** tab:
+Reset the local database from the `db` container's **Exec** tab on Docker Desktop
+after any database migration:
 
 ```bash
 dropdb -U user -h localhost dev_db
 createdb -U user -h localhost dev_db
+```
+
+Sample rows are not loaded automatically. To load them manually, run this from a WSL terminal on the host, from the repository root:
+
+```bash
+docker compose -f .devcontainer/docker-compose.yml exec -T db psql -U user -d dev_db < .devcontainer/seed.sql
 ```
 
 Enter the database password (`password`) if prompted. **This permanently deletes all data in the local database.** Then run `npm --workspace services/api run migration:run` in the Dev Container terminal to recreate the schema. Afterward, you can optionally run the `psql` seed command above.

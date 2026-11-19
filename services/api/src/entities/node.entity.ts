@@ -4,9 +4,9 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
   JoinColumn,
 } from 'typeorm';
+import { Version } from './version.entity';
 
 @Entity('nodes')
 export class ItemNode {
@@ -26,10 +26,6 @@ export class ItemNode {
   @OneToMany(() => ItemNode, (node) => node.parent)
   children!: ItemNode[];
 
-  @UpdateDateColumn({
-    name: 'updated_at',
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  updatedAt!: Date;
+  @OneToMany(() => Version, (version) => version.node)
+  versions!: Version[];
 }

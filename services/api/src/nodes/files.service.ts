@@ -2,6 +2,12 @@ import { Injectable, OnModuleInit } from "@nestjs/common";
 import { Bucket, Storage } from "@google-cloud/storage";
 import { ConfigService } from "@nestjs/config";
 
+export interface UploadedFileVersion {
+    name: string
+    version: string
+    fileType: string
+}
+
 @Injectable()
 export class FilesService implements OnModuleInit {
     private storage!: Storage;
@@ -19,16 +25,32 @@ export class FilesService implements OnModuleInit {
         this.bucket = this.storage.bucket(bucketName);
     }
 
-    retrieveFileStream(nodeId: string) {
-        const blob = this.bucket.file(nodeId);
+    retrieveFileStream(nodeId: string, nodeVersion: string) {
+        const blob = this.bucket.file(nodeId, {
+            generation: nodeVersion
+        });
         return blob.createReadStream();
     }
 
-    uploadFile(file: Express.Multer.File, nodeId: string): Promise<string> {
+    async retrieveAllFileVersions(nodeId: string) {
+        return this.bucket.getFiles({
+            prefix: nodeId,
+            versions: true
+        })
+    }
+
+    async uploadFile(file: Express.Multer.File, nodeId: string, expectedCurrentVersion?: string): Promise<UploadedFileVersion> {
         const blob = this.bucket.file(nodeId);
         const blobStream = blob.createWriteStream({
             resumable: false,
             contentType: file.mimetype,
+            // Fails with a 412 Precondition Failed error if someone else 
+            // uploaded a newer version in the meantime
+            ...(expectedCurrentVersion && {
+                preconditionOpts: {
+                ifGenerationMatch: Number(expectedCurrentVersion),
+                },
+            }),
         });
 
         return new Promise((resolve, reject) => {
@@ -37,28 +59,41 @@ export class FilesService implements OnModuleInit {
             });
 
             blobStream.on("finish", () => {
-                const publicUrl = `https://storage.googleapis.com/${this.bucket.name}/${blob.name}`;
-                resolve(publicUrl);
+                const generation = blob.metadata.generation;
+                if (generation == null) {
+                    reject(new Error("Unable to retrieve object version"));
+                    return;
+                }
+
+                resolve({
+                    name: blob.name,
+                    version: String(generation),
+                    fileType: file.mimetype,
+                });
             });
 
             blobStream.end(file.buffer);
         });
     }
 
-    async deleteFile(nodeId: string): Promise<void> {
-        const blob = this.bucket.file(nodeId);
+    async deleteFile(nodeId: string, nodeVersion: string): Promise<void> {
+        const blob = this.bucket.file(nodeId, {
+            generation: nodeVersion
+        });
         try {
             await blob.delete();
         } catch (error) {
-            const code =
-                typeof error === "object" && error !== null && "code" in error
-                    ? error.code
-                    : undefined;
-            if (code === 404 || code === "404") {
+            // A delete on a missing object is already a success since 
+            // the object is gone already
+            if (
+                typeof error === "object" &&
+                error !== null &&
+                "code" in error &&
+                (error.code === 404 || error.code === "404")
+            ) {
                 return;
             }
             throw error;
         }
     }
-  // Implement file-related operations here
 }
