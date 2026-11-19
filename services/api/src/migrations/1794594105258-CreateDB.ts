@@ -12,5 +12,4 @@ export class CreateDB1794594105258 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "nodes" DROP CONSTRAINT "FK_cc5eb8fb76e5f05aaf7a7e65bef"`);
         await queryRunner.query(`DROP TABLE "nodes"`);
     }
-
 }
