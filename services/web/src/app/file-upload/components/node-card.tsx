@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import { useDeleteNodesMutation } from "$src/store/nodesApi/nodesApiSlice";
 import { NodeDto } from "@repo/types";
 import RenameNodeModal from "./rename-node-modal";
-import { openFolder } from "$src/store/folderStructureSlice/FolderStructureSlice";
+import { openFolder } from "$src/store/folderNav/folderNavSlice";
 
 type NodeCardProps = {
   node: NodeDto;

@@ -5,11 +5,11 @@ import { NodeDto } from "@repo/types";
 import { makeStore } from "$src/store/store";
 import { Provider } from "react-redux";
 import { useDeleteNodesMutation } from "$src/store/nodesApi/nodesApiSlice";
-import { openFolder } from "$src/store/folderStructureSlice/FolderStructureSlice";
 import {
   fileCardMockData,
   folderCardMockData,
 } from "$src/app/constants/test-data/node-test-data";
+import { openFolder } from "$src/store/folderNav/folderNavSlice";
 
 // Keep the real API slice for the store, but replace the mutation hook so the
 // test verifies the component's request without possibility of making a network call

@@ -1,18 +1,19 @@
 "use client";
 
-import Section from "$src/app/file-upload/components/node-section";
+import NodeSection from "$src/app/file-upload/components/node-section";
 import HorizontalDivider from "$src/app/components/horizontal-divider";
-import { parseFoldersAndFilesFromParentId } from "$src/utils/node-helper";
 import { useGetFolderStructureQuery } from "$src/store/nodesApi/nodesApiSlice";
 import { useSelector } from "react-redux";
-import { getCurrentFolderId, getEntities } from "$src/store/folderStructureSlice/FolderStructureSlice";
+import {
+  selectCurrentId,
+  selectFilesAndFolders,
+} from "$src/store/folderNav/folderNavSlice";
 
 export default function FileUploadPage() {
+  const currentFolderId = useSelector(selectCurrentId);
+  const { files, folders } = useSelector(selectFilesAndFolders);
 
-  const currentFolderId = useSelector(getCurrentFolderId);
-  const entities = useSelector(getEntities);
-
-  const { isLoading } = useGetFolderStructureQuery(
+  const { isLoading, isError } = useGetFolderStructureQuery(
     { rootId: currentFolderId ?? undefined, depth: 2 },
     { refetchOnMountOrArgChange: true },
   );
@@ -21,19 +22,16 @@ export default function FileUploadPage() {
     return <div>Loading..</div>;
   }
 
-  const { files, folders } = parseFoldersAndFilesFromParentId(
-    entities,
-    currentFolderId || undefined,
-  );
+  if (isError) {
+    return <div>An error occured trying to load this folder</div>;
+  }
 
   return (
     <main className="bg-company min-h-screen text-white p-8">
       <div className="flex flex-col gap-7">
-        <Section isFolderNodeSection nodes={folders} />
-
+        <NodeSection isFolderNodeSection nodes={folders} />
         <HorizontalDivider />
-
-        <Section nodes={files} />
+        <NodeSection nodes={files} />
       </div>
     </main>
   );

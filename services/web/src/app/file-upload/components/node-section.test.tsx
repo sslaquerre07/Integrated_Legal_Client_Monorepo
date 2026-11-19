@@ -2,16 +2,16 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { Provider } from "react-redux";
 import { makeStore } from "$src/store/store";
-import {
-  getCurrentFolderId,
-  openFolder,
-} from "$src/store/folderStructureSlice/FolderStructureSlice";
 import { NodeDto } from "@repo/types";
 import {
   fileCardMockData,
   folderCardMockData,
 } from "$src/app/constants/test-data/node-test-data";
 import NodeSection from "./node-section";
+import {
+  openFolder,
+  selectCurrentId,
+} from "$src/store/folderNav/folderNavSlice";
 
 jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
   global.fetch = jest.fn() as unknown as typeof fetch;
@@ -44,14 +44,14 @@ jest.mock(
 
 function renderSection(
   nodes: NodeDto[] = [],
-  isFolderSection = false,
+  isFolderNodeSection = false,
   store = makeStore(),
 ) {
   return {
     store,
     ...render(
       <Provider store={store}>
-        <NodeSection isFolderNodeSection={isFolderSection} nodes={nodes} />
+        <NodeSection isFolderNodeSection={isFolderNodeSection} nodes={nodes} />
       </Provider>,
     ),
   };
@@ -143,7 +143,7 @@ describe("NodeSection", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "back" }));
 
-    expect(getCurrentFolderId(store.getState())).toBeFalsy();
+    expect(selectCurrentId(store.getState())).toBeFalsy();
     expect(
       screen.queryByRole("button", { name: "back" }),
     ).not.toBeInTheDocument();

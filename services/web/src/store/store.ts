@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { nodesApiSlice } from "./nodesApi/nodesApiSlice";
-import folderStructureReducer from "./folderStructureSlice/FolderStructureSlice";
+import folderNavReducer from "./folderNav/folderNavSlice";
+
 
 /**
  * Creates a Redux store with the node history and nodes API reducers.
@@ -13,7 +14,7 @@ import folderStructureReducer from "./folderStructureSlice/FolderStructureSlice"
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      folderStructure: folderStructureReducer,
+      folderNav: folderNavReducer,
       [nodesApiSlice.reducerPath]: nodesApiSlice.reducer,
     },
 
