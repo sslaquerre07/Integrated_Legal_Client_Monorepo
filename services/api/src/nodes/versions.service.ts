@@ -28,6 +28,8 @@ export class VersionsService {
     nodeId: string,
     uploadedFile: UploadedFileVersion,
   ): Promise<Version> {
+    // Pessimistically updates the is_current. If the upload of the new version fails,
+    // the old is_current retains it status
     return this.repository.manager.transaction(async (manager) => {
       const node = await manager.findOneOrFail(ItemNode, {
         where: { id: nodeId },

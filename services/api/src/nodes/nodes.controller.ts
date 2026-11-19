@@ -60,6 +60,7 @@ export class NodesController {
     });
     return batchResult;
   }
+  // Uploading a new file and creating a new version entry
   private async uploadVersionForNode(
     file: Express.Multer.File,
     node: ItemNode,
@@ -117,6 +118,7 @@ export class NodesController {
         "The specified node is a folder, not a file.",
       );
     }
+    // Either retrieves the user-specified version or the current version
     const nodeVersion = version ?? await this.versionsService.getCurrentNodeVersion(id);
 
     const fileStream = this.filesService.retrieveFileStream(id, nodeVersion);
@@ -239,6 +241,7 @@ export class NodesController {
   /**
    * Deletes files and empty folders with their associated node records.
    * The result reports successful deletions and any storage or database failures.
+   * This deletes all versions of the node from the DB and the Storage Bucket
    * @param ids UUIDs of the file or folder nodes to delete.
    */
   @Delete("/files")
