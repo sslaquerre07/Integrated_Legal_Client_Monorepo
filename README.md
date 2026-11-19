@@ -89,20 +89,14 @@ When new migrations are added, apply them in the Dev Container with:
 npm --workspace services/api run migration:run
 ```
 
-Sample rows are not loaded automatically. To load them manually, open Docker Desktop, select the running `db` container, and open its **Exec** tab. Run:
-
-```bash
-psql -U user -h localhost -d dev_db -f /seed.sql
-```
-
-If the initial migration fails because `nodes` already exists from the previous setup, reset the local database from the `db` container's **Exec** tab:
+If the migrations are failing for whatever reason, there might be something wrong with your local configuration. Please run these commands in the exec tab of your db container in docker desktop to create a fresh db:
 
 ```bash
 dropdb -U user -h localhost dev_db
 createdb -U user -h localhost dev_db
 ```
 
-Enter the database password (`password`) if prompted. **This permanently deletes all data in the local database.** Then run `npm --workspace services/api run migration:run` in the Dev Container terminal to recreate the schema. Afterward, you can optionally run the `psql` seed command above.
+Enter the database password (`password`) if prompted. **This permanently deletes all data in the local database.** Then run `npm --workspace services/api run migration:run` in the Dev Container terminal to recreate the schema.
 
 #### Google Cloud Setup
 In order for your local environment to be able to communicate to Google Cloud Services such as our Storage Bucket, you will need to authenticate yourself with Google Cloud CLI with the following commands:

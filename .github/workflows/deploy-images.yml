@@ -36,7 +36,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Google Auth
         if: github.event_name == 'push'
@@ -59,7 +59,7 @@ jobs:
 
       - name: Build Backend Image
         if: env.CONDITION_BACKEND == 'true'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile.deploy.be
@@ -68,7 +68,7 @@ jobs:
 
       - name: Build Frontend Image
         if: env.CONDITION_FRONTEND == 'true'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile.deploy.fe
@@ -80,7 +80,7 @@ jobs:
       - name: Generate Ephemeral GitHub App Token
         if: github.event_name == 'push'
         id: generate-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
@@ -89,7 +89,7 @@ jobs:
 
       - name: Checkout Deployment Repository Using App Token
         if: github.event_name == 'push'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: 'sslaquerre07/Integrated_Legal_Client_Deployment'
           token: ${{ steps.generate-token.outputs.token }}
@@ -125,7 +125,7 @@ jobs:
         if: >-
           github.event_name == 'push' &&
           (env.CONDITION_BACKEND == 'true' || env.CONDITION_FRONTEND == 'true')
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ steps.generate-token.outputs.token }}
           commit-message: "chore: update container image tags to sha-${{ github.sha }}"

@@ -2,7 +2,6 @@
 import {
   ConflictException,
   Injectable,
-  NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -17,18 +16,6 @@ export class NodesService {
   ) {}
 
   // Private helper functions
-  private async findNodeOrThrow(
-    id: string,
-    message = "Node not found",
-  ): Promise<ItemNode> {
-    const node = await this.repository.findOneBy({ id });
-
-    if (!node) {
-      throw new NotFoundException(message);
-    }
-
-    return node;
-  }
   private normalizeTree(nodes: any[]) {
     const tree: any[] = [];
     const structuralMap = new Map<string, any>();
@@ -39,7 +26,6 @@ export class NodesService {
         id: node.id,
         name: node.name,
         isFolder: node.is_folder,
-        updatedAt: node.updated_at,
         parentId: node.parent_id,
       };
       structuralMap.set(node.id, { id: node.id, children: [] });
@@ -57,20 +43,20 @@ export class NodesService {
   }
 
   async getNodeById(id: string) {
-    return await this.findNodeOrThrow(id);
+    return await this.repository.findOneByOrFail({id});
   }
 
   async getFolderStructure(depth: number = 3, rootId?: string) {
     const query = `
       WITH RECURSIVE node_tree AS (
-        SELECT id, name, is_folder, parent_id, updated_at, 1 AS level
+        SELECT id, name, is_folder, parent_id, 1 AS level
         FROM nodes
         WHERE ($2::uuid IS NULL AND parent_id IS NULL)
            OR id = $2::uuid
 
         UNION ALL
 
-        SELECT n.id, n.name, n.is_folder, n.parent_id, n.updated_at, nt.level + 1
+        SELECT n.id, n.name, n.is_folder, n.parent_id, nt.level + 1
         FROM nodes n
         INNER JOIN node_tree nt ON n.parent_id = nt.id
         WHERE nt.level < $1
@@ -84,10 +70,7 @@ export class NodesService {
   async createNode(nodeDto: CreateNodeDto) {
     const node = this.repository.create(nodeDto);
     if (nodeDto.parentId) {
-      const parentNode = await this.findNodeOrThrow(
-        nodeDto.parentId,
-        "Parent node not found",
-      );
+      const parentNode = await this.getNodeById(nodeDto.parentId);
       node.parent = parentNode;
     }
 
@@ -96,7 +79,7 @@ export class NodesService {
 
   // Only updates name for now, but can be extended to update other fields
   async updateNode(id: string, nodeDto: Partial<CreateNodeDto>) {
-    const node = await this.findNodeOrThrow(id, "Node not found");
+    const node = await this.getNodeById(id);
 
     if (nodeDto.name) {
       node.name = nodeDto.name;
@@ -105,7 +88,7 @@ export class NodesService {
   }
 
   async deleteNode(id: string) {
-    const node = await this.findNodeOrThrow(id, "Node not found");
+    const node = await this.getNodeById(id);
     // Note: For now, we are only allowing the deletion of empty folders
     if (node.isFolder) {
       const child = await this.repository.findOneBy({ parent: { id } });

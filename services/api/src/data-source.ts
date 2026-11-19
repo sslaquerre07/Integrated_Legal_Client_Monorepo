@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { getDatabaseConfig } from './database/database.config';
+import { getDatabaseConfig } from './database.config';
 
 export default new DataSource({
   ...getDatabaseConfig((name) => process.env[name]),

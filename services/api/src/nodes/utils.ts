@@ -6,7 +6,6 @@ export function toNodeDto(entity: ItemNode): NodeDto {
     id: entity.id,
     name: entity.name,
     isFolder: entity.isFolder,
-    updatedAt: entity.updatedAt.toISOString(),
     parentId: entity.parent?.id,
   };
 }

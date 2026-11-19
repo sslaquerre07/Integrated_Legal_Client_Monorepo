@@ -13,15 +13,17 @@ import {
   Post,
   Query,
   UseInterceptors,
+  UploadedFile,
   UploadedFiles,
   Res,
   StreamableFile,
   MaxFileSizeValidator,
   ParseFilePipe,
+  InternalServerErrorException,
 } from "@nestjs/common";
-import { FilesInterceptor } from "@nestjs/platform-express";
+import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { NodesService } from "./nodes.service";
-import { FilesService } from "./files.service";
+import { FilesService, type UploadedFileVersion } from "./files.service";
 import { ItemNode } from "../entities/node.entity";
 import { type Response } from "express";
 
@@ -32,6 +34,7 @@ import {
   NodeDto,
 } from "@repo/types";
 import { toNodeDto } from "./utils";
+import { VersionsService } from "./versions.service";
 
 @Controller("nodes")
 export class NodesController {
@@ -39,6 +42,7 @@ export class NodesController {
   constructor(
     @Inject(NodesService) private readonly nodesService: NodesService,
     @Inject(FilesService) private readonly filesService: FilesService,
+    @Inject(VersionsService) private readonly versionsService: VersionsService,
   ) {}
 
   // Helper functions
@@ -55,6 +59,30 @@ export class NodesController {
       }
     });
     return batchResult;
+  }
+  // Uploading a new file and creating a new version entry
+  private async uploadVersionForNode(
+    file: Express.Multer.File,
+    node: ItemNode,
+  ): Promise<BatchActionItemResult<NodeDto>> {
+    let uploadedFile: UploadedFileVersion;
+    try {
+      uploadedFile = await this.filesService.uploadFile(file, node.id);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : String(error);
+      return { success: false, stage: "storage", message };
+    }
+
+    try {
+      await this.versionsService.createVersion(node.id, uploadedFile);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : String(error);
+      return { success: false, stage: "database", message };
+    }
+
+    return { success: true, value: toNodeDto(node) };
   }
 
   /**
@@ -76,11 +104,13 @@ export class NodesController {
   /**
    * Retrieves a file's contents for inline display.
    * @param id UUID of the file node to retrieve.
+   * @param version Optional version of the file to retrieve.
    */
-  @Get("/file/:id")
+  @Get("/file")
   async getFileContent(
-    @Param("id", new ParseUUIDPipe()) id: string,
     @Res({ passthrough: true }) res: Response,
+    @Body("id", new ParseUUIDPipe()) id: string,
+    @Body("version") version?: string,
   ) {
     const node = await this.nodesService.getNodeById(id);
     if (node.isFolder) {
@@ -88,8 +118,10 @@ export class NodesController {
         "The specified node is a folder, not a file.",
       );
     }
+    // Either retrieves the user-specified version or the current version
+    const nodeVersion = version ?? await this.versionsService.getCurrentNodeVersion(id);
 
-    const fileStream = this.filesService.retrieveFileStream(id);
+    const fileStream = this.filesService.retrieveFileStream(id, nodeVersion);
     res.setHeader("Content-Disposition", "inline");
     res.setHeader("Content-Type", "application/octet-stream");
 
@@ -102,7 +134,7 @@ export class NodesController {
    * @param files Files to upload.
    * @param parentId Optional UUID of the folder that will contain the uploaded files.
    */
-  @Post("/files")
+  @Post("/files/new-node")
   @UseInterceptors(FilesInterceptor("files"))
   async createFile(
     @UploadedFiles(
@@ -118,13 +150,13 @@ export class NodesController {
   ): Promise<BatchActionResult<NodeDto>> {
     const results: BatchActionItemResult<NodeDto>[] = await Promise.all(
       files.map(async (file) => {
+        // Attempt to create a node in the database
         const nodeDto: CreateNodeDto = {
           name: file.originalname,
           isFolder: false,
           parentId: parentId ?? undefined,
         };
         let node: ItemNode;
-
         try {
           node = await this.nodesService.createNode(nodeDto);
         } catch (error) {
@@ -133,22 +165,44 @@ export class NodesController {
           return { success: false as const, stage: "database", message };
         }
 
-        try {
-          await this.filesService.uploadFile(file, node.id);
-          return {
-            success: true as const,
-            value: toNodeDto(node),
-          };
-        } catch (error) {
+        const result = await this.uploadVersionForNode(file, node);
+        if (!result.success && result.stage === "storage") {
           await this.nodesService.deleteNode(node.id);
-          const message =
-            error instanceof Error ? error.message : String(error);
-          return { success: false as const, stage: "storage", message };
         }
+        return result;
       }),
     );
 
     return this.collectBatchResults(results);
+  }
+
+  /**
+   * Uploads a new version of an existing file node.
+   * @param id UUID of the file node to update.
+   * @param file New file contents.
+   */
+  @Post("/files/new-version")
+  @UseInterceptors(FileInterceptor("file"))
+  async createFileVersion(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10 * 1048576 }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+    @Body("id", new ParseUUIDPipe()) id: string,
+  ): Promise<BatchActionResult<NodeDto>> {
+    const node = await this.nodesService.getNodeById(id);
+    if (node.isFolder) {
+      throw new BadRequestException(
+        "The specified node is a folder, not a file.",
+      );
+    }
+
+    const result = await this.uploadVersionForNode(file, node);
+    return this.collectBatchResults([result]);
   }
 
   /**
@@ -187,30 +241,41 @@ export class NodesController {
   /**
    * Deletes files and empty folders with their associated node records.
    * The result reports successful deletions and any storage or database failures.
+   * This deletes all versions of the node from the DB and the Storage Bucket
    * @param ids UUIDs of the file or folder nodes to delete.
    */
-  @Delete()
+  @Delete("/files")
   async deleteNodes(
     @Body("ids") ids: string[],
   ): Promise<BatchActionResult<{ id: string }>> {
     const results: BatchActionItemResult<{ id: string }>[] = await Promise.all(
       ids.map(async (id) => {
+        const allVersions = await this.versionsService.getAllVersionEntriesById(id);
         try {
-          const node = await this.nodesService.getNodeById(id);
-          if (!node.isFolder) await this.filesService.deleteFile(id);
+          await Promise.all(
+            allVersions.map(async (version) => {
+              const node = await this.nodesService.getNodeById(id);
+              if(node.isFolder) 
+                return Promise.resolve();
+              await this.filesService.deleteFile(version.nodeId, version.nodeVersion);
+              return this.versionsService.deleteVersion(version.nodeId, version.nodeVersion)
+            })
+          );
         } catch (error) {
           const message =
             error instanceof Error ? error.message : String(error);
-          return { success: false as const, stage: "storage", message };
+          return { success: false as const, stage: "version", message };
         }
 
+        if((await this.versionsService.getAllVersionEntriesById(id)).length !== 0)
+          throw new InternalServerErrorException("Another version was uploaded in the deletion process, could not remove the file completely")
         try {
           await this.nodesService.deleteNode(id);
           return { success: true as const, key: id, value: { id } };
         } catch (error) {
           const message =
             error instanceof Error ? error.message : String(error);
-          return { success: false as const, stage: "database", message };
+          return { success: false as const, stage: "node", message };
         }
       }),
     );
