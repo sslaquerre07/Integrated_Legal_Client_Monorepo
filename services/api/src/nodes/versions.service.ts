@@ -20,6 +20,10 @@ export class VersionsService {
     return version.nodeVersion;
   }
 
+  async getAllVersionEntriesById(nodeId: string) {
+    return this.repository.findBy({nodeId});
+  }
+
   async createVersion(
     nodeId: string,
     uploadedFile: UploadedFileVersion,
@@ -45,5 +49,13 @@ export class VersionsService {
       });
       return manager.save(version);
     });
+  }
+
+  async deleteVersion(nodeId: string, nodeVersion: string) {
+    const versionEntry = await this.repository.findOneByOrFail({
+      nodeId,
+      nodeVersion
+    })
+    return this.repository.remove(versionEntry);
   }
 }

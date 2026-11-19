@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, OnModuleInit } from "@nestjs/common";
 import { Bucket, Storage } from "@google-cloud/storage";
 import { ConfigService } from "@nestjs/config";
 
@@ -41,39 +41,28 @@ export class FilesService implements OnModuleInit {
 
     async uploadFile(file: Express.Multer.File, nodeId: string, expectedCurrentVersion?: string): Promise<UploadedFileVersion> {
         const blob = this.bucket.file(nodeId);
-        const blobStream = blob.createWriteStream({
+        await blob.save(file.buffer, {
             resumable: false,
             contentType: file.mimetype,
             // Fails with a 412 Precondition Failed error if someone else 
             // uploaded a newer version in the meantime
             ...(expectedCurrentVersion && {
                 preconditionOpts: {
-                ifGenerationMatch: Number(expectedCurrentVersion),
+                    ifGenerationMatch: Number(expectedCurrentVersion),
                 },
             }),
         });
 
-        return new Promise((resolve, reject) => {
-            blobStream.on("error", (err) => {
-                reject(err);
-            });
+        const generation = blob.metadata.generation;
+        if (generation == null) {
+        throw new Error("Unable to retrieve object version");
+        }
 
-            blobStream.on("finish", () => {
-                const generation = blob.metadata.generation;
-                if (generation == null) {
-                    reject(new Error("Unable to retrieve object version"));
-                    return;
-                }
-
-                resolve({
-                    name: blob.name,
-                    version: String(generation),
-                    fileType: file.mimetype,
-                });
-            });
-
-            blobStream.end(file.buffer);
-        });
+        return {
+        name: blob.name,
+        version: String(generation),
+        fileType: file.mimetype,
+        };
     }
 
     async deleteFile(nodeId: string, nodeVersion: string): Promise<void> {
@@ -93,7 +82,7 @@ export class FilesService implements OnModuleInit {
             ) {
                 return;
             }
-            throw error;
+            throw new InternalServerErrorException(`Version ${nodeVersion} failed to be deleted`);
         }
     }
 }

@@ -47,7 +47,7 @@ services:
       NODE_ENV: development
       DATABASE_URL: postgres://user:password@db:5432/dev_db
       GCP_PROJECT_ID: integrated-legal-client-portal
-      STORAGE_BUCKET_NAME: ilcp-storage-bucket-dev
+      STORAGE_BUCKET_NAME: ilcp-dev-bucket
     volumes:
       - ..:/workspaces/Integrated_Legal_Client_Monorepo:cached
     depends_on:

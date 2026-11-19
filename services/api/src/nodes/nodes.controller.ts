@@ -19,6 +19,7 @@ import {
   StreamableFile,
   MaxFileSizeValidator,
   ParseFilePipe,
+  InternalServerErrorException,
 } from "@nestjs/common";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { NodesService } from "./nodes.service";
@@ -131,7 +132,7 @@ export class NodesController {
    * @param files Files to upload.
    * @param parentId Optional UUID of the folder that will contain the uploaded files.
    */
-  @Post("/files/newFile")
+  @Post("/files/new-node")
   @UseInterceptors(FilesInterceptor("files"))
   async createFile(
     @UploadedFiles(
@@ -178,10 +179,9 @@ export class NodesController {
    * @param id UUID of the file node to update.
    * @param file New file contents.
    */
-  @Post("/files/:id/versions")
+  @Post("/files/new-version")
   @UseInterceptors(FileInterceptor("file"))
   async createFileVersion(
-    @Param("id", new ParseUUIDPipe()) id: string,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -190,6 +190,7 @@ export class NodesController {
       }),
     )
     file: Express.Multer.File,
+    @Body("id", new ParseUUIDPipe()) id: string,
   ): Promise<BatchActionResult<NodeDto>> {
     const node = await this.nodesService.getNodeById(id);
     if (node.isFolder) {
@@ -240,28 +241,38 @@ export class NodesController {
    * The result reports successful deletions and any storage or database failures.
    * @param ids UUIDs of the file or folder nodes to delete.
    */
-  @Delete()
+  @Delete("/files")
   async deleteNodes(
     @Body("ids") ids: string[],
   ): Promise<BatchActionResult<{ id: string }>> {
     const results: BatchActionItemResult<{ id: string }>[] = await Promise.all(
       ids.map(async (id) => {
+        const allVersions = await this.versionsService.getAllVersionEntriesById(id);
         try {
-          const node = await this.nodesService.getNodeById(id);
-          if (!node.isFolder) await this.filesService.deleteFile(id);
+          await Promise.all(
+            allVersions.map(async (version) => {
+              const node = await this.nodesService.getNodeById(id);
+              if(node.isFolder) 
+                return Promise.resolve();
+              await this.filesService.deleteFile(version.nodeId, version.nodeVersion);
+              return this.versionsService.deleteVersion(version.nodeId, version.nodeVersion)
+            })
+          );
         } catch (error) {
           const message =
             error instanceof Error ? error.message : String(error);
-          return { success: false as const, stage: "storage", message };
+          return { success: false as const, stage: "version", message };
         }
 
+        if((await this.versionsService.getAllVersionEntriesById(id)).length !== 0)
+          throw new InternalServerErrorException("Another version was uploaded in the deletion process, could not remove the file completely")
         try {
           await this.nodesService.deleteNode(id);
           return { success: true as const, key: id, value: { id } };
         } catch (error) {
           const message =
             error instanceof Error ? error.message : String(error);
-          return { success: false as const, stage: "database", message };
+          return { success: false as const, stage: "node", message };
         }
       }),
     );
