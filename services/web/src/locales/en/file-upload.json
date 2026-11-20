@@ -1,0 +1,31 @@
+{
+  "FileUpload": {
+    "sections": {
+      "folders": "Folders",
+      "files": "Files"
+    },
+    "createFileModal": {
+      "title": "Create File",
+      "buttonContent": "Create File",
+      "form": {
+        "inputLabel": "Choose Files"
+      }
+    },
+    "createFolderModal": {
+      "title": "Create Folder",
+      "buttonContent": "Create Folder",
+      "form": {
+        "inputLabel": "Folder Name",
+        "helperText": "Enter the name of the folder you want to create."
+      }
+    },
+    "renameNodeModal": {
+      "title": "Renaming -",
+      "buttonContent": "",
+      "form": {
+        "inputLabel": "New Name",
+        "helperText": "Enter the new name."
+      }
+    }
+  }
+}

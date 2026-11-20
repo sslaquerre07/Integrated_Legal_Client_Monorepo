@@ -10,6 +10,9 @@ const config = {
   testEnvironment: 'jsdom', // Simulates a browser environment for React components
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'], // Used to load extra matchers like jest-dom
   testMatch: ['**/*.test.(ts|tsx)'],
+  moduleNameMapper: {
+    "^\\$src/(.*)$": "<rootDir>/src/$1", // matches $src
+  },
 }
 
 export default createJestConfig(config)
