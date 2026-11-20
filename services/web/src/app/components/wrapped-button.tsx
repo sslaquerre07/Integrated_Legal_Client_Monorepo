@@ -15,7 +15,6 @@ export default function WrappedButton({
 }: ButtonProps) {
   // "extra" functionality - in case we need a smaller folder button
   const icon = isFolder ? <FolderIcon /> : undefined;
-  const onClickFunction = onClick;
   return (
     <Button
       variant="contained"
@@ -23,7 +22,7 @@ export default function WrappedButton({
       disableElevation
       startIcon={icon}
       sx={{ textTransform: "none" }}
-      onClick={onClickFunction}
+      onClick={onClick}
     >
       {content}
     </Button>

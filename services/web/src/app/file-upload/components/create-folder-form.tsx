@@ -21,7 +21,7 @@ export default function CreateFolderForm() {
   };
 
   return (
-    <div>
+    <>
       <FormControl className="flex flex-col gap-2 my-8">
         <InputLabel htmlFor="my-input" className="text-white">
           {messages.FileUpload.createFolderModal.form.inputLabel}
@@ -37,6 +37,6 @@ export default function CreateFolderForm() {
         </FormHelperText>
       </FormControl>
       <WrappedButton content="Submit" onClick={handleCreate} />
-    </div>
+    </>
   );
 }

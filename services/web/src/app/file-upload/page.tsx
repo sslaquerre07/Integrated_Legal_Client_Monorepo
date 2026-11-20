@@ -9,6 +9,7 @@ import {
   selectFilesAndFolders,
 } from "$src/store/folderNav/folderNavSlice";
 import { folderStructureArgs } from "$src/utils/node-helper";
+import {Stack} from "@mui/material";
 
 export default function FileUploadPage() {
   const currentFolderId = useSelector(selectCurrentId);
@@ -19,11 +20,11 @@ export default function FileUploadPage() {
   );
 
   if (isLoading) {
-    return <div>Loading..</div>;
+    return <Stack>Loading..</Stack>;
   }
 
   if (isError) {
-    return <div>An error occured trying to load this folder</div>;
+    return <Stack>An error occured trying to load this folder</Stack>;
   }
 
   return (

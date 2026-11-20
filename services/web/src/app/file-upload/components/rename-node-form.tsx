@@ -18,7 +18,7 @@ export default function RenameNodeForm(id: string, initialName: string) {
   };
 
   return (
-    <div>
+    <>
       <FormControl className="flex flex-col gap-2 my-8">
         <InputLabel htmlFor="my-input" className="text-white">
           {messages.FileUpload.renameNodeModal.form.inputLabel}
@@ -34,6 +34,6 @@ export default function RenameNodeForm(id: string, initialName: string) {
         </FormHelperText>
       </FormControl>
       <WrappedButton content="Submit" onClick={handleRename} />
-    </div>
+    </>
   );
 }

@@ -28,12 +28,6 @@ export function parseFoldersAndFilesFromParentId(
   return {files, folders};
 }
 
-/**
- * Returns the arguments for folder structury query
- * 
- * @param rootId 
- * @returns An object containing the arguments
- */
 export const folderStructureArgs = (rootId: string | null) => ({
   depth: 2,
   rootId: rootId ?? undefined,

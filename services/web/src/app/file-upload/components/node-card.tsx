@@ -1,23 +1,22 @@
 "use client";
-import { useDispatch } from "react-redux";
+import {useDispatch} from "react-redux";
 import Card from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import FolderIcon from "@mui/icons-material/Folder";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import { useDeleteNodesMutation } from "$src/store/nodesApi/nodesApiSlice";
-import { NodeDto } from "@repo/types";
+import {useDeleteNodesMutation} from "$src/store/nodesApi/nodesApiSlice";
+import {NodeDto} from "@repo/types";
 import RenameNodeModal from "./rename-node-modal";
-import { openFolder } from "$src/store/folderNav/folderNavSlice";
+import {openFolder} from "$src/store/folderNav/folderNavSlice";
+import {Stack} from "@mui/material";
 
 type NodeCardProps = {
   node: NodeDto;
 };
 
-export default function NodeCard({ node }: NodeCardProps) {
-  const { id, isFolder, name: content } = node;
-
-  const icon = isFolder ? <FolderIcon fontSize="large" /> : undefined;
+export default function NodeCard({node}: NodeCardProps) {
+  const {id, isFolder, name: content} = node;
 
   const [deleteNodesMutation] = useDeleteNodesMutation();
   const dispatch = useDispatch();
@@ -31,7 +30,7 @@ export default function NodeCard({ node }: NodeCardProps) {
   }
 
   function handleDeleteNode() {
-    deleteNodesMutation({ ids: [id] });
+    deleteNodesMutation({ids: [id]});
   }
 
   return (
@@ -40,13 +39,13 @@ export default function NodeCard({ node }: NodeCardProps) {
         className="flex min-w-0 flex-1 items-center justify-start gap-3 self-stretch py-4 pl-3 pr-3 font-roboto-mono text-xl font-bold"
         onClick={handleSelect}
       >
-        {icon}
+        {isFolder ? <FolderIcon fontSize="large" /> : undefined}
         <span className="min-w-0 truncate" title={content}>
           {content}
         </span>
       </CardActionArea>
 
-      <div className="flex shrink-0 gap-2 pr-3">
+      <Stack direction="row" className="flex shrink-0 gap-2 pr-3">
         <RenameNodeModal id={id} name={content} />
         <IconButton
           aria-label="delete"
@@ -56,7 +55,7 @@ export default function NodeCard({ node }: NodeCardProps) {
         >
           <CloseIcon />
         </IconButton>
-      </div>
+      </Stack>
     </Card>
   );
 }
