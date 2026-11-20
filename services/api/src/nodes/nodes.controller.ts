@@ -286,6 +286,7 @@ export class NodesController {
   /**
    * Deletes a specific version of a file.
    * If the current version is deleted, sets the most recent remaining version as current.
+   * Returns the new current version regardless
    * @param id UUID of the file node.
    * @param version Version identifier to delete.
    */
@@ -310,6 +311,7 @@ export class NodesController {
   /**
    * Rolls a file back to a specific version by deleting all newer versions.
    * The specified version becomes the current version.
+   * Returns the new current version
    * @param id UUID of the file node.
    * @param version Version identifier to roll back to.
    */
@@ -318,6 +320,8 @@ export class NodesController {
     @Body("id", new ParseUUIDPipe()) id: string,
     @Body("version") version: string,
   ): Promise<string> {
+    if(await this.versionsService.getCurrentNodeVersion(id) === version)
+      throw new BadRequestException("This is already the current version");
     const newerVersions = await this.versionsService.getNewerVersions(
       id,
       version,
