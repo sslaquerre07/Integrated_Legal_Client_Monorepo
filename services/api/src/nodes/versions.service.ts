@@ -1,6 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { MoreThan, Not, Repository } from "typeorm";
 import { Version } from "../entities/version.entity";
 import { ItemNode } from "../entities/node.entity";
 import type { UploadedFileVersion } from "./files.service";
@@ -22,6 +26,42 @@ export class VersionsService {
 
   async getAllVersionEntriesById(nodeId: string) {
     return this.repository.findBy({nodeId});
+  }
+
+  async getNewerVersions(nodeId: string, nodeVersion: string): Promise<Version[]> {
+    const targetVersion = await this.repository.findOneBy({
+      nodeId,
+      nodeVersion,
+    });
+
+    if (!targetVersion) {
+      throw new BadRequestException("Version not found for this file.");
+    }
+
+    return this.repository.find({
+      where: {
+        nodeId,
+        nodeVersion: Not(nodeVersion),
+        createdAt: MoreThan(targetVersion.createdAt),
+      },
+      order: { createdAt: "ASC" },
+    });
+  }
+
+  async findAndSetNewCurrentVersion(nodeId: string): Promise<string> {
+    const mostRecentVersion = await this.repository.findOne({
+      where: { nodeId },
+      order: { createdAt: "DESC" },
+    });
+
+    if (!mostRecentVersion)
+      throw new InternalServerErrorException("Unable to set new is_current");
+    
+    await this.repository.update(
+      { nodeId, nodeVersion: mostRecentVersion.nodeVersion },
+      { isCurrent: true },
+    );
+    return mostRecentVersion.nodeVersion;
   }
 
   async createVersion(
