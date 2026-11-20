@@ -282,4 +282,75 @@ export class NodesController {
 
     return this.collectBatchResults(results);
   }
+
+  /**
+   * Deletes a specific version of a file.
+   * If the current version is deleted, sets the most recent remaining version as current.
+   * @param id UUID of the file node.
+   * @param version Version identifier to delete.
+   */
+  @Delete("/file-version")
+  async deleteFileVersion(
+    @Body("id", new ParseUUIDPipe()) id: string,
+    @Body("version") version: string,
+  ): Promise<string> {
+    // If there is only one remaining version, should call the node deletion endpoint
+    if((await this.versionsService.getAllVersionEntriesById(id)).length <= 1)
+      throw new BadRequestException("Calling this endpoint requires more than one remaining version");
+
+    const currentFileVersion = await this.versionsService.getCurrentNodeVersion(id);
+    await this.filesService.deleteFile(id, version);
+    await this.versionsService.deleteVersion(id, version);
+    
+    if(currentFileVersion === version)
+      return this.versionsService.findAndSetNewCurrentVersion(id);
+    else return currentFileVersion;
+  }
+
+  /**
+   * Rolls a file back to a specific version by deleting all newer versions.
+   * The specified version becomes the current version.
+   * @param id UUID of the file node.
+   * @param version Version identifier to roll back to.
+   */
+  @Delete("/file-version/rollback")
+  async rollbackFileVersion(
+    @Body("id", new ParseUUIDPipe()) id: string,
+    @Body("version") version: string,
+  ): Promise<string> {
+    const newerVersions = await this.versionsService.getNewerVersions(
+      id,
+      version,
+    );
+
+    await Promise.all(
+      newerVersions.map(async (newerVersion) => {
+        try {
+          await this.filesService.deleteFile(
+            newerVersion.nodeId,
+            newerVersion.nodeVersion,
+          );
+        } catch (error) {
+          throw new InternalServerErrorException(
+            `Version ${newerVersion.nodeVersion} failed to be deleted from storage during rollback. Other versions may have been deleted in this proces`,
+            { cause: error },
+          );
+        }
+
+        try {
+          await this.versionsService.deleteVersion(
+            newerVersion.nodeId,
+            newerVersion.nodeVersion,
+          );
+        } catch (error) {
+          throw new InternalServerErrorException(
+            `Version ${newerVersion.nodeVersion} failed to be deleted from the database. Other versions may have been deleted in this process`,
+            { cause: error },
+          );
+        }
+      }),
+    );
+
+    return this.versionsService.findAndSetNewCurrentVersion(id);
+  }
 }
