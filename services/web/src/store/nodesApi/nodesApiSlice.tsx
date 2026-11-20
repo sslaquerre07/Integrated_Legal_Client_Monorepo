@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { FolderStructureDto, NodeDto, BatchActionResult } from "@repo/types";
+import { FolderStructureDto, NodeDto } from "@repo/types";
 
 const API = "http://localhost:3001";
 
@@ -38,21 +38,16 @@ export const nodesApiSlice = createApi({
         }),
       }),
       createFile: builder.mutation<
-        BatchActionResult<NodeDto>,
-        { parentId?: string; files: File[] }
+        NodeDto,
+        { parentId?: string; file: File }
       >({
-        query: ({ parentId, files }) => {
+        query: ({ parentId, file }) => {
           const formData = new FormData();
-          // Append parentId field (if it exists)
           if (parentId) formData.append("parentId", parentId);
-
-          // Append each file
-          files.forEach((file) => {
-            formData.append("files", file);
-          });
+          formData.append("file", file);
 
           return {
-            url: "/files",
+            url: "/files/new-node",
             method: "POST",
             body: formData,
           };
@@ -82,15 +77,12 @@ export const nodesApiSlice = createApi({
         },
         invalidatesTags: ["Folder"],
       }),
-      deleteNodes: builder.mutation<
-        BatchActionResult<{ id: string }>,
-        { ids: string[] }
-      >({
-        query: ({ ids }) => {
+      deleteNode: builder.mutation<void, string>({
+        query: (id) => {
           return {
-            url: ``,
+            url: "/files",
             method: "DELETE",
-            body: { ids },
+            body: { id },
           };
         },
         invalidatesTags: ["Folder"],
@@ -105,5 +97,5 @@ export const {
   useCreateFileMutation,
   useCreateFolderMutation,
   useRenameNodeMutation,
-  useDeleteNodesMutation
+  useDeleteNodeMutation,
 } = nodesApiSlice;
