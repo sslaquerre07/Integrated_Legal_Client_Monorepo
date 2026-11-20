@@ -10,7 +10,7 @@ import { messages } from "$src/i18n/messages";
 import {
   openFolder,
   selectBackId,
-  selectCurrentId,
+  selectcurrentFolderId,
 } from "$src/store/folderNav/folderNavSlice";
 
 type NodeSectionProps = {
@@ -46,7 +46,7 @@ function NodeSectionHeader({
   const section_label = isFolderNodeSection
     ? messages.FileUpload.sections.folders
     : messages.FileUpload.sections.files;
-  const isAtRootFolder = useSelector(selectCurrentId) ? false : true;
+  const isAtRootFolder = useSelector(selectcurrentFolderId) ? false : true;
   return (
     <div className="flex flex-row items-center justify-between">
       <div className="flex flex-row items-center gap-5">
