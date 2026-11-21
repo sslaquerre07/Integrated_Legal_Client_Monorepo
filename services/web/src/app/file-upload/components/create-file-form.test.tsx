@@ -3,7 +3,7 @@ import "@testing-library/jest-dom";
 import { useSelector } from "react-redux";
 import { useCreateFileMutation } from "$src/store/nodesApi/nodesApiSlice";
 import CreateFileForm from "./create-file-form";
-import { selectCurrentId } from "$src/store/folderNav/folderNavSlice";
+import { selectCurrentFolderId } from "$src/store/folderNav/folderNavSlice";
 
 jest.mock("react-redux", () => ({
   useSelector: jest.fn(),
@@ -14,7 +14,7 @@ jest.mock("$src/store/nodesApi/nodesApiSlice", () => ({
 }));
 
 jest.mock("$src/store/folderNav/folderNavSlice", () => ({
-  selectCurrentId: jest.fn(),
+  selectCurrentFolderId: jest.fn(),
 }));
 
 const mockUseSelector = useSelector as unknown as jest.Mock;
@@ -22,7 +22,7 @@ const mockUseCreateFileMutation = useCreateFileMutation as jest.Mock;
 
 function mockCurrentFolderId(currentFolderId: string | null) {
   mockUseSelector.mockImplementation((selector) =>
-    selector === selectCurrentId ? currentFolderId : undefined,
+    selector === selectCurrentFolderId ? currentFolderId : undefined,
   );
 }
 
@@ -51,7 +51,7 @@ describe("CreateFileForm", () => {
   it("reads the current folder id from the folder structure slice", () => {
     render(<CreateFileForm />);
 
-    expect(mockUseSelector).toHaveBeenCalledWith(selectCurrentId);
+    expect(mockUseSelector).toHaveBeenCalledWith(selectCurrentFolderId);
   });
 
   it("uploads the selected files to the current folder", () => {

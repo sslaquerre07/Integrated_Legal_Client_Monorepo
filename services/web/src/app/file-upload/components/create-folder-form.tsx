@@ -4,12 +4,12 @@ import WrappedButton from "$src/app/components/wrapped-button";
 import { useCreateFolderMutation } from "$src/store/nodesApi/nodesApiSlice";
 import { useSelector } from "react-redux";
 import { messages } from "$src/i18n/messages";
-import { selectCurrentId } from "$src/store/folderNav/folderNavSlice";
+import { selectCurrentFolderId } from "$src/store/folderNav/folderNavSlice";
 
 export default function CreateFolderForm() {
   const [folderName, setFolderName] = React.useState("");
   const [createFolder] = useCreateFolderMutation();
-  const currentFolderId = useSelector(selectCurrentId);
+  const currentFolderId = useSelector(selectCurrentFolderId);
 
   const handleCreate = async () => {
     if (!folderName.trim()) return;

@@ -3,11 +3,11 @@ import { FormControl, Input } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import WrappedButton from "../../components/wrapped-button";
-import { selectCurrentId } from "$src/store/folderNav/folderNavSlice";
+import { selectCurrentFolderId } from "$src/store/folderNav/folderNavSlice";
 
 export default function CreateFileForm() {
   const [createFile] = useCreateFileMutation();
-  const currentFolderId = useSelector(selectCurrentId);
+  const currentFolderId = useSelector(selectCurrentFolderId);
   const [files, setFiles] = useState<File[]>([]);
 
   // Uploads the user-selected files

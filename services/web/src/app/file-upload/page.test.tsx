@@ -8,10 +8,8 @@ import {
   fileCardMockData,
   folderCardMockData,
 } from "$src/app/constants/test-data/node-test-data";
-import {
-  selectCurrentId,
-  selectFilesAndFolders,
-} from "$src/store/folderNav/folderNavSlice";
+import { selectFilesAndFolders } from "$src/store/folderNav/selectors";
+import { selectCurrentFolderId } from "$src/store/folderNav/folderNavSlice";
 
 jest.mock("react-redux", () => ({
   useSelector: jest.fn(),
@@ -62,7 +60,7 @@ const mockFilesAndFolders = {
 
 function mockSelectors(currentFolderId: string | null) {
   mockUseSelector.mockImplementation((selector) => {
-    if (selector === selectCurrentId) return currentFolderId;
+    if (selector === selectCurrentFolderId) return currentFolderId;
     if (selector === selectFilesAndFolders) return mockFilesAndFolders;
     return undefined;
   });
@@ -112,7 +110,7 @@ describe("FileUploadPage", () => {
   it("reads root nodes from the folder navigation slice", () => {
     render(<FileUploadPage />);
 
-    expect(mockUseSelector).toHaveBeenCalledWith(selectCurrentId);
+    expect(mockUseSelector).toHaveBeenCalledWith(selectCurrentFolderId);
     expect(mockUseSelector).toHaveBeenCalledWith(selectFilesAndFolders);
   });
 
@@ -143,13 +141,13 @@ describe("FileUploadPage", () => {
       rootId: folderCardMockData.id,
       depth: 2,
     });
-    expect(mockUseSelector).toHaveBeenCalledWith(selectCurrentId);
+    expect(mockUseSelector).toHaveBeenCalledWith(selectCurrentFolderId);
     expect(mockUseSelector).toHaveBeenCalledWith(selectFilesAndFolders);
   });
 
   it("renders empty sections when the folder has no children", () => {
     mockUseSelector.mockImplementation((selector) => {
-      if (selector === selectCurrentId) return null;
+      if (selector === selectCurrentFolderId) return null;
       if (selector === selectFilesAndFolders) {
         return { folders: [], files: [] };
       }

@@ -10,7 +10,7 @@ import {
 import NodeSection from "./node-section";
 import {
   openFolder,
-  selectcurrentFolderId
+  selectCurrentFolderId
 } from "$src/store/folderNav/folderNavSlice";
 
 jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
@@ -143,7 +143,7 @@ describe("NodeSection", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "back" }));
 
-    expect(selectcurrentFolderId(store.getState())).toBeFalsy();
+    expect(selectCurrentFolderId(store.getState())).toBeFalsy();
     expect(
       screen.queryByRole("button", { name: "back" }),
     ).not.toBeInTheDocument();
