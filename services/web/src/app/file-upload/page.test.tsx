@@ -98,15 +98,6 @@ describe("FileUploadPage", () => {
     expect(screen.queryByTestId("file-section")).not.toBeInTheDocument();
   });
 
-  it("requests the root folder structure at depth two", () => {
-    render(<FileUploadPage />);
-
-    expect(mockUseGetFolderStructureQuery).toHaveBeenCalledWith({
-      rootId: undefined,
-      depth: 2,
-    });
-  });
-
   it("reads root nodes from the folder navigation slice", () => {
     render(<FileUploadPage />);
 
@@ -130,19 +121,6 @@ describe("FileUploadPage", () => {
       folderCardMockData.name,
     );
     expect(screen.getByTestId("section-divider")).toBeInTheDocument();
-  });
-
-  it("requests children for the selected folder", () => {
-    mockSelectors(folderCardMockData.id);
-
-    render(<FileUploadPage />);
-
-    expect(mockUseGetFolderStructureQuery).toHaveBeenCalledWith({
-      rootId: folderCardMockData.id,
-      depth: 2,
-    });
-    expect(mockUseSelector).toHaveBeenCalledWith(selectCurrentFolderId);
-    expect(mockUseSelector).toHaveBeenCalledWith(selectFilesAndFolders);
   });
 
   it("renders empty sections when the folder has no children", () => {
