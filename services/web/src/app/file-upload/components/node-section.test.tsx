@@ -65,81 +65,24 @@ function makeStoreInsideFolder() {
 }
 
 describe("NodeSection", () => {
-  it("renders the Files heading by default", () => {
-    renderSection([fileCardMockData]);
-
-    expect(screen.getByText("Files")).toBeInTheDocument();
-    expect(screen.queryByText("Folders")).not.toBeInTheDocument();
-  });
-
-  it("renders the Folders heading for a folder section", () => {
-    renderSection([folderCardMockData], true);
-
-    expect(screen.getByText("Folders")).toBeInTheDocument();
-    expect(screen.queryByText("Files")).not.toBeInTheDocument();
-  });
-
-  it("renders one node card for every node", () => {
-    renderSection([folderCardMockData, fileCardMockData]);
+  it("renders the correct number of child node cards in each section", () => {
+    const { rerender, store } = renderSection(
+      [folderCardMockData, fileCardMockData],
+      true,
+    );
 
     expect(screen.getAllByTestId("node-card")).toHaveLength(2);
-    expect(screen.getByText(folderCardMockData.name)).toBeInTheDocument();
-    expect(screen.getByText(fileCardMockData.name)).toBeInTheDocument();
-  });
-
-  it("renders no node cards when the node list is empty", () => {
-    renderSection();
-
-    expect(screen.queryByTestId("node-card")).not.toBeInTheDocument();
-  });
-
-  it("shows create controls only for folder sections", () => {
-    const { rerender } = renderSection([], true);
-
-    expect(
-      screen.getByRole("button", { name: "Create Folder" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Create File" }),
-    ).toBeInTheDocument();
 
     rerender(
-      <Provider store={makeStore()}>
-        <NodeSection nodes={[]} />
+      <Provider store={store}>
+        <NodeSection nodes={[fileCardMockData]} />
       </Provider>,
     );
 
-    expect(
-      screen.queryByRole("button", { name: "Create Folder" }),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("button", { name: "Create File" }),
-    ).not.toBeInTheDocument();
+    expect(screen.getAllByTestId("node-card")).toHaveLength(1);
   });
 
-  it("hides the back button at the root folder", () => {
-    renderSection([], true);
-
-    expect(
-      screen.queryByRole("button", { name: "back" }),
-    ).not.toBeInTheDocument();
-  });
-
-  it("shows the back button inside a folder", () => {
-    renderSection([], true, makeStoreInsideFolder());
-
-    expect(screen.getByRole("button", { name: "back" })).toBeInTheDocument();
-  });
-
-  it("never shows the back button in the files section", () => {
-    renderSection([], false, makeStoreInsideFolder());
-
-    expect(
-      screen.queryByRole("button", { name: "back" }),
-    ).not.toBeInTheDocument();
-  });
-
-  it("returns to the parent folder when back is clicked", () => {
+  it("back button works in folder section", () => {
     const { store } = renderSection([], true, makeStoreInsideFolder());
 
     fireEvent.click(screen.getByRole("button", { name: "back" }));

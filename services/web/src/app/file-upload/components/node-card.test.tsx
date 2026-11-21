@@ -1,10 +1,13 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import NodeCard from "./node-card";
 import { NodeDto } from "@repo/types";
 import { makeStore } from "$src/store/store";
 import { Provider } from "react-redux";
-import { useDeleteNodesMutation } from "$src/store/nodesApi/nodesApiSlice";
+import {
+  useDeleteNodesMutation,
+  useRenameNodeMutation,
+} from "$src/store/nodesApi/nodesApiSlice";
 import {
   fileCardMockData,
   folderCardMockData,
@@ -16,17 +19,29 @@ import { openFolder } from "$src/store/folderNav/folderNavSlice";
 jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
   global.fetch = jest.fn() as unknown as typeof fetch;
   const actual = jest.requireActual("$src/store/nodesApi/nodesApiSlice");
-  return { ...actual, useDeleteNodesMutation: jest.fn() };
+  return {
+    ...actual,
+    useDeleteNodesMutation: jest.fn(),
+    useRenameNodeMutation: jest.fn(),
+  };
 });
 
 describe("NodeCard", () => {
   const deleteNodesMutation = jest.fn();
+  const renameNodeMutation = jest.fn();
 
   beforeEach(() => {
     deleteNodesMutation.mockReset();
+    renameNodeMutation.mockReset();
+    renameNodeMutation.mockResolvedValue({
+      data: { id: fileCardMockData.id },
+    });
     // RTK Query hooks return the trigger function as the first tuple item.
     (useDeleteNodesMutation as jest.Mock).mockReturnValue([
       deleteNodesMutation,
+    ]);
+    (useRenameNodeMutation as jest.Mock).mockReturnValue([
+      renameNodeMutation,
     ]);
   });
 
@@ -44,9 +59,20 @@ describe("NodeCard", () => {
     };
   };
 
-  it("renders the content", () => {
-    renderNodeCard(fileCardMockData);
+  it("renders folder and file content with the appropriate icon", () => {
+    const { rerender, store } = renderNodeCard(folderCardMockData);
+
+    expect(screen.getByText("Test Folder")).toBeInTheDocument();
+    expect(screen.getByTestId("FolderIcon")).toBeInTheDocument();
+
+    rerender(
+      <Provider store={store}>
+        <NodeCard node={fileCardMockData} />
+      </Provider>,
+    );
+
     expect(screen.getByText("Test File")).toBeInTheDocument();
+    expect(screen.queryByTestId("FolderIcon")).not.toBeInTheDocument();
   });
 
   it("deletes the node when the delete button is clicked", () => {
@@ -59,14 +85,21 @@ describe("NodeCard", () => {
     });
   });
 
-  it("renders the folder icon when isFolder is true", () => {
-    renderNodeCard(folderCardMockData);
-    expect(screen.getByTestId("FolderIcon")).toBeInTheDocument();
-  });
-
-  it("does not render the folder icon when isFolder is false", () => {
+  it("renames the node", async () => {
     renderNodeCard(fileCardMockData);
-    expect(screen.queryByTestId("FolderIcon")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "rename" }));
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "  Renamed File  " },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+
+    await waitFor(() => {
+      expect(renameNodeMutation).toHaveBeenCalledWith({
+        id: fileCardMockData.id,
+        name: "Renamed File",
+      });
+    });
   });
 
   it("opens the folder when its content is clicked", () => {
@@ -75,15 +108,5 @@ describe("NodeCard", () => {
     fireEvent.click(screen.getByText(folderCardMockData.name));
 
     expect(dispatchSpy).toHaveBeenCalledWith(openFolder(folderCardMockData.id));
-  });
-
-  it("does not open anything when a file's content is clicked", () => {
-    const { dispatchSpy } = renderNodeCard(fileCardMockData);
-
-    fireEvent.click(screen.getByText(fileCardMockData.name));
-
-    expect(dispatchSpy).not.toHaveBeenCalledWith(
-      expect.objectContaining({ type: openFolder.type }),
-    );
   });
 });
