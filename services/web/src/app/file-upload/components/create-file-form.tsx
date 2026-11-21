@@ -23,7 +23,7 @@ export default function CreateFileForm() {
   };
 
   return (
-    <div>
+    <>
       <FormControl>
         <Input
           type="file"
@@ -33,6 +33,6 @@ export default function CreateFileForm() {
         />
       </FormControl>
       <WrappedButton content="Submit" onClick={handleCreateFile} />
-    </div>
+    </>
   );
 }

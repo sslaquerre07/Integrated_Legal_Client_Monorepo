@@ -10,8 +10,9 @@ import {
 import NodeSection from "./node-section";
 import {
   openFolder,
-  selectCurrentFolderId
+  selectCurrentFolderId,
 } from "$src/store/folderNav/folderNavSlice";
+import { Stack } from "@mui/material";
 
 jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
   global.fetch = jest.fn() as unknown as typeof fetch;
@@ -22,22 +23,22 @@ jest.mock(
   "$src/app/file-upload/components/node-card",
   () =>
     function NodeCardMock({ node }: { node: NodeDto }) {
-      return <div data-testid="node-card">{node.name}</div>;
+      return <Stack data-testid="node-card">{node.name}</Stack>;
     },
 );
 
 jest.mock(
-  "$src/app/file-upload/components/create-folder-modal",
+  "$src/app/file-upload/components/create-folder-form",
   () =>
-    function CreateFolderModalMock() {
+    function CreateFolderFormMock() {
       return <button type="button">Create Folder</button>;
     },
 );
 
 jest.mock(
-  "$src/app/file-upload/components/create-file-modal",
+  "$src/app/file-upload/components/create-file-form",
   () =>
-    function CreateFileModalMock() {
+    function CreateFileFormMock() {
       return <button type="button">Create File</button>;
     },
 );

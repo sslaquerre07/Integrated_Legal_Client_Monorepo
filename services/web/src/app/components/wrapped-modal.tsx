@@ -31,7 +31,7 @@ export default function WrappedModal({
   const handleClose = () => setOpen(false);
 
   return (
-    <div>
+    <>
       {trigger(handleOpen)}
 
       <Modal
@@ -52,6 +52,6 @@ export default function WrappedModal({
           {content}
         </Box>
       </Modal>
-    </div>
+    </>
   );
 }

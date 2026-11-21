@@ -26,12 +26,10 @@ export default function FileUploadPage() {
   }
 
   return (
-    <main className="bg-company min-h-screen text-white p-8">
-      <div className="flex flex-col gap-7">
-        <NodeSection isFolderNodeSection nodes={folders} />
-        <HorizontalDivider />
-        <NodeSection nodes={files} />
-      </div>
-    </main>
+    <Stack className="bg-company min-h-screen text-white p-8 flex flex-col gap-7">
+      <NodeSection isFolderNodeSection nodes={folders} />
+      <HorizontalDivider />
+      <NodeSection nodes={files} />
+    </Stack>
   );
 }
