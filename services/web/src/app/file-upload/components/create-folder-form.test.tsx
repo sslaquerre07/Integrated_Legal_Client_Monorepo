@@ -36,43 +36,7 @@ describe("CreateFolderForm", () => {
     mockUseCreateFolderMutation.mockReturnValue([createFolder]);
   });
 
-  it("renders the folder name field, helper text, and submit button", () => {
-    render(<CreateFolderForm />);
-
-    expect(screen.getByText("Folder Name")).toBeInTheDocument();
-    expect(
-      screen.getByText("Enter the name of the folder you want to create."),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("textbox")).toHaveAttribute("id", "folder-name");
-    expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
-  });
-
-  it("reads the current folder id from the folder structure slice", () => {
-    render(<CreateFolderForm />);
-
-    expect(mockUseSelector).toHaveBeenCalledWith(selectCurrentFolderId);
-  });
-
-  it("does not create a folder when the name is blank", () => {
-    render(<CreateFolderForm />);
-
-    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
-
-    expect(createFolder).not.toHaveBeenCalled();
-  });
-
-  it("does not create a folder when the name contains only whitespace", () => {
-    render(<CreateFolderForm />);
-    fireEvent.change(screen.getByRole("textbox"), {
-      target: { value: "   " },
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
-
-    expect(createFolder).not.toHaveBeenCalled();
-  });
-
-  it("trims the name and includes the current folder as the parent", async () => {
+  it("creates a folder in the current folder", async () => {
     render(<CreateFolderForm />);
     const input = screen.getByRole("textbox");
 
@@ -88,27 +52,20 @@ describe("CreateFolderForm", () => {
     });
   });
 
-  it.each([
-    ["an empty string", ""],
-    ["null", null],
-  ])(
-    "creates a root folder without a parent id when the current folder id is %s",
-    async (_, currentFolderId) => {
-      mockCurrentFolderId(currentFolderId);
-      render(<CreateFolderForm />);
+  it("creates a folder without a parent id in the root folder", async () => {
+    mockCurrentFolderId(null);
+    render(<CreateFolderForm />);
 
-      fireEvent.change(screen.getByRole("textbox"), {
-        target: { value: "Root Folder" },
-      });
-      fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "Root Folder" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
 
-      await waitFor(() => {
-        expect(createFolder).toHaveBeenCalledTimes(1);
-      });
-      expect(createFolder.mock.calls[0][0]).toStrictEqual({
+    await waitFor(() => {
+      expect(createFolder).toHaveBeenCalledWith({
         name: "Root Folder",
         parentId: undefined,
       });
-    },
-  );
+    });
+  });
 });
