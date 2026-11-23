@@ -5,7 +5,7 @@ import CardActionArea from "@mui/material/CardActionArea";
 import FolderIcon from "@mui/icons-material/Folder";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
-import { useDeleteNodesMutation } from "$src/store/nodesApi/nodesApiSlice";
+import { useDeleteNodeMutation } from "$src/store/nodesApi/nodesApiSlice";
 import { NodeDto } from "@repo/types";
 import { openFolder } from "$src/store/folderNav/folderNavSlice";
 import { Stack } from "@mui/material";
@@ -21,7 +21,7 @@ type NodeCardProps = {
 export default function NodeCard({ node }: NodeCardProps) {
   const { id, isFolder, name: content } = node;
 
-  const [deleteNodesMutation] = useDeleteNodesMutation();
+  const [deleteNodesMutation] = useDeleteNodeMutation();
   const dispatch = useDispatch();
   /**
    * Pushes the nodeState to the nodeHistory
@@ -33,7 +33,7 @@ export default function NodeCard({ node }: NodeCardProps) {
   }
 
   function handleDeleteNode() {
-    deleteNodesMutation({ ids: [id] });
+    deleteNodesMutation(id);
   }
 
   const renameModalTitle = `${messages.FileUpload.renameNodeModal.title} ${content}`;

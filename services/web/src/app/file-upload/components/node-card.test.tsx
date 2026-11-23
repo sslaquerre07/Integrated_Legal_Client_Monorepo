@@ -5,7 +5,7 @@ import { NodeDto } from "@repo/types";
 import { makeStore } from "$src/store/store";
 import { Provider } from "react-redux";
 import {
-  useDeleteNodesMutation,
+  useDeleteNodeMutation,
   useRenameNodeMutation,
 } from "$src/store/nodesApi/nodesApiSlice";
 import {
@@ -21,24 +21,24 @@ jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
   const actual = jest.requireActual("$src/store/nodesApi/nodesApiSlice");
   return {
     ...actual,
-    useDeleteNodesMutation: jest.fn(),
+    useDeleteNodeMutation: jest.fn(),
     useRenameNodeMutation: jest.fn(),
   };
 });
 
 describe("NodeCard", () => {
-  const deleteNodesMutation = jest.fn();
+  const deleteNodeMutation = jest.fn();
   const renameNodeMutation = jest.fn();
 
   beforeEach(() => {
-    deleteNodesMutation.mockReset();
+    deleteNodeMutation.mockReset();
     renameNodeMutation.mockReset();
     renameNodeMutation.mockResolvedValue({
       data: { id: fileCardMockData.id },
     });
     // RTK Query hooks return the trigger function as the first tuple item.
-    (useDeleteNodesMutation as jest.Mock).mockReturnValue([
-      deleteNodesMutation,
+    (useDeleteNodeMutation as jest.Mock).mockReturnValue([
+      deleteNodeMutation,
     ]);
     (useRenameNodeMutation as jest.Mock).mockReturnValue([
       renameNodeMutation,
@@ -80,9 +80,7 @@ describe("NodeCard", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "delete" }));
 
-    expect(deleteNodesMutation).toHaveBeenCalledWith({
-      ids: [fileCardMockData.id],
-    });
+    expect(deleteNodeMutation).toHaveBeenCalledWith(fileCardMockData.id);
   });
 
   it("renames the node", async () => {
