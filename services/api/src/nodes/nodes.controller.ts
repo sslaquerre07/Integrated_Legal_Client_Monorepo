@@ -80,11 +80,11 @@ export class NodesController {
    * @param id UUID of the file node to retrieve.
    * @param version Optional version of the file to retrieve.
    */
-  @Get("/file")
+  @Get("/file/:id")
   async getFileContent(
     @Res({ passthrough: true }) res: Response,
-    @Body("id", new ParseUUIDPipe()) id: string,
-    @Body("version") version?: string,
+    @Param("id", new ParseUUIDPipe()) id: string,
+    @Query("version") version?: string,
   ) {
     const node = await this.nodesService.getNodeById(id);
     if (node.isFolder) {
