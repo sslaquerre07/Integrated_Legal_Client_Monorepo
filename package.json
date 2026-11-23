@@ -8,6 +8,8 @@
     "test": "turbo run test",
     "test:fe": "npm run test --workspace=web",
     "test:be": "npm run test --workspace=api",
+    "test:fe:watch": "npm run test --workspace=web -- --watch",
+    "test:be:watch": "npm run test --workspace=api -- --watch",
     "test:all": "npm run test --workspaces --if-present",
     "prepare": "husky"
   },

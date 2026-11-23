@@ -1,12 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./userSlice/userSlice";
-import lawyerFileReducer from "./lawyerFile/laywerFileSlice";
 import { nodesApiSlice } from "./nodesApi/nodesApiSlice";
+import folderNavReducer from "./folderNav/folderNavSlice";
 
-export const store = configureStore({
+export const makeStore = () =>
+  configureStore({
   reducer: {
-    user: userReducer,
-    lawyerFile: lawyerFileReducer,
+    folderNav: folderNavReducer,
     [nodesApiSlice.reducerPath]: nodesApiSlice.reducer,
   },
 
@@ -14,6 +13,10 @@ export const store = configureStore({
     return getDefaultMiddleware().concat(nodesApiSlice.middleware);
   },
 });
+
+
+// Create store that this app will use
+export const store = makeStore();
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

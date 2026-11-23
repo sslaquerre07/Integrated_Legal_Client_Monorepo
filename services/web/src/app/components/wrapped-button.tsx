@@ -4,12 +4,14 @@ import FolderIcon from "@mui/icons-material/Folder";
 
 type ButtonProps = {
   content: string;
-  isFolder: boolean;
+  isFolder?: boolean;
+  onClick?: () => void;
 };
 
 export default function WrappedButton({
   content,
-  isFolder,
+  isFolder = false,
+  onClick,
 }: ButtonProps) {
   // "extra" functionality - in case we need a smaller folder button
   const icon = isFolder ? <FolderIcon /> : undefined;
@@ -20,7 +22,7 @@ export default function WrappedButton({
       disableElevation
       startIcon={icon}
       sx={{ textTransform: "none" }}
-      onClick={() => console.log("clicked", content)}
+      onClick={onClick}
     >
       {content}
     </Button>
