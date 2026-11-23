@@ -11,9 +11,7 @@ export default function CreateFileForm() {
   const [files, setFiles] = useState<File[]>([]);
 
   // Uploads the user-selected files
-  const handleCreateFile = () => {
-    createFile({ parentId: currentFolderId || undefined, files });
-  };
+  const handleCreateFile = () => files.forEach((file) => createFile({ parentId: currentFolderId || undefined, file }));
 
   // Updates the state object whenever user changes their uploads
   // Beneficial once we implement a custom drag-and-drop component
