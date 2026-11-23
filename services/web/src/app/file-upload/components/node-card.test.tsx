@@ -80,9 +80,7 @@ describe("NodeCard", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "delete" }));
 
-    expect(deleteNodeMutation).toHaveBeenCalledWith({
-      id: fileCardMockData.id,
-    });
+    expect(deleteNodeMutation).toHaveBeenCalledWith(fileCardMockData.id);
   });
 
   it("renames the node", async () => {
