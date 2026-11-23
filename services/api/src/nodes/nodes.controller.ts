@@ -285,7 +285,7 @@ export class NodesController {
           );
         } catch (error) {
           throw new InternalServerErrorException(
-            `Version ${newerVersion.nodeVersion} failed to be deleted from storage during rollback. Other versions may have been deleted in this proces`,
+            `Version ${newerVersion.nodeVersion} failed to be deleted from storage during rollback. Other versions may have been deleted in this process`,
             { cause: error },
           );
         }
