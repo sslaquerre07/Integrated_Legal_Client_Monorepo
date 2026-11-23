@@ -36,8 +36,7 @@ export default function NodeCard({ node }: NodeCardProps) {
     deleteNodesMutation({ ids: [id] });
   }
 
-  const renameModalTitle =
-    messages.FileUpload.renameNodeModal.title + " " + content;
+  const renameModalTitle = `${messages.FileUpload.renameNodeModal.title} ${content}`;
 
   return (
     <Card className="flex items-center whitespace-nowrap rounded-lg bg-white/5 text-white">
