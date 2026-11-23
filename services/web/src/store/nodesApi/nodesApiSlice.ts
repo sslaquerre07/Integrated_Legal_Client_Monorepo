@@ -1,15 +1,10 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { FolderStructureDto, NodeDto } from "@repo/types";
+import { baseApi } from "./baseApi";
 
-const API = "http://localhost:3001";
+const nodesUrl = (path: string) => `nodes/${path}`;
 
 // Based on nodes module
-export const nodesApiSlice = createApi({
-  reducerPath: "nodesApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${API}/nodes`,
-  }),
-  tagTypes: ["Folder"],
+export const nodesApiSlice = baseApi.injectEndpoints({
   endpoints: (builder) => {
     return {
       getFolderStructure: builder.query<
@@ -17,14 +12,14 @@ export const nodesApiSlice = createApi({
         { depth: number; rootId?: string }
       >({
         query: ({ depth, rootId }) => ({
-          url: `/structure`,
+          url: nodesUrl("structure"),
           params: { depth, rootId },
         }),
         providesTags: ["Folder"],
       }),
       getFileContent: builder.query<string, { id: string }>({
         query: ({ id }) => ({
-          url: `/file/${id}`,
+          url: nodesUrl(`file/${id}`),
           responseHandler: async (response: Response) => {
             // Return regular json if anything is wrong
             if (!response.ok) {
@@ -47,7 +42,7 @@ export const nodesApiSlice = createApi({
           formData.append("file", file);
 
           return {
-            url: "/files/new-node",
+            url: nodesUrl("files/new-node"),
             method: "POST",
             body: formData,
           };
@@ -60,7 +55,7 @@ export const nodesApiSlice = createApi({
       >({
         query: ({ name, parentId }) => {
           return {
-            url: "/folders",
+            url: nodesUrl("folders"),
             method: "POST",
             body: { name, parentId },
           };
@@ -70,7 +65,7 @@ export const nodesApiSlice = createApi({
       renameNode: builder.mutation<NodeDto, { id: string; name: string }>({
         query: ({ id, name }) => {
           return {
-            url: `/${id}`,
+            url: nodesUrl(id),
             method: "PATCH",
             body: { name },
           };
@@ -80,7 +75,7 @@ export const nodesApiSlice = createApi({
       deleteNode: builder.mutation<void, string>({
         query: (id) => {
           return {
-            url: "/files",
+            url: nodesUrl("files"),
             method: "DELETE",
             body: { id },
           };
