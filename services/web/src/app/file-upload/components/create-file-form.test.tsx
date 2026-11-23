@@ -49,9 +49,13 @@ describe("CreateFileForm", () => {
     fireEvent.change(getFileInput(container), { target: { files } });
     fireEvent.click(screen.getByRole("button", { name: "Submit" }));
 
-    expect(createFile).toHaveBeenCalledWith({
+    expect(createFile).toHaveBeenNthCalledWith(1, {
       parentId: "current-folder-id",
-      files,
+      file: files[0],
+    });
+    expect(createFile).toHaveBeenNthCalledWith(2, {
+      parentId: "current-folder-id",
+      file: files[1],
     });
   });
 
@@ -63,6 +67,9 @@ describe("CreateFileForm", () => {
     fireEvent.change(getFileInput(container), { target: { files } });
     fireEvent.click(screen.getByRole("button", { name: "Submit" }));
 
-    expect(createFile).toHaveBeenCalledWith({ parentId: undefined, files });
+    expect(createFile).toHaveBeenCalledWith({
+      parentId: undefined,
+      file: files[0],
+    });
   });
 });
