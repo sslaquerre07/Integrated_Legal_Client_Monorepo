@@ -4,7 +4,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Version } from './version.entity';
@@ -30,15 +30,15 @@ export class Comment {
   @Column({ name: 'node_version', type: 'varchar' })
   nodeVersion!: string;
 
-  @OneToOne(() => Comment, (comment) => comment.child, {
+  @ManyToOne(() => Comment, (comment) => comment.children, {
     nullable: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'parent_id' })
   parent!: Comment | null;
 
-  @OneToOne(() => Comment, (comment) => comment.parent)
-  child!: Comment | null;
+  @OneToMany(() => Comment, (comment) => comment.parent)
+  children!: Comment[];
 
   @Column({ type: 'integer' })
   page!: number;
