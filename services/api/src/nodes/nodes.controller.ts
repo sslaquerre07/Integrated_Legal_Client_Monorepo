@@ -195,9 +195,9 @@ export class NodesController {
    * Deletes a file and its versions, or an empty folder.
    * @param id UUID of the file or folder node to delete.
    */
-  @Delete("/files")
+  @Delete("/files/:id")
   async deleteNode(
-    @Body("id", new ParseUUIDPipe()) id: string,
+    @Param("id", new ParseUUIDPipe()) id: string,
   ): Promise<void> {
     const allVersions = await this.versionsService.getAllVersionEntriesById(id);
     const versionDeletionResults = await Promise.allSettled(
@@ -239,10 +239,10 @@ export class NodesController {
    * @param id UUID of the file node.
    * @param version Version identifier to delete.
    */
-  @Delete("/file-version")
+  @Delete("/file-version/:id")
   async deleteFileVersion(
-    @Body("id", new ParseUUIDPipe()) id: string,
-    @Body("version") version: string,
+    @Param("id", new ParseUUIDPipe()) id: string,
+    @Query("version") version: string,
   ): Promise<string> {
     // If there is only one remaining version, should call the node deletion endpoint
     if((await this.versionsService.getAllVersionEntriesById(id)).length <= 1)
@@ -264,10 +264,10 @@ export class NodesController {
    * @param id UUID of the file node.
    * @param version Version identifier to roll back to.
    */
-  @Delete("/file-version/rollback")
+  @Delete("/file-version/rollback/:id")
   async rollbackFileVersion(
-    @Body("id", new ParseUUIDPipe()) id: string,
-    @Body("version") version: string,
+    @Param("id", new ParseUUIDPipe()) id: string,
+    @Query("version") version: string,
   ): Promise<string> {
     if(await this.versionsService.getCurrentNodeVersion(id) === version)
       throw new BadRequestException("This is already the current version");
