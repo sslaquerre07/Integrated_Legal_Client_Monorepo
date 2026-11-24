@@ -1,16 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { nodesApiSlice } from "./nodesApi/nodesApiSlice";
+import { baseApi } from "./nodesApi/baseApi";
 import folderNavReducer from "./folderNav/folderNavSlice";
 
 export const makeStore = () =>
   configureStore({
   reducer: {
     folderNav: folderNavReducer,
-    [nodesApiSlice.reducerPath]: nodesApiSlice.reducer,
+    [baseApi.reducerPath]: baseApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(nodesApiSlice.middleware);
+    return getDefaultMiddleware().concat(baseApi.middleware);
   },
 });
 
