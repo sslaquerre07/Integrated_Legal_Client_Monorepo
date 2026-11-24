@@ -8,6 +8,7 @@
     "dev": {
       "cache": false,
       "passThroughEnv": [
+        "API_URL",
         "DATABASE_URL",
         "GCP_PROJECT_ID",
         "STORAGE_BUCKET_NAME"
