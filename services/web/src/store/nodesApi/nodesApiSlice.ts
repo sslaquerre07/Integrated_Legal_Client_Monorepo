@@ -75,9 +75,8 @@ export const nodesApiSlice = baseApi.injectEndpoints({
       deleteNode: builder.mutation<void, string>({
         query: (id) => {
           return {
-            url: nodesUrl("files"),
+            url: nodesUrl(`files/${encodeURIComponent(id)}`),
             method: "DELETE",
-            body: { id },
           };
         },
         invalidatesTags: ["Folder"],
