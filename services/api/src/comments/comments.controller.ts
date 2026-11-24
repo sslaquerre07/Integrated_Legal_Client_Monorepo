@@ -15,6 +15,12 @@ export class CommentsController {
     @Inject(CommentsService) private readonly commentsService: CommentsService,
   ) {}
 
+  /**
+   * Retrieves page's comments on a specific file version.
+   * @param id UUID of the file node with the comment.
+   * @param version Version of the file with the comment.
+   * @param page Page to retrive comments from
+   */
   @Get("/perPage/:id")
   async getPageComments(
     @Param("id", new ParseUUIDPipe()) id: string,
