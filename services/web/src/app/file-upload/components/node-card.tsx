@@ -13,6 +13,7 @@ import WrappedModal from "$src/app/components/wrapped-modal";
 import RenameNodeForm from "./rename-node-form";
 import { messages } from "$src/i18n/messages";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
+import { useRouter } from "next/navigation";
 
 type NodeCardProps = {
   node: NodeDto;
@@ -20,6 +21,8 @@ type NodeCardProps = {
 
 export default function NodeCard({ node }: NodeCardProps) {
   const { id, isFolder, name: content } = node;
+
+  const router = useRouter();
 
   const [deleteNodesMutation] = useDeleteNodeMutation();
   const dispatch = useDispatch();
@@ -29,6 +32,8 @@ export default function NodeCard({ node }: NodeCardProps) {
   function handleSelect() {
     if (isFolder) {
       dispatch(openFolder(id));
+    } else {
+      router.push(`file-view/${id}`)
     }
   }
 
