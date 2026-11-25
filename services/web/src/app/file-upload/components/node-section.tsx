@@ -1,7 +1,6 @@
+"use client"
 import NodeCard from "$src/app/file-upload/components/node-card";
 import { NodeDto } from "@repo/types";
-import ArrowBack from "@mui/icons-material/ArrowBack";
-import IconButton from "@mui/material/IconButton";
 import { useDispatch, useSelector } from "react-redux";
 import { messages } from "$src/i18n/messages";
 import {
@@ -14,6 +13,7 @@ import CreateFileForm from "./create-file-form";
 import WrappedButton from "$src/app/components/wrapped-button";
 import CreateFolderForm from "./create-folder-form";
 import { Stack } from "@mui/material";
+import BackButton from "$src/app/components/back-button";
 
 type NodeSectionProps = {
   isFolderNodeSection?: boolean; // Currently, we have 2 different sections - Files and Folder
@@ -44,14 +44,7 @@ export default function NodeSection({
       <Stack className="flex flex-row items-center justify-between">
         <Stack className="flex flex-row items-center gap-5">
           {isFolderNodeSection && !isAtRootFolder ? (
-            <IconButton
-              aria-label="back"
-              size="medium"
-              className="h-12 w-12 rounded-lg bg-teal-400/5 text-white"
-              onClick={handleGoBack}
-            >
-              <ArrowBack />
-            </IconButton>
+            <BackButton handleGoBack={handleGoBack} />
           ) : null}
           <span className="whitespace-nowrap text-2xl font-semibold text-white">
             {section_label}
