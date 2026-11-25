@@ -4,9 +4,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryColumn,
 } from 'typeorm';
 import { ItemNode } from './node.entity';
+import { Comment } from './comment.entity';
 
 @Entity('versions')
 export class Version {
@@ -35,6 +37,9 @@ export class Version {
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt!: Date;
+
+  @OneToMany(() => Comment, (comment) => comment.version)
+  comments!: Comment[];
 }
 
 export { Version as NodeVersion };

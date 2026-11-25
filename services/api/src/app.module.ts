@@ -4,6 +4,8 @@ import { NodesModule } from './nodes/nodes.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ItemNode } from './entities/node.entity';
 import { Version } from './entities/version.entity';
+import { Comment } from './entities/comment.entity';
+import { CommentsModule } from './comments/comments.modules';
 import { getDatabaseConfig } from './database.config';
 
 @Module({
@@ -15,11 +17,12 @@ import { getDatabaseConfig } from './database.config';
       useFactory: async (configService: ConfigService) => {
         return {
           ...getDatabaseConfig((name) => configService.get<string>(name)),
-          entities: [ItemNode, Version],
+          entities: [ItemNode, Version, Comment],
         };
       },
     }),
     NodesModule,
+    CommentsModule,
   ],
 })
 export class AppModule {}
