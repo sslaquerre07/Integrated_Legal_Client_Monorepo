@@ -5,9 +5,15 @@ import {
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
+  Post,
   Query,
+  Body,
+  Patch,
+  Delete,
 } from "@nestjs/common";
 import { CommentsService } from "./comments.service";
+import type { CreateCommentDTO } from "@repo/types";
+
 
 @Controller("comments")
 export class CommentsController {
@@ -35,5 +41,36 @@ export class CommentsController {
     return Promise.all(
       threadHeads.map((head) => this.commentsService.buildThread(head)),
     );
+  }
+
+  /**
+   * Creates a new comment.
+   * @param commentDto DTO containing the comment data from the request body.
+   */
+  @Post("/create")
+  async createComment(@Body() commentDto: CreateCommentDTO) {
+    return await this.commentsService.createComment(commentDto);
+  }
+
+  /**
+   * Updates an existing comment.
+   * @param id UUID of the comment to update.
+   * @param content New content for the comment.
+   */
+  @Patch("/update/:id")
+  async updateComment(
+    @Param("id", new ParseUUIDPipe()) id: string,
+    @Body("content") content: string,
+  ) {
+    return await this.commentsService.updateComment(id, content);
+  }
+
+  /**
+   * Deletes a comment.
+   * @param id UUID of the comment to delete.
+   */
+  @Delete("/delete/:id")
+  async deleteComment(@Param("id", new ParseUUIDPipe()) id: string) {
+    return await this.commentsService.deleteComment(id);
   }
 }
