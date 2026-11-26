@@ -5,9 +5,13 @@ import {
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
+  Post,
   Query,
+  Body
 } from "@nestjs/common";
 import { CommentsService } from "./comments.service";
+import type { CreateCommentDTO } from "@repo/types";
+
 
 @Controller("comments")
 export class CommentsController {
@@ -35,5 +39,10 @@ export class CommentsController {
     return Promise.all(
       threadHeads.map((head) => this.commentsService.buildThread(head)),
     );
+  }
+
+  @Post("/create")
+  async createComment(@Body() commentDto: CreateCommentDTO) {
+    return await this.commentsService.createComment(commentDto);
   }
 }
