@@ -61,19 +61,19 @@ export class CommentsService {
     return await this.repository.save(comment);
   }
 
-  // async updateComment(id: string, content: string): Promise<CommentDTO | null> {
-  //   const comment = await this.repository.findOne({ where: { id } });
-  //   if (!comment) {
-  //     return null;
-  //   }
-  //   comment.content = content;
-  //   const updatedComment = await this.repository.save(comment);
-  //   return updatedComment as CommentDTO;
-  // }
+  async updateComment(id: string, content: string): Promise<CommentDTO | null> {
+    const comment = await this.repository.findOne({ where: { id } });
+    if (!comment) {
+      return null;
+    }
+    comment.content = content;
+    const updatedComment = await this.repository.save(comment);
+    return updatedComment as CommentDTO;
+  }
 
   // async deleteComment(id: string): Promise<boolean> {
   //   const result = await this.repository.delete(id);
-  //   return result.affected !== undefined && result.affected > 0;
+  //   return result.affected != null && result.affected > 0;
   // }
 
 }

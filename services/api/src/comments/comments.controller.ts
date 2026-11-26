@@ -7,7 +7,8 @@ import {
   ParseUUIDPipe,
   Post,
   Query,
-  Body
+  Body,
+  Patch,
 } from "@nestjs/common";
 import { CommentsService } from "./comments.service";
 import type { CreateCommentDTO } from "@repo/types";
@@ -41,8 +42,25 @@ export class CommentsController {
     );
   }
 
+  /**
+   * Creates a new comment.
+   * @param commentDto DTO containing the comment data from the request body.
+   */
   @Post("/create")
   async createComment(@Body() commentDto: CreateCommentDTO) {
     return await this.commentsService.createComment(commentDto);
+  }
+
+  /**
+   * Updates an existing comment.
+   * @param id UUID of the comment to update.
+   * @param content New content for the comment.
+   */
+  @Patch("/update/:id")
+  async updateComment(
+    @Param("id", new ParseUUIDPipe()) id: string,
+    @Body("content") content: string,
+  ) {
+    return await this.commentsService.updateComment(id, content);
   }
 }
