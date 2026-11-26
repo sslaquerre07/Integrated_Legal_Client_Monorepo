@@ -1,10 +1,11 @@
 "use client";
 
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import BackButton from "$src/app/components/back-button";
 import { use } from "react";
 import { useGetFileContentQuery } from "$src/store/nodesApi/nodesApiSlice";
 import { getErrorMessage } from "$src/utils/general-helper";
+import { messages } from "$src/i18n/messages";
 
 type FileViewPageProps = {
   params: Promise<{ id: string }>;
@@ -17,12 +18,18 @@ export default function FileViewPage({ params }: FileViewPageProps) {
   return (
     <Stack className="bg-company min-h-screen text-white p-8 flex flex-col gap-7">
       <BackButton />
-      <p>Placeholder page for {fileId}</p>
+      <Typography>
+        {messages.FileView.placeholderPrefix} {fileId}
+      </Typography>
       {isError ? (
-        <p>An Error occured: {getErrorMessage(error)}</p>
+        <Typography>
+          {messages.FileView.errorPrefix} {getErrorMessage(error)}
+        </Typography>
       ) : isLoading ? (
-        <p>Loading file status...</p>
-      ) : <p>Your file exists!</p>}
+        <Typography>{messages.FileView.loadingStatus}</Typography>
+      ) : (
+        <Typography>{messages.FileView.fileExists}</Typography>
+      )}
     </Stack>
   );
 }

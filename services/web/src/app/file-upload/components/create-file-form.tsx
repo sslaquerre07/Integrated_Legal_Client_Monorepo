@@ -1,12 +1,13 @@
 "use client";
 
 import { useCreateFileMutation } from "$src/store/nodesApi/nodesApiSlice";
-import { FormControl, Input } from "@mui/material";
+import { FormControl, Input, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import WrappedButton from "../../components/wrapped-button";
 import { selectCurrentFolderId } from "$src/store/folderNav/folderNavSlice";
 import { getErrorMessage } from "$src/utils/general-helper";
+import { messages } from "$src/i18n/messages";
 
 export default function CreateFileForm() {
   const [createFile, { isError, error }] = useCreateFileMutation();
@@ -36,8 +37,16 @@ export default function CreateFileForm() {
           onChange={handleFileChange}
         />
       </FormControl>
-      <WrappedButton content="Submit" onClick={handleCreateFile} />
-      {isError ?? <p>An Error occured: {getErrorMessage(error)}</p>}
+      <WrappedButton
+        content={messages.FileUpload.createFileModal.form.submitButtonContent}
+        onClick={handleCreateFile}
+      />
+      {isError && (
+        <Typography>
+          {messages.FileUpload.createFileModal.form.errorPrefix}{" "}
+          {getErrorMessage(error)}
+        </Typography>
+      )}
     </>
   );
 }
