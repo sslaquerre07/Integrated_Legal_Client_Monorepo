@@ -32,11 +32,13 @@ function getFileInput(container: HTMLElement) {
 
 describe("CreateFileForm", () => {
   const createFile = jest.fn();
-
   beforeEach(() => {
     jest.clearAllMocks();
     mockCurrentFolderId("current-folder-id");
-    mockUseCreateFileMutation.mockReturnValue([createFile]);
+    mockUseCreateFileMutation.mockReturnValue([
+      createFile,
+      { isError: false, error: undefined },
+    ]);
   });
 
   it("uploads more than one file to the correct folder", () => {
