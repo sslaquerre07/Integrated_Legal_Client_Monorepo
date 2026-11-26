@@ -9,6 +9,7 @@ import {
   Query,
   Body,
   Patch,
+  Delete,
 } from "@nestjs/common";
 import { CommentsService } from "./comments.service";
 import type { CreateCommentDTO } from "@repo/types";
@@ -62,5 +63,14 @@ export class CommentsController {
     @Body("content") content: string,
   ) {
     return await this.commentsService.updateComment(id, content);
+  }
+
+  /**
+   * Deletes a comment.
+   * @param id UUID of the comment to delete.
+   */
+  @Delete("/delete/:id")
+  async deleteComment(@Param("id", new ParseUUIDPipe()) id: string) {
+    return await this.commentsService.deleteComment(id);
   }
 }
