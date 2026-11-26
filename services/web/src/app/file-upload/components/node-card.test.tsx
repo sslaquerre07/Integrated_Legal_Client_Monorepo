@@ -26,11 +26,26 @@ jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
   };
 });
 
+const mockPush = jest.fn();
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+    replace: jest.fn(),
+    back: jest.fn(),
+    refresh: jest.fn(),
+    prefetch: jest.fn(),
+  }),
+  usePathname: () => '/',
+  useSearchParams: () => new URLSearchParams(),
+}));
+
+
 describe("NodeCard", () => {
   const deleteNodeMutation = jest.fn();
   const renameNodeMutation = jest.fn();
 
   beforeEach(() => {
+    mockPush.mockClear();
     deleteNodeMutation.mockReset();
     renameNodeMutation.mockReset();
     renameNodeMutation.mockResolvedValue({

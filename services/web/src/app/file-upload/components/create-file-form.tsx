@@ -1,17 +1,24 @@
+"use client";
+
 import { useCreateFileMutation } from "$src/store/nodesApi/nodesApiSlice";
-import { FormControl, Input } from "@mui/material";
+import { FormControl, Input, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import WrappedButton from "../../components/wrapped-button";
 import { selectCurrentFolderId } from "$src/store/folderNav/folderNavSlice";
+import { getErrorMessage } from "$src/utils/general-helper";
+import { messages } from "$src/i18n/messages";
 
 export default function CreateFileForm() {
-  const [createFile] = useCreateFileMutation();
+  const [createFile, { isError, error }] = useCreateFileMutation();
   const currentFolderId = useSelector(selectCurrentFolderId);
   const [files, setFiles] = useState<File[]>([]);
 
   // Uploads the user-selected files
-  const handleCreateFile = () => files.forEach((file) => createFile({ parentId: currentFolderId || undefined, file }));
+  const handleCreateFile = () =>
+    files.forEach((file) =>
+      createFile({ parentId: currentFolderId || undefined, file }),
+    );
 
   // Updates the state object whenever user changes their uploads
   // Beneficial once we implement a custom drag-and-drop component
@@ -22,7 +29,7 @@ export default function CreateFileForm() {
 
   return (
     <>
-      <FormControl>
+      <FormControl className="flex flex-col gap-2 my-8">
         <Input
           type="file"
           inputProps={{ multiple: true }}
@@ -30,7 +37,16 @@ export default function CreateFileForm() {
           onChange={handleFileChange}
         />
       </FormControl>
-      <WrappedButton content="Submit" onClick={handleCreateFile} />
+      <WrappedButton
+        content={messages.FileUpload.createFileModal.form.submitButtonContent}
+        onClick={handleCreateFile}
+      />
+      {isError && (
+        <Typography>
+          {messages.FileUpload.createFileModal.form.errorPrefix}{" "}
+          {getErrorMessage(error)}
+        </Typography>
+      )}
     </>
   );
 }
