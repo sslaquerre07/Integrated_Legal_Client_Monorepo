@@ -33,7 +33,7 @@ export default function NodeCard({ node }: NodeCardProps) {
     if (isFolder) {
       dispatch(openFolder(id));
     } else {
-      router.push(`file-view/${id}`)
+      router.push(`file-view/${id}`);
     }
   }
 
@@ -58,7 +58,7 @@ export default function NodeCard({ node }: NodeCardProps) {
       <Stack direction="row" className="flex shrink-0 gap-2 pr-3">
         <WrappedModal
           title={renameModalTitle}
-          content={RenameNodeForm(id, content)}
+          content={<RenameNodeForm id={id} initialName={content} />}
           trigger={(open) => (
             <IconButton
               aria-label="rename"

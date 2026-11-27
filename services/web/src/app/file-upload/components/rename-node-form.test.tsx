@@ -9,16 +9,6 @@ jest.mock("$src/store/nodesApi/nodesApiSlice", () => ({
 
 const mockUseRenameNodeMutation = useRenameNodeMutation as jest.Mock;
 
-function TestRenameNodeForm({
-  id,
-  name,
-}: {
-  id: string;
-  name: string;
-}) {
-  return RenameNodeForm(id, name);
-}
-
 describe("RenameNodeForm", () => {
   const renameNode = jest.fn();
 
@@ -28,7 +18,7 @@ describe("RenameNodeForm", () => {
   });
 
   it("does not rename the node when the new name is empty or whitespace", () => {
-    render(<TestRenameNodeForm id="node-id" name="Original Name" />);
+    render(<RenameNodeForm id="node-id" initialName="Original Name" />);
 
     for (const invalidName of ["", "   "]) {
       fireEvent.change(screen.getByRole("textbox"), {
@@ -42,7 +32,7 @@ describe("RenameNodeForm", () => {
 
   it("trims the new name and sends the node id", async () => {
     renameNode.mockResolvedValue({ data: { id: "node-id" } });
-    render(<TestRenameNodeForm id="node-id" name="Original Name" />);
+    render(<RenameNodeForm id="node-id" initialName="Original Name" />);
     const input = screen.getByRole("textbox");
 
     fireEvent.change(screen.getByRole("textbox"), {

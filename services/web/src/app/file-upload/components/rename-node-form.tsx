@@ -4,7 +4,15 @@ import React from "react";
 import WrappedButton from "$src/app/components/wrapped-button";
 import { messages } from "$src/i18n/messages";
 
-export default function RenameNodeForm(id: string, initialName: string) {
+type RenameNodeFormProps = {
+  id: string;
+  initialName: string;
+};
+
+export default function RenameNodeForm({
+  id,
+  initialName,
+}: RenameNodeFormProps) {
   const [newName, setNewName] = React.useState(initialName);
   const [renameNode] = useRenameNodeMutation();
 
