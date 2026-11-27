@@ -37,19 +37,6 @@ jest.mock(
     },
 );
 
-const mockPush = jest.fn();
-jest.mock("next/navigation", () => ({
-  useRouter: () => ({
-    push: mockPush,
-    replace: jest.fn(),
-    back: jest.fn(),
-    refresh: jest.fn(),
-    prefetch: jest.fn(),
-  }),
-  usePathname: () => "/",
-  useSearchParams: () => new URLSearchParams(),
-}));
-
 function renderSection(
   nodes: NodeDto[] = [],
   isFolderNodeSection = false,
@@ -72,7 +59,6 @@ function makeStoreInsideFolder() {
 }
 
 describe("NodeSection", () => {
-  beforeEach(() => mockPush.mockClear());
   it("renders the correct number of child node cards in each section", () => {
     const { rerender, store } = renderSection(
       [folderCardMockData, fileCardMockData],
