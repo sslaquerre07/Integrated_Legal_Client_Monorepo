@@ -17,6 +17,7 @@ export default function FileUploadPage() {
     folderStructureArgs(currentFolderId),
   );
 
+  // TODO: Remove hardcoded strings here
   if (isLoading) {
     return <Stack>Loading..</Stack>;
   }

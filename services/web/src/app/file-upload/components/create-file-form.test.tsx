@@ -1,38 +1,29 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { useSelector } from "react-redux";
+import { fireEvent, screen } from "@testing-library/react";
 import { useCreateFileMutation } from "$src/store/nodesApi/nodesApiSlice";
 import CreateFileForm from "./create-file-form";
-import { selectCurrentFolderId } from "$src/store/folderNav/folderNavSlice";
-
-jest.mock("react-redux", () => ({
-  useSelector: jest.fn(),
-}));
+import { openFolder } from "$src/store/folderNav/folderNavSlice";
+import { makeStore } from "$src/store/store";
+import { renderWithProviders } from "$src/test/utils/render";
 
 jest.mock("$src/store/nodesApi/nodesApiSlice", () => ({
   useCreateFileMutation: jest.fn(),
 }));
 
-jest.mock("$src/store/folderNav/folderNavSlice", () => ({
-  selectCurrentFolderId: jest.fn(),
-}));
-
-const mockUseSelector = useSelector as unknown as jest.Mock;
 const mockUseCreateFileMutation = useCreateFileMutation as jest.Mock;
-
-function mockCurrentFolderId(currentFolderId: string | null) {
-  mockUseSelector.mockImplementation((selector) =>
-    selector === selectCurrentFolderId ? currentFolderId : undefined,
-  );
-}
 
 function getFileInput(container: HTMLElement) {
   return container.querySelector('input[type="file"]') as HTMLInputElement;
 }
 
+function renderForm(folderId: string | null = null) {
+  const store = makeStore();
+  store.dispatch(openFolder(folderId));
+  return renderWithProviders(<CreateFileForm />, { store });
+}
+
 describe("CreateFileForm", () => {
   const createFile = jest.fn();
   beforeEach(() => {
-    mockCurrentFolderId("current-folder-id");
     mockUseCreateFileMutation.mockReturnValue([
       createFile,
       { isError: false, error: undefined },
@@ -40,7 +31,7 @@ describe("CreateFileForm", () => {
   });
 
   it("uploads more than one file to the correct folder", () => {
-    const { container } = render(<CreateFileForm />);
+    const { container } = renderForm("current-folder-id");
     const files = [
       new File(["contract"], "contract.pdf", { type: "application/pdf" }),
       new File(["evidence"], "evidence.txt", { type: "text/plain" }),
@@ -60,8 +51,7 @@ describe("CreateFileForm", () => {
   });
 
   it("omits parentId when there is no current folder", () => {
-    mockCurrentFolderId(null);
-    const { container } = render(<CreateFileForm />);
+    const { container } = renderForm();
     const files = [new File(["a"], "a.txt", { type: "text/plain" })];
 
     fireEvent.change(getFileInput(container), { target: { files } });
