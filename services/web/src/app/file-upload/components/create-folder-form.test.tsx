@@ -1,5 +1,4 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import { useSelector } from "react-redux";
 import { useCreateFolderMutation } from "$src/store/nodesApi/nodesApiSlice";
 import CreateFolderForm from "./create-folder-form";

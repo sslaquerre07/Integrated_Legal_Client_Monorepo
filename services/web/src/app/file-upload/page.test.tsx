@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import { useSelector } from "react-redux";
 import { NodeDto } from "@repo/types";
 import FileUploadPage from "./page";

@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import { useSelector } from "react-redux";
 import { useCreateFileMutation } from "$src/store/nodesApi/nodesApiSlice";
 import CreateFileForm from "./create-file-form";

@@ -1,5 +1,4 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import WrappedModal from "./wrapped-modal";
 import { Stack } from "@mui/material";
 

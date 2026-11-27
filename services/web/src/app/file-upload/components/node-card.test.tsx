@@ -1,5 +1,4 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import NodeCard from "./node-card";
 import { NodeDto } from "@repo/types";
 import { makeStore } from "$src/store/store";
