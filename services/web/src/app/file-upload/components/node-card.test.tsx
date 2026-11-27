@@ -1,8 +1,7 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import NodeCard from "./node-card";
 import { NodeDto } from "@repo/types";
 import { makeStore } from "$src/store/store";
-import { Provider } from "react-redux";
 import {
   useDeleteNodeMutation,
   useRenameNodeMutation,
@@ -12,6 +11,7 @@ import {
   folderCardMockData,
 } from "$src/test/fixtures/node-test-data";
 import { openFolder } from "$src/store/folderNav/folderNavSlice";
+import { renderWithProviders } from "$src/test/utils/render";
 
 // Keep the real API slice for the store, but replace the mutation hook so the
 // test verifies the component's request without possibility of making a network call
@@ -43,27 +43,18 @@ describe("NodeCard", () => {
     const store = makeStore();
     const dispatchSpy = jest.spyOn(store, "dispatch");
     return {
-      store,
       dispatchSpy,
-      ...render(
-        <Provider store={store}>
-          <NodeCard node={node} />
-        </Provider>,
-      ),
+      ...renderWithProviders(<NodeCard node={node} />, { store }),
     };
   };
 
   it("renders folder and file content with the appropriate icon", () => {
-    const { rerender, store } = renderNodeCard(folderCardMockData);
+    const { rerender } = renderNodeCard(folderCardMockData);
 
     expect(screen.getByText("Test Folder")).toBeInTheDocument();
     expect(screen.getByTestId("FolderIcon")).toBeInTheDocument();
 
-    rerender(
-      <Provider store={store}>
-        <NodeCard node={fileCardMockData} />
-      </Provider>,
-    );
+    rerender(<NodeCard node={fileCardMockData} />);
 
     expect(screen.getByText("Test File")).toBeInTheDocument();
     expect(screen.queryByTestId("FolderIcon")).not.toBeInTheDocument();

@@ -1,5 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { Provider } from "react-redux";
+import { fireEvent, screen } from "@testing-library/react";
 import { makeStore } from "$src/store/store";
 import { NodeDto } from "@repo/types";
 import {
@@ -12,6 +11,7 @@ import {
   selectCurrentFolderId,
 } from "$src/store/folderNav/folderNavSlice";
 import { Stack } from "@mui/material";
+import { renderWithProviders } from "$src/test/utils/render";
 
 jest.mock(
   "$src/app/file-upload/components/node-card",
@@ -42,14 +42,10 @@ function renderSection(
   isFolderNodeSection = false,
   store = makeStore(),
 ) {
-  return {
-    store,
-    ...render(
-      <Provider store={store}>
-        <NodeSection isFolderNodeSection={isFolderNodeSection} nodes={nodes} />
-      </Provider>,
-    ),
-  };
+  return renderWithProviders(
+    <NodeSection isFolderNodeSection={isFolderNodeSection} nodes={nodes} />,
+    { store },
+  );
 }
 
 function makeStoreInsideFolder() {
@@ -60,18 +56,14 @@ function makeStoreInsideFolder() {
 
 describe("NodeSection", () => {
   it("renders the correct number of child node cards in each section", () => {
-    const { rerender, store } = renderSection(
+    const { rerender } = renderSection(
       [folderCardMockData, fileCardMockData],
       true,
     );
 
     expect(screen.getAllByTestId("node-card")).toHaveLength(2);
 
-    rerender(
-      <Provider store={store}>
-        <NodeSection nodes={[fileCardMockData]} />
-      </Provider>,
-    );
+    rerender(<NodeSection nodes={[fileCardMockData]} />);
 
     expect(screen.getAllByTestId("node-card")).toHaveLength(1);
   });
