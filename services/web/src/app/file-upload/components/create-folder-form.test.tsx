@@ -29,7 +29,6 @@ describe("CreateFolderForm", () => {
   const createFolder = jest.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
     createFolder.mockResolvedValue({ data: { id: "new-folder-id" } });
     mockCurrentFolderId("current-folder-id");
     mockUseCreateFolderMutation.mockReturnValue([createFolder]);

@@ -67,7 +67,6 @@ function mockSelectors(currentFolderId: string | null) {
 
 describe("FileUploadPage", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     mockSelectors(null);
     mockUseGetFolderStructureQuery.mockReturnValue({ isLoading: false });
   });

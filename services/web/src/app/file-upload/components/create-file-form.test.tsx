@@ -32,7 +32,6 @@ function getFileInput(container: HTMLElement) {
 describe("CreateFileForm", () => {
   const createFile = jest.fn();
   beforeEach(() => {
-    jest.clearAllMocks();
     mockCurrentFolderId("current-folder-id");
     mockUseCreateFileMutation.mockReturnValue([
       createFile,
