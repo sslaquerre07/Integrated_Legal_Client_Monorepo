@@ -7,7 +7,7 @@ import { useGetFolderStructureQuery } from "$src/store/nodesApi/nodesApiSlice";
 import {
   fileCardMockData,
   folderCardMockData,
-} from "$src/app/constants/test-data/node-test-data";
+} from "$src/test/fixtures/node-test-data";
 import { selectFilesAndFolders } from "$src/store/folderNav/selectors";
 import { selectCurrentFolderId } from "$src/store/folderNav/folderNavSlice";
 

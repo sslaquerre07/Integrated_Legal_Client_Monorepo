@@ -11,7 +11,7 @@ import {
 import {
   fileCardMockData,
   folderCardMockData,
-} from "$src/app/constants/test-data/node-test-data";
+} from "$src/test/fixtures/node-test-data";
 import { openFolder } from "$src/store/folderNav/folderNavSlice";
 
 // Keep the real API slice for the store, but replace the mutation hook so the

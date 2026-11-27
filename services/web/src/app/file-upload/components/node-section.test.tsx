@@ -6,7 +6,7 @@ import { NodeDto } from "@repo/types";
 import {
   fileCardMockData,
   folderCardMockData,
-} from "$src/app/constants/test-data/node-test-data";
+} from "$src/test/fixtures/node-test-data";
 import NodeSection from "./node-section";
 import {
   openFolder,
