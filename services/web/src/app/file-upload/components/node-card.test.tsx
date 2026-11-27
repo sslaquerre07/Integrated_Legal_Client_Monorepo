@@ -16,7 +16,6 @@ import { openFolder } from "$src/store/folderNav/folderNavSlice";
 // Keep the real API slice for the store, but replace the mutation hook so the
 // test verifies the component's request without possibility of making a network call
 jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
-  global.fetch = jest.fn() as unknown as typeof fetch;
   const actual = jest.requireActual("$src/store/nodesApi/nodesApiSlice");
   return {
     ...actual,

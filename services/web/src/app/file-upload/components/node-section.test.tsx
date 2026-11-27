@@ -13,11 +13,6 @@ import {
 } from "$src/store/folderNav/folderNavSlice";
 import { Stack } from "@mui/material";
 
-jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
-  global.fetch = jest.fn() as unknown as typeof fetch;
-  return jest.requireActual("$src/store/nodesApi/nodesApiSlice");
-});
-
 jest.mock(
   "$src/app/file-upload/components/node-card",
   () =>
