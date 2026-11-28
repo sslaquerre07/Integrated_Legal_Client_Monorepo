@@ -1,7 +1,7 @@
 import {NodeDto} from "@repo/types";
 
 /**
- * Calculates the total price including tax.
+ * Parses files and folders from a list of entities
  *
  * @param entities - The Record of entities with type NodeDTO
  * @param parentId - The `currentId` slice value. If null, it's root folder.

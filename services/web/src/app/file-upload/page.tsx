@@ -6,24 +6,25 @@ import { useGetFolderStructureQuery } from "$src/store/nodesApi/nodesApiSlice";
 import { useSelector } from "react-redux";
 import { selectCurrentFolderId } from "$src/store/folderNav/folderNavSlice";
 import { folderStructureArgs } from "$src/utils/node-helper";
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { selectFilesAndFolders } from "$src/store/folderNav/selectors";
+import { messages } from "$src/i18n/messages";
+import { getErrorMessage } from "$src/utils/general-helper";
 
 export default function FileUploadPage() {
   const currentFolderId = useSelector(selectCurrentFolderId);
   const { files, folders } = useSelector(selectFilesAndFolders);
 
-  const { isLoading, isError } = useGetFolderStructureQuery(
+  const { isLoading, isError, error } = useGetFolderStructureQuery(
     folderStructureArgs(currentFolderId),
   );
 
-  if (isLoading) {
-    return <Stack>Loading..</Stack>;
-  }
-
-  if (isError) {
-    return <Stack>An error occured trying to load this folder</Stack>;
-  }
+  if (isError)
+    return (
+      <Typography>{`${messages.FileUpload.errorPrefix} ${getErrorMessage(error)}`}</Typography>
+    );
+  if (isLoading)
+    return <Typography>{messages.FileUpload.loadingStatus}</Typography>;
 
   return (
     <Stack className="bg-company min-h-screen text-white p-8 flex flex-col gap-7">

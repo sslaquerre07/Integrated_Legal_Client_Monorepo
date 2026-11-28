@@ -1,13 +1,12 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import WrappedModal from "./wrapped-modal";
-import { Stack } from "@mui/material";
+import { Typography } from "@mui/material";
 
 function renderModal() {
   return render(
     <WrappedModal
       title="Example modal"
-      content={<Stack>Modal content</Stack>}
+      content={<Typography>Modal content</Typography>}
       trigger={(open) => (
         <button type="button" onClick={open}>
           Open modal

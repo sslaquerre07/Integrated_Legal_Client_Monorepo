@@ -1,6 +1,6 @@
 export interface TreeNodeDto {
   id: string;
-  children: object[];
+  children: TreeNodeDto[];
 }
 
 export interface CreateNodeDto {

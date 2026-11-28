@@ -1,5 +1,7 @@
 {
   "FileUpload": {
+    "loadingStatus": "Loading folder...",
+    "errorPrefix": "An Error occured:",
     "sections": {
       "folders": "Folders",
       "files": "Files"

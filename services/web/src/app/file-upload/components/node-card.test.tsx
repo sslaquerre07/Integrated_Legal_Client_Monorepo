@@ -1,9 +1,7 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import NodeCard from "./node-card";
 import { NodeDto } from "@repo/types";
 import { makeStore } from "$src/store/store";
-import { Provider } from "react-redux";
 import {
   useDeleteNodeMutation,
   useRenameNodeMutation,
@@ -11,13 +9,13 @@ import {
 import {
   fileCardMockData,
   folderCardMockData,
-} from "$src/app/constants/test-data/node-test-data";
+} from "$src/test/fixtures/node-test-data";
 import { openFolder } from "$src/store/folderNav/folderNavSlice";
+import { renderWithProviders } from "$src/test/utils/render";
 
 // Keep the real API slice for the store, but replace the mutation hook so the
 // test verifies the component's request without possibility of making a network call
 jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
-  global.fetch = jest.fn() as unknown as typeof fetch;
   const actual = jest.requireActual("$src/store/nodesApi/nodesApiSlice");
   return {
     ...actual,
@@ -26,67 +24,39 @@ jest.mock("$src/store/nodesApi/nodesApiSlice", () => {
   };
 });
 
-const mockPush = jest.fn();
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: mockPush,
-    replace: jest.fn(),
-    back: jest.fn(),
-    refresh: jest.fn(),
-    prefetch: jest.fn(),
-  }),
-  usePathname: () => '/',
-  useSearchParams: () => new URLSearchParams(),
-}));
-
-
 describe("NodeCard", () => {
   const deleteNodeMutation = jest.fn();
   const renameNodeMutation = jest.fn();
 
   beforeEach(() => {
-    mockPush.mockClear();
     deleteNodeMutation.mockReset();
     renameNodeMutation.mockReset();
     renameNodeMutation.mockResolvedValue({
       data: { id: fileCardMockData.id },
     });
     // RTK Query hooks return the trigger function as the first tuple item.
-    (useDeleteNodeMutation as jest.Mock).mockReturnValue([
-      deleteNodeMutation,
-    ]);
-    (useRenameNodeMutation as jest.Mock).mockReturnValue([
-      renameNodeMutation,
-    ]);
+    (useDeleteNodeMutation as jest.Mock).mockReturnValue([deleteNodeMutation]);
+    (useRenameNodeMutation as jest.Mock).mockReturnValue([renameNodeMutation]);
   });
 
   const renderNodeCard = (node: NodeDto) => {
     const store = makeStore();
     const dispatchSpy = jest.spyOn(store, "dispatch");
     return {
-      store,
       dispatchSpy,
-      ...render(
-        <Provider store={store}>
-          <NodeCard node={node} />
-        </Provider>,
-      ),
+      ...renderWithProviders(<NodeCard node={node} />, { store }),
     };
   };
 
   it("renders folder and file content with the appropriate icon", () => {
-    const { rerender, store } = renderNodeCard(folderCardMockData);
+    const { rerender } = renderNodeCard(folderCardMockData);
 
-    expect(screen.getByText("Test Folder")).toBeInTheDocument();
+    expect(screen.getByText(folderCardMockData.name)).toBeInTheDocument();
     expect(screen.getByTestId("FolderIcon")).toBeInTheDocument();
 
-    rerender(
-      <Provider store={store}>
-        <NodeCard node={fileCardMockData} />
-      </Provider>,
-    );
+    rerender(<NodeCard node={fileCardMockData} />);
 
-    expect(screen.getByText("Test File")).toBeInTheDocument();
+    expect(screen.getByText(fileCardMockData.name)).toBeInTheDocument();
     expect(screen.queryByTestId("FolderIcon")).not.toBeInTheDocument();
   });
 
