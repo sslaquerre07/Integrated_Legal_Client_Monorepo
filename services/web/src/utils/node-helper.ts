@@ -1,6 +1,6 @@
 import {NodeDto} from "@repo/types";
 
-/**
+/** // TODO: Fix misleading header
  * Calculates the total price including tax.
  *
  * @param entities - The Record of entities with type NodeDTO

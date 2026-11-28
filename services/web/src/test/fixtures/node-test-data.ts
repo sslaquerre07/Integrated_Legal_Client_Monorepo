@@ -1,5 +1,4 @@
-import { NodeDto } from "@repo/types";
-
+import { FolderStructureDto, NodeDto } from "@repo/types";
 
 export const fileCardMockData: NodeDto = {
   id: "test-id",
@@ -52,14 +51,39 @@ export const unrelatedFileMockData: NodeDto = {
   parentId: "another-folder-id",
   updatedAt: "2026-11-16T15:56:19Z",
 };
+export const otherFolderMockData: NodeDto = {
+  id: "another-folder-id",
+  isFolder: true,
+  name: "Archive",
+  updatedAt: "2026-11-16T15:56:19Z",
+};
 
-export const folderStructureMockData = {
-  tree: [],
+export const folderStructureMockData: FolderStructureDto = {
+  tree: [
+    {
+      id: rootFolderMockData.id,
+      children: [
+        { id: childFolderMockData.id, children: [] },
+        { id: childFileMockData.id, children: [] },
+      ],
+    },
+    { id: rootFileMockData.id, children: [] },
+    {
+      id: otherFolderMockData.id,
+      children: [{ id: unrelatedFileMockData.id, children: [] }],
+    },
+  ],
   entities: {
     [rootFolderMockData.id]: rootFolderMockData,
     [rootFileMockData.id]: rootFileMockData,
     [childFolderMockData.id]: childFolderMockData,
     [childFileMockData.id]: childFileMockData,
+    [otherFolderMockData.id]: otherFolderMockData,
     [unrelatedFileMockData.id]: unrelatedFileMockData,
   },
+};
+
+export const emptyFolderStructure: FolderStructureDto = {
+  tree: [],
+  entities: {},
 };

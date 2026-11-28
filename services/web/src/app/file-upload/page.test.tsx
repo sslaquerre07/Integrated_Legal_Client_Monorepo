@@ -1,20 +1,23 @@
-import { render, screen } from "@testing-library/react";
-import { useSelector } from "react-redux";
-import { NodeDto } from "@repo/types";
+import { screen } from "@testing-library/react";
+import { FolderStructureDto, NodeDto } from "@repo/types";
 import FileUploadPage from "./page";
-import { useGetFolderStructureQuery } from "$src/store/nodesApi/nodesApiSlice";
 import {
-  fileCardMockData,
-  folderCardMockData,
+  nodesApiSlice,
+  useGetFolderStructureQuery,
+} from "$src/store/nodesApi/nodesApiSlice";
+import { openFolder } from "$src/store/folderNav/folderNavSlice";
+import { makeStore } from "$src/store/store";
+import { renderWithProviders } from "$src/test/utils/render";
+import { folderStructureArgs } from "$src/utils/node-helper";
+import {
+  emptyFolderStructure,
+  folderStructureMockData,
+  rootFileMockData,
+  rootFolderMockData,
 } from "$src/test/fixtures/node-test-data";
-import { selectFilesAndFolders } from "$src/store/folderNav/selectors";
-import { selectCurrentFolderId } from "$src/store/folderNav/folderNavSlice";
-
-jest.mock("react-redux", () => ({
-  useSelector: jest.fn(),
-}));
 
 jest.mock("$src/store/nodesApi/nodesApiSlice", () => ({
+  ...jest.requireActual("$src/store/nodesApi/nodesApiSlice"),
   useGetFolderStructureQuery: jest.fn(),
 }));
 
@@ -49,45 +52,46 @@ jest.mock(
     },
 );
 
-const mockUseSelector = useSelector as unknown as jest.Mock;
 const mockUseGetFolderStructureQuery = useGetFolderStructureQuery as jest.Mock;
 
-const mockFilesAndFolders = {
-  folders: [folderCardMockData],
-  files: [fileCardMockData],
-};
-
-function mockSelectors(currentFolderId: string | null) {
-  mockUseSelector.mockImplementation((selector) => {
-    if (selector === selectCurrentFolderId) return currentFolderId;
-    if (selector === selectFilesAndFolders) return mockFilesAndFolders;
-    return undefined;
-  });
+async function renderPage({
+  folderId = null,
+  structure = emptyFolderStructure,
+}: { folderId?: string | null; structure?: FolderStructureDto } = {}) {
+  const store = makeStore();
+  store.dispatch(openFolder(folderId));
+  await store.dispatch(
+    nodesApiSlice.util.upsertQueryData(
+      "getFolderStructure",
+      folderStructureArgs(folderId),
+      structure,
+    ),
+  );
+  return renderWithProviders(<FileUploadPage />, { store });
 }
 
 describe("FileUploadPage", () => {
   beforeEach(() => {
-    mockSelectors(null);
     mockUseGetFolderStructureQuery.mockReturnValue({ isLoading: false });
   });
 
-  it("shows a loading state while the folder structure is loading", () => {
+  it("shows a loading state while the folder structure is loading", async () => {
     mockUseGetFolderStructureQuery.mockReturnValue({ isLoading: true });
 
-    render(<FileUploadPage />);
+    await renderPage();
 
     expect(screen.getByText("Loading..")).toBeInTheDocument();
     expect(screen.queryByTestId("folder-section")).not.toBeInTheDocument();
     expect(screen.queryByTestId("file-section")).not.toBeInTheDocument();
   });
 
-  it("shows an error state when the folder structure fails to load", () => {
+  it("shows an error state when the folder structure fails to load", async () => {
     mockUseGetFolderStructureQuery.mockReturnValue({
       isLoading: false,
       isError: true,
     });
 
-    render(<FileUploadPage />);
+    await renderPage();
 
     expect(
       screen.getByText("An error occured trying to load this folder"),
@@ -96,41 +100,26 @@ describe("FileUploadPage", () => {
     expect(screen.queryByTestId("file-section")).not.toBeInTheDocument();
   });
 
-  it("reads root nodes from the folder navigation slice", () => {
-    render(<FileUploadPage />);
-
-    expect(mockUseSelector).toHaveBeenCalledWith(selectCurrentFolderId);
-    expect(mockUseSelector).toHaveBeenCalledWith(selectFilesAndFolders);
-  });
-
-  it("renders folders and files in separate sections", () => {
-    render(<FileUploadPage />);
+  it("renders folders and files in separate sections", async () => {
+    await renderPage({ structure: folderStructureMockData });
 
     expect(screen.getByTestId("folder-section")).toHaveTextContent(
-      folderCardMockData.name,
+      rootFolderMockData.name,
     );
     expect(screen.getByTestId("folder-section")).not.toHaveTextContent(
-      fileCardMockData.name,
+      rootFileMockData.name,
     );
     expect(screen.getByTestId("file-section")).toHaveTextContent(
-      fileCardMockData.name,
+      rootFileMockData.name,
     );
     expect(screen.getByTestId("file-section")).not.toHaveTextContent(
-      folderCardMockData.name,
+      rootFolderMockData.name,
     );
     expect(screen.getByTestId("section-divider")).toBeInTheDocument();
   });
 
-  it("renders empty sections when the folder has no children", () => {
-    mockUseSelector.mockImplementation((selector) => {
-      if (selector === selectCurrentFolderId) return null;
-      if (selector === selectFilesAndFolders) {
-        return { folders: [], files: [] };
-      }
-      return undefined;
-    });
-
-    render(<FileUploadPage />);
+  it("renders empty sections when the folder has no children", async () => {
+    await renderPage();
 
     expect(screen.getByTestId("folder-section")).toHaveTextContent(/^Folders$/);
     expect(screen.getByTestId("file-section")).toHaveTextContent(/^Files$/);
