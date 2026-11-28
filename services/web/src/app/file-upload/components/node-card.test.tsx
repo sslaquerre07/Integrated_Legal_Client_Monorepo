@@ -64,7 +64,9 @@ describe("NodeCard", () => {
   it("deletes the node when the delete button is clicked", () => {
     renderNodeCard(fileCardMockData);
 
-    fireEvent.click(screen.getByRole("button", { name: "delete" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: messages.FileUpload.nodeCard.delete }),
+    );
 
     expect(deleteNodeMutation).toHaveBeenCalledWith(fileCardMockData.id);
   });
@@ -72,7 +74,9 @@ describe("NodeCard", () => {
   it("renames the node", async () => {
     renderNodeCard(fileCardMockData);
 
-    fireEvent.click(screen.getByRole("button", { name: "rename" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: messages.FileUpload.nodeCard.rename }),
+    );
     fireEvent.change(screen.getByRole("textbox"), {
       target: { value: "  Renamed File  " },
     });
