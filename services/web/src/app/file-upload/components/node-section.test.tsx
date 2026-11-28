@@ -10,14 +10,14 @@ import {
   openFolder,
   selectCurrentFolderId,
 } from "$src/store/folderNav/folderNavSlice";
-import { Stack } from "@mui/material";
+import { Typography } from "@mui/material";
 import { renderWithProviders } from "$src/test/utils/render";
 
 jest.mock(
   "$src/app/file-upload/components/node-card",
   () =>
     function NodeCardMock({ node }: { node: NodeDto }) {
-      return <Stack data-testid="node-card">{node.name}</Stack>;
+      return <Typography data-testid="node-card">{node.name}</Typography>;
     },
 );
 

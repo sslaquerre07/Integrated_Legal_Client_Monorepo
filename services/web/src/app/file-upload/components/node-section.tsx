@@ -40,7 +40,7 @@ export default function NodeSection({
   const createFolderModalTitle = messages.FileUpload.createFolderModal.title;
 
   return (
-    <Stack>
+    <>
       <Stack className="flex flex-row items-center justify-between">
         <Stack className="flex flex-row items-center gap-5">
           {isFolderNodeSection && !isAtRootFolder ? (
@@ -77,6 +77,6 @@ export default function NodeSection({
           <NodeCard key={node.id} node={node} />
         ))}
       </Stack>
-    </Stack>
+    </>
   );
 }
