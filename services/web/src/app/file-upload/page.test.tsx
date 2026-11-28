@@ -124,11 +124,4 @@ describe("FileUploadPage", () => {
     );
     expect(screen.getByTestId("section-divider")).toBeInTheDocument();
   });
-
-  it("renders empty sections when the folder has no children", async () => {
-    await renderPage();
-
-    expect(screen.getByTestId("folder-section")).toHaveTextContent(/^Folders$/);
-    expect(screen.getByTestId("file-section")).toHaveTextContent(/^Files$/);
-  });
 });

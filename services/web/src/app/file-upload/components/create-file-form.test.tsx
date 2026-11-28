@@ -4,6 +4,7 @@ import CreateFileForm from "./create-file-form";
 import { openFolder } from "$src/store/folderNav/folderNavSlice";
 import { makeStore } from "$src/store/store";
 import { renderWithProviders } from "$src/test/utils/render";
+import { messages } from "$src/i18n/messages";
 
 jest.mock("$src/store/nodesApi/nodesApiSlice", () => ({
   useCreateFileMutation: jest.fn(),
@@ -38,7 +39,11 @@ describe("CreateFileForm", () => {
     ];
 
     fireEvent.change(getFileInput(container), { target: { files } });
-    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: messages.FileUpload.createFileModal.form.submitButtonContent,
+      }),
+    );
 
     expect(createFile).toHaveBeenNthCalledWith(1, {
       parentId: "current-folder-id",
@@ -48,6 +53,7 @@ describe("CreateFileForm", () => {
       parentId: "current-folder-id",
       file: files[1],
     });
+    expect(createFile).toHaveBeenCalledTimes(2);
   });
 
   it("omits parentId when there is no current folder", () => {
@@ -55,7 +61,11 @@ describe("CreateFileForm", () => {
     const files = [new File(["a"], "a.txt", { type: "text/plain" })];
 
     fireEvent.change(getFileInput(container), { target: { files } });
-    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: messages.FileUpload.createFileModal.form.submitButtonContent,
+      }),
+    );
 
     expect(createFile).toHaveBeenCalledWith({
       parentId: undefined,

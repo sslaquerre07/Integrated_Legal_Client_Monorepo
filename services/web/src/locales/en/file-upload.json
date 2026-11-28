@@ -1,10 +1,14 @@
 {
   "FileUpload": {
     "loadingStatus": "Loading folder...",
-    "errorPrefix": "An Error occured:",
+    "errorPrefix": "An Error occurred:",
     "sections": {
       "folders": "Folders",
       "files": "Files"
+    },
+    "nodeCard": {
+      "rename": "rename",
+      "delete": "delete"
     },
     "createFileModal": {
       "title": "Create File",
@@ -12,7 +16,7 @@
       "form": {
         "inputLabel": "Choose Files",
         "submitButtonContent": "Submit",
-        "errorPrefix": "An Error occured:"
+        "errorPrefix": "An Error occurred:"
       }
     },
     "createFolderModal": {
@@ -20,7 +24,8 @@
       "buttonContent": "Create Folder",
       "form": {
         "inputLabel": "Folder Name",
-        "helperText": "Enter the name of the folder you want to create."
+        "helperText": "Enter the name of the folder you want to create.",
+        "submitButtonContent": "Submit"
       }
     },
     "renameNodeModal": {
@@ -28,14 +33,9 @@
       "buttonContent": "",
       "form": {
         "inputLabel": "New Name",
-        "helperText": "Enter the new name."
+        "helperText": "Enter the new name.",
+        "submitButtonContent": "Submit"
       }
     }
-  },
-  "FileView": {
-    "placeholderPrefix": "Placeholder page for",
-    "errorPrefix": "An Error occured:",
-    "loadingStatus": "Loading file status...",
-    "fileExists": "Your file exists!"
   }
 }

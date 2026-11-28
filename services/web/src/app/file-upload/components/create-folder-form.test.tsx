@@ -4,6 +4,7 @@ import CreateFolderForm from "./create-folder-form";
 import { openFolder } from "$src/store/folderNav/folderNavSlice";
 import { makeStore } from "$src/store/store";
 import { renderWithProviders } from "$src/test/utils/render";
+import { messages } from "$src/i18n/messages";
 
 jest.mock("$src/store/nodesApi/nodesApiSlice", () => ({
   useCreateFolderMutation: jest.fn(),
@@ -25,12 +26,39 @@ describe("CreateFolderForm", () => {
     mockUseCreateFolderMutation.mockReturnValue([createFolder]);
   });
 
+  it("only creates a folder when the name has text", async () => {
+    renderForm();
+
+    for (const name of ["", "   ", "Real Folder"]) {
+      fireEvent.change(screen.getByRole("textbox"), {
+        target: { value: name },
+      });
+      fireEvent.click(
+        screen.getByRole("button", {
+          name: messages.FileUpload.createFolderModal.form.submitButtonContent,
+        }),
+      );
+    }
+
+    await waitFor(() => {
+      expect(createFolder).toHaveBeenCalledWith({
+        name: "Real Folder",
+        parentId: undefined,
+      });
+    });
+    expect(createFolder).toHaveBeenCalledTimes(1);
+  });
+
   it("creates a folder in the current folder", async () => {
     renderForm("current-folder-id");
     const input = screen.getByRole("textbox");
 
     fireEvent.change(input, { target: { value: "  New Folder  " } });
-    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: messages.FileUpload.createFolderModal.form.submitButtonContent,
+      }),
+    );
 
     await waitFor(() => {
       expect(createFolder).toHaveBeenCalledWith({
@@ -46,7 +74,11 @@ describe("CreateFolderForm", () => {
     fireEvent.change(screen.getByRole("textbox"), {
       target: { value: "Root Folder" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: messages.FileUpload.createFolderModal.form.submitButtonContent,
+      }),
+    );
 
     await waitFor(() => {
       expect(createFolder).toHaveBeenCalledWith({
