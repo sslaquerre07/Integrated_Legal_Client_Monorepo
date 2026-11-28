@@ -25,6 +25,25 @@ describe("CreateFolderForm", () => {
     mockUseCreateFolderMutation.mockReturnValue([createFolder]);
   });
 
+  it("only creates a folder when the name has text", async () => {
+    renderForm();
+
+    for (const name of ["", "   ", "Real Folder"]) {
+      fireEvent.change(screen.getByRole("textbox"), {
+        target: { value: name },
+      });
+      fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+    }
+
+    await waitFor(() => {
+      expect(createFolder).toHaveBeenCalledWith({
+        name: "Real Folder",
+        parentId: undefined,
+      });
+    });
+    expect(createFolder).toHaveBeenCalledTimes(1);
+  });
+
   it("creates a folder in the current folder", async () => {
     renderForm("current-folder-id");
     const input = screen.getByRole("textbox");
