@@ -12,6 +12,7 @@ import {
 } from "$src/store/folderNav/folderNavSlice";
 import { Typography } from "@mui/material";
 import { renderWithProviders } from "$src/test/utils/render";
+import { messages } from "$src/i18n/messages";
 
 jest.mock(
   "$src/app/file-upload/components/node-card",
@@ -70,12 +71,13 @@ describe("NodeSection", () => {
 
   it("back button works in folder section", () => {
     const { store } = renderSection([], true, makeStoreInsideFolder());
+    const backButtonLabel = messages.Components.backButton;
 
-    fireEvent.click(screen.getByRole("button", { name: "back" }));
+    fireEvent.click(screen.getByRole("button", { name: backButtonLabel }));
 
     expect(selectCurrentFolderId(store.getState())).toBeFalsy();
     expect(
-      screen.queryByRole("button", { name: "back" }),
+      screen.queryByRole("button", { name: backButtonLabel }),
     ).not.toBeInTheDocument();
   });
 });

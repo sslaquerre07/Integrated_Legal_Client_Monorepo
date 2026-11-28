@@ -12,6 +12,7 @@ import {
 } from "$src/test/fixtures/node-test-data";
 import { openFolder } from "$src/store/folderNav/folderNavSlice";
 import { renderWithProviders } from "$src/test/utils/render";
+import { messages } from "$src/i18n/messages";
 
 // Keep the real API slice for the store, but replace the mutation hook so the
 // test verifies the component's request without possibility of making a network call
@@ -75,7 +76,11 @@ describe("NodeCard", () => {
     fireEvent.change(screen.getByRole("textbox"), {
       target: { value: "  Renamed File  " },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: messages.FileUpload.renameNodeModal.form.submitButtonContent,
+      }),
+    );
 
     await waitFor(() => {
       expect(renameNodeMutation).toHaveBeenCalledWith({

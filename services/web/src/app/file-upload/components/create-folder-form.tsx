@@ -36,7 +36,10 @@ export default function CreateFolderForm() {
           {messages.FileUpload.createFolderModal.form.helperText}
         </FormHelperText>
       </FormControl>
-      <WrappedButton content="Submit" onClick={handleCreate} />
+      <WrappedButton
+        content={messages.FileUpload.createFolderModal.form.submitButtonContent}
+        onClick={handleCreate}
+      />
     </>
   );
 }

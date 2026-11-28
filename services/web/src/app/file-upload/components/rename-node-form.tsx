@@ -41,7 +41,10 @@ export default function RenameNodeForm({
           {messages.FileUpload.renameNodeModal.form.helperText}
         </FormHelperText>
       </FormControl>
-      <WrappedButton content="Submit" onClick={handleRename} />
+      <WrappedButton
+        content={messages.FileUpload.renameNodeModal.form.submitButtonContent}
+        onClick={handleRename}
+      />
     </>
   );
 }

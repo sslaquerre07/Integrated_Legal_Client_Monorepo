@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { useRenameNodeMutation } from "$src/store/nodesApi/nodesApiSlice";
 import RenameNodeForm from "./rename-node-form";
+import { messages } from "$src/i18n/messages";
 
 jest.mock("$src/store/nodesApi/nodesApiSlice", () => ({
   useRenameNodeMutation: jest.fn(),
@@ -23,7 +24,11 @@ describe("RenameNodeForm", () => {
       fireEvent.change(screen.getByRole("textbox"), {
         target: { value: invalidName },
       });
-      fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+      fireEvent.click(
+        screen.getByRole("button", {
+          name: messages.FileUpload.renameNodeModal.form.submitButtonContent,
+        }),
+      );
     }
 
     expect(renameNode).not.toHaveBeenCalled();
@@ -37,7 +42,11 @@ describe("RenameNodeForm", () => {
     fireEvent.change(screen.getByRole("textbox"), {
       target: { value: "  Renamed Node  " },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: messages.FileUpload.renameNodeModal.form.submitButtonContent,
+      }),
+    );
 
     await waitFor(() => {
       expect(renameNode).toHaveBeenCalledWith({

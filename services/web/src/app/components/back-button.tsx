@@ -1,3 +1,4 @@
+import { messages } from "$src/i18n/messages";
 import { ArrowBack } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -14,7 +15,7 @@ export default function BackButton({ handleGoBack }: BackButtonProps) {
   }
   return (
     <IconButton
-      aria-label="back"
+      aria-label={messages.Components.backButton}
       size="medium"
       className="h-12 w-12 rounded-lg bg-teal-400/5 text-white"
       onClick={handleGoBack}

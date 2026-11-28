@@ -4,6 +4,7 @@ import CreateFolderForm from "./create-folder-form";
 import { openFolder } from "$src/store/folderNav/folderNavSlice";
 import { makeStore } from "$src/store/store";
 import { renderWithProviders } from "$src/test/utils/render";
+import { messages } from "$src/i18n/messages";
 
 jest.mock("$src/store/nodesApi/nodesApiSlice", () => ({
   useCreateFolderMutation: jest.fn(),
@@ -32,7 +33,11 @@ describe("CreateFolderForm", () => {
       fireEvent.change(screen.getByRole("textbox"), {
         target: { value: name },
       });
-      fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+      fireEvent.click(
+        screen.getByRole("button", {
+          name: messages.FileUpload.createFolderModal.form.submitButtonContent,
+        }),
+      );
     }
 
     await waitFor(() => {
@@ -49,7 +54,11 @@ describe("CreateFolderForm", () => {
     const input = screen.getByRole("textbox");
 
     fireEvent.change(input, { target: { value: "  New Folder  " } });
-    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: messages.FileUpload.createFolderModal.form.submitButtonContent,
+      }),
+    );
 
     await waitFor(() => {
       expect(createFolder).toHaveBeenCalledWith({
@@ -65,7 +74,11 @@ describe("CreateFolderForm", () => {
     fireEvent.change(screen.getByRole("textbox"), {
       target: { value: "Root Folder" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: messages.FileUpload.createFolderModal.form.submitButtonContent,
+      }),
+    );
 
     await waitFor(() => {
       expect(createFolder).toHaveBeenCalledWith({

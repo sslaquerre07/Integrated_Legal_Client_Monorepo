@@ -61,7 +61,7 @@ export default function NodeCard({ node }: NodeCardProps) {
           content={<RenameNodeForm id={id} initialName={content} />}
           trigger={(open) => (
             <IconButton
-              aria-label="rename"
+              aria-label={messages.FileUpload.nodeCard.rename}
               size="large"
               className="h-12 w-12 rounded-lg bg-teal-400/5 text-white"
               onClick={open}
@@ -71,7 +71,7 @@ export default function NodeCard({ node }: NodeCardProps) {
           )}
         />
         <IconButton
-          aria-label="delete"
+          aria-label={messages.FileUpload.nodeCard.delete}
           size="large"
           className="h-12 w-12 rounded-lg bg-teal-400/5 text-white"
           onClick={handleDeleteNode}

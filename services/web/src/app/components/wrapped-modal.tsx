@@ -34,15 +34,10 @@ export default function WrappedModal({
     <>
       {trigger(handleOpen)}
 
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Modal open={open} onClose={handleClose} aria-labelledby="modal-title">
         <Box sx={style} className="bg-company rounded-lg">
           <Typography
-            id="modal-modal-title"
+            id="modal-title"
             variant="h6"
             component="h2"
             className="font-roboto-mono text-xl font-bold"
