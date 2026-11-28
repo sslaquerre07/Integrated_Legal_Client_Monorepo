@@ -48,6 +48,7 @@ describe("CreateFileForm", () => {
       parentId: "current-folder-id",
       file: files[1],
     });
+    expect(createFile).toHaveBeenCalledTimes(2);
   });
 
   it("omits parentId when there is no current folder", () => {
