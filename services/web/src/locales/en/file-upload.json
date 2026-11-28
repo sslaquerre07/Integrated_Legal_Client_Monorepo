@@ -1,7 +1,7 @@
 {
   "FileUpload": {
     "loadingStatus": "Loading folder...",
-    "errorPrefix": "An Error occured:",
+    "errorPrefix": "An Error occurred:",
     "sections": {
       "folders": "Folders",
       "files": "Files"
@@ -12,7 +12,7 @@
       "form": {
         "inputLabel": "Choose Files",
         "submitButtonContent": "Submit",
-        "errorPrefix": "An Error occured:"
+        "errorPrefix": "An Error occurred:"
       }
     },
     "createFolderModal": {
@@ -31,11 +31,5 @@
         "helperText": "Enter the new name."
       }
     }
-  },
-  "FileView": {
-    "placeholderPrefix": "Placeholder page for",
-    "errorPrefix": "An Error occured:",
-    "loadingStatus": "Loading file status...",
-    "fileExists": "Your file exists!"
   }
 }

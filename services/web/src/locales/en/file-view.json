@@ -1,0 +1,8 @@
+{
+  "FileView": {
+    "placeholderPrefix": "Placeholder page for",
+    "errorPrefix": "An Error occured:",
+    "loadingStatus": "Loading file status...",
+    "fileExists": "Your file exists!"
+  }
+}
