@@ -51,12 +51,12 @@ describe("NodeCard", () => {
   it("renders folder and file content with the appropriate icon", () => {
     const { rerender } = renderNodeCard(folderCardMockData);
 
-    expect(screen.getByText("Test Folder")).toBeInTheDocument();
+    expect(screen.getByText(folderCardMockData.name)).toBeInTheDocument();
     expect(screen.getByTestId("FolderIcon")).toBeInTheDocument();
 
     rerender(<NodeCard node={fileCardMockData} />);
 
-    expect(screen.getByText("Test File")).toBeInTheDocument();
+    expect(screen.getByText(fileCardMockData.name)).toBeInTheDocument();
     expect(screen.queryByTestId("FolderIcon")).not.toBeInTheDocument();
   });
 

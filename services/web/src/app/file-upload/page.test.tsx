@@ -15,6 +15,7 @@ import {
   rootFileMockData,
   rootFolderMockData,
 } from "$src/test/fixtures/node-test-data";
+import { messages } from "$src/i18n/messages";
 
 jest.mock("$src/store/nodesApi/nodesApiSlice", () => ({
   ...jest.requireActual("$src/store/nodesApi/nodesApiSlice"),
@@ -80,7 +81,9 @@ describe("FileUploadPage", () => {
 
     await renderPage();
 
-    expect(screen.getByText("Loading..")).toBeInTheDocument();
+    expect(
+      screen.getByText(messages.FileUpload.loadingStatus),
+    ).toBeInTheDocument();
     expect(screen.queryByTestId("folder-section")).not.toBeInTheDocument();
     expect(screen.queryByTestId("file-section")).not.toBeInTheDocument();
   });
@@ -89,12 +92,16 @@ describe("FileUploadPage", () => {
     mockUseGetFolderStructureQuery.mockReturnValue({
       isLoading: false,
       isError: true,
+      error: {
+        status: "bad",
+        error: "demo error",
+      },
     });
 
     await renderPage();
 
     expect(
-      screen.getByText("An error occured trying to load this folder"),
+      screen.getByText(`${messages.FileUpload.errorPrefix} demo error`),
     ).toBeInTheDocument();
     expect(screen.queryByTestId("folder-section")).not.toBeInTheDocument();
     expect(screen.queryByTestId("file-section")).not.toBeInTheDocument();
