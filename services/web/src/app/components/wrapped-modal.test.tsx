@@ -17,28 +17,19 @@ function renderModal() {
 }
 
 describe("WrappedModal", () => {
-  it("renders the trigger and keeps the modal closed initially", () => {
-    renderModal();
 
-    expect(
-      screen.getByRole("button", { name: "Open modal" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByRole("heading", { name: "Example modal" }),
-    ).not.toBeInTheDocument();
-    expect(screen.queryByText("Modal content")).not.toBeInTheDocument();
-  });
+  it("opens with the title and content only after a click", () => {
+  renderModal();
+  const title = { name: "Example modal" };
 
-  it("opens with the configured title and content", () => {
-    renderModal();
+  expect(screen.queryByRole("heading", title)).not.toBeInTheDocument();
+  expect(screen.queryByText("Modal content")).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Open modal" }));
+  fireEvent.click(screen.getByRole("button", { name: "Open modal" }));
 
-    expect(
-      screen.getByRole("heading", { name: "Example modal" }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("Modal content")).toBeInTheDocument();
-  });
+  expect(screen.getByRole("heading", title)).toBeInTheDocument();
+  expect(screen.getByText("Modal content")).toBeInTheDocument();
+});
 
   it("closes when the backdrop is clicked", async () => {
     renderModal();
