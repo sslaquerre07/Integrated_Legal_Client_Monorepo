@@ -7,8 +7,8 @@ import {
   useRenameNodeMutation,
 } from "$src/store/nodesApi/nodesApiSlice";
 import {
-  fileCardMockData,
-  folderCardMockData,
+  rootFileMockData,
+  rootFolderMockData,
 } from "$src/test/fixtures/node-test-data";
 import { openFolder } from "$src/store/folderNav/folderNavSlice";
 import { renderWithProviders } from "$src/test/utils/render";
@@ -33,7 +33,7 @@ describe("NodeCard", () => {
     deleteNodeMutation.mockReset();
     renameNodeMutation.mockReset();
     renameNodeMutation.mockResolvedValue({
-      data: { id: fileCardMockData.id },
+      data: { id: rootFileMockData.id },
     });
     // RTK Query hooks return the trigger function as the first tuple item.
     (useDeleteNodeMutation as jest.Mock).mockReturnValue([deleteNodeMutation]);
@@ -50,29 +50,29 @@ describe("NodeCard", () => {
   };
 
   it("renders folder and file content with the appropriate icon", () => {
-    const { rerender } = renderNodeCard(folderCardMockData);
+    const { rerender } = renderNodeCard(rootFolderMockData);
 
-    expect(screen.getByText(folderCardMockData.name)).toBeInTheDocument();
+    expect(screen.getByText(rootFolderMockData.name)).toBeInTheDocument();
     expect(screen.getByTestId("FolderIcon")).toBeInTheDocument();
 
-    rerender(<NodeCard node={fileCardMockData} />);
+    rerender(<NodeCard node={rootFileMockData} />);
 
-    expect(screen.getByText(fileCardMockData.name)).toBeInTheDocument();
+    expect(screen.getByText(rootFileMockData.name)).toBeInTheDocument();
     expect(screen.queryByTestId("FolderIcon")).not.toBeInTheDocument();
   });
 
   it("deletes the node when the delete button is clicked", () => {
-    renderNodeCard(fileCardMockData);
+    renderNodeCard(rootFileMockData);
 
     fireEvent.click(
       screen.getByRole("button", { name: messages.FileUpload.nodeCard.delete }),
     );
 
-    expect(deleteNodeMutation).toHaveBeenCalledWith(fileCardMockData.id);
+    expect(deleteNodeMutation).toHaveBeenCalledWith(rootFileMockData.id);
   });
 
   it("renames the node", async () => {
-    renderNodeCard(fileCardMockData);
+    renderNodeCard(rootFileMockData);
 
     fireEvent.click(
       screen.getByRole("button", { name: messages.FileUpload.nodeCard.rename }),
@@ -88,17 +88,17 @@ describe("NodeCard", () => {
 
     await waitFor(() => {
       expect(renameNodeMutation).toHaveBeenCalledWith({
-        id: fileCardMockData.id,
+        id: rootFileMockData.id,
         name: "Renamed File",
       });
     });
   });
 
   it("opens the folder when its content is clicked", () => {
-    const { dispatchSpy } = renderNodeCard(folderCardMockData);
+    const { dispatchSpy } = renderNodeCard(rootFolderMockData);
 
-    fireEvent.click(screen.getByText(folderCardMockData.name));
+    fireEvent.click(screen.getByText(rootFolderMockData.name));
 
-    expect(dispatchSpy).toHaveBeenCalledWith(openFolder(folderCardMockData.id));
+    expect(dispatchSpy).toHaveBeenCalledWith(openFolder(rootFolderMockData.id));
   });
 });

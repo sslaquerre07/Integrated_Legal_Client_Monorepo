@@ -2,8 +2,8 @@ import { fireEvent, screen } from "@testing-library/react";
 import { makeStore } from "$src/store/store";
 import { NodeDto } from "@repo/types";
 import {
-  fileCardMockData,
-  folderCardMockData,
+  rootFileMockData,
+  rootFolderMockData,
 } from "$src/test/fixtures/node-test-data";
 import NodeSection from "./node-section";
 import {
@@ -51,20 +51,20 @@ function renderSection(
 
 function makeStoreInsideFolder() {
   const store = makeStore();
-  store.dispatch(openFolder(folderCardMockData.id));
+  store.dispatch(openFolder(rootFolderMockData.id));
   return store;
 }
 
 describe("NodeSection", () => {
   it("renders the correct number of child node cards in each section", () => {
     const { rerender } = renderSection(
-      [folderCardMockData, fileCardMockData],
+      [rootFolderMockData, rootFileMockData],
       true,
     );
 
     expect(screen.getAllByTestId("node-card")).toHaveLength(2);
 
-    rerender(<NodeSection nodes={[fileCardMockData]} />);
+    rerender(<NodeSection nodes={[rootFileMockData]} />);
 
     expect(screen.getAllByTestId("node-card")).toHaveLength(1);
   });
